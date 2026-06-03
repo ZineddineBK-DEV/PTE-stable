@@ -1,0 +1,82 @@
+<div class="modal-header accessory-modal-header">
+    <div class="modal-header-left">
+        <div class="modal-header-icon">
+            <i class="fas fa-plug"></i>
+        </div>
+        <div>
+            <h5 class="modal-title">Edit Accessory</h5>
+            <p class="modal-subtitle">Update the accessory details below</p>
+        </div>
+    </div>
+    <button type="button" class="modal-close-btn" aria-label="Close" (click)="activeModal.dismiss()">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body accessory-modal-body">
+    <form [formGroup]="accessoryForm" (ngSubmit)="onSubmit(accessoryForm)">
+
+        <!-- Name -->
+        <div class="form-field mb-3">
+            <label class="field-label">Name <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+                <i class="fas fa-tag input-icon"></i>
+                <input type="text" class="modern-input form-control"
+                    placeholder="Accessory name…" formControlName="name" required>
+            </div>
+            <small class="field-error"
+                *ngIf="!accessoryForm.get('name')?.valid && accessoryForm.get('name')?.touched">
+                <i class="fas fa-exclamation-circle"></i> Name is required
+            </small>
+        </div>
+
+        <div class="row">
+            <!-- Brand -->
+            <div class="col-xl-4 col-md-4 col-sm-12">
+                <div class="form-field mb-3">
+                    <label class="field-label">Brand</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-industry input-icon"></i>
+                        <input type="text" class="modern-input form-control"
+                            placeholder="Brand name…" formControlName="brand">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model -->
+            <div class="col-xl-4 col-md-4 col-sm-12">
+                <div class="form-field mb-3">
+                    <label class="field-label">Model</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-cube input-icon"></i>
+                        <input type="text" class="modern-input form-control"
+                            placeholder="Model name…" formControlName="model">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Serial Number -->
+            <div class="col-xl-4 col-md-4 col-sm-12">
+                <div class="form-field mb-3">
+                    <label class="field-label">Serial Number</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-barcode input-icon"></i>
+                        <input type="text" class="modern-input form-control"
+                            placeholder="Serial number…" formControlName="serial_number">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="form-footer">
+            <button type="button" class="btn-cancel" (click)="activeModal.dismiss()">
+                Cancel
+            </button>
+            <button type="submit" class="btn-save" [disabled]="!accessoryForm.valid">
+                <i class="fas fa-check"></i> Save Changes
+            </button>
+        </div>
+
+    </form>
+</div>

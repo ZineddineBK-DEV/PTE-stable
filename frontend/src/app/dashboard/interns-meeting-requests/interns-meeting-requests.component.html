@@ -1,0 +1,101 @@
+<section class="main-content">
+    <ul class="breadcrumb breadcrumb-style">
+        <li class="breadcrumb-item">
+            <h5 class="page-title m-b-0">Interns Meeting Requests</h5>
+        </li>
+        <li class="breadcrumb-item bcrumb-1">
+            <a routerLink="/dashboard/main">
+                <i class="fas fa-home font-17"></i>
+            </a>
+        </li>
+        <li class="breadcrumb-item">Interns</li>
+        <li class="breadcrumb-item">Meeting Requests</li>
+    </ul>
+
+    <div class="section-body">
+
+        <!-- Page Header -->
+        <div class="page-header mb-4">
+            <div class="page-header-left">
+                <div class="header-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <div>
+                    <h4 class="mb-1">Meeting Requests</h4>
+                    <p class="text-muted mb-0">Review and manage intern meeting requests</p>
+                </div>
+            </div>
+            <div class="requests-summary" *ngIf="requests.length > 0">
+                <span class="summary-badge">
+                    <i class="fas fa-clock"></i>
+                    {{requests.length}} Pending
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Requests Sidebar -->
+            <div class="col-xl-4 col-lg-4 col-md-12 mb-4">
+                <div class="sidebar-card">
+                    <div class="sidebar-header">
+                        <i class="fas fa-inbox"></i>
+                        <span>Pending Requests</span>
+                        <span class="count-badge">{{requests.length}}</span>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" *ngIf="requests.length === 0">
+                        <img src="assets/images/empty.png" alt="No requests" class="empty-img">
+                        <h5>No Pending Requests</h5>
+                        <p>Interns haven't sent any meeting requests yet.</p>
+                    </div>
+
+                    <!-- Request Cards -->
+                    <div class="requests-list" *ngIf="requests.length > 0">
+                        <div class="request-item" *ngFor="let item of requests"
+                             (click)="openDetails(item._id)">
+                            <div class="request-avatar">
+                                <img [src]="internImagesURL + item.intern?.image"
+                                     [alt]="item.intern?.firstName"
+                                     width="46" height="46"
+                                     >
+                                <div class="avatar-pulse"></div>
+                            </div>
+                            <div class="request-info">
+                                <strong class="request-name">
+                                    {{item.intern?.firstName}} {{item.intern?.lastName}}
+                                </strong>
+                                <span class="request-dept">{{item.intern?.departement}}</span>
+                                <span class="request-title">{{item.title}}</span>
+                            </div>
+                            <div class="request-status">
+                                <span class="status-pill pending">
+                                    <i class="fas fa-clock"></i>
+                                    Pending
+                                </span>
+                                <i class="fas fa-chevron-right arrow-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar -->
+            <div class="col-xl-8 col-lg-8 col-md-12">
+                <div class="calendar-card">
+                    <div class="calendar-header">
+                        <div class="calendar-legend">
+                            <span class="legend-item">
+                                <span class="legend-dot approved"></span>
+                                Approved
+                            </span>
+                        </div>
+                    </div>
+                    <div class="detail-card-body calendar-body">
+                        <full-calendar [options]="calendarOptions"></full-calendar>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

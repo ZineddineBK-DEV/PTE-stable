@@ -1,0 +1,254 @@
+// =============================================
+// VARIABLES
+// =============================================
+$primary-start: #667eea;
+$primary-end: #764ba2;
+$accent-blue: #4facfe;
+$accent-cyan: #00f2fe;
+
+$text-dark: #2c3e50;
+$text-muted: #7f8c8d;
+
+$bg-soft: #f8f9fc;
+$border-light: #e2e8f0;
+
+$shadow-sm: 0 2px 8px rgba(0,0,0,0.07);
+$shadow-md: 0 6px 18px rgba(0,0,0,0.12);
+
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+
+// =============================================
+// HEADER
+// =============================================
+.modern-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.4rem 1.6rem;
+  background: linear-gradient(135deg, $primary-start, $primary-end);
+  color: white;
+  border: none;
+}
+
+.modal-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modal-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: $radius-md;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-title {
+  margin: 0;
+  font-weight: 800;
+}
+
+.modal-subtitle {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.btn-close-modern {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-sm;
+  color: white;
+  cursor: pointer;
+}
+
+// =============================================
+// BODY
+// =============================================
+.modern-modal-body {
+  padding: 1.5rem;
+  background: $bg-soft;
+}
+
+// =============================================
+// FORM
+// =============================================
+.modern-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  label {
+    font-weight: 700;
+    font-size: 0.8rem;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+
+    span {
+      color: red;
+    }
+  }
+
+  input, select {
+    padding: 0.6rem 0.9rem;
+    border-radius: $radius-sm;
+    border: 1.5px solid $border-light;
+    font-size: 0.9rem;
+
+    &:focus {
+      border-color: $primary-start;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+      outline: none;
+    }
+  }
+
+  small {
+    color: #e74c3c;
+    font-size: 0.75rem;
+    margin-top: 3px;
+  }
+}
+
+// =============================================
+// DROPZONE
+// =============================================
+.dropzone-wrapper {
+  background: white;
+  border-radius: $radius-md;
+  padding: 0.8rem;
+  border: 2px dashed rgba(102,126,234,0.2);
+  transition: 0.3s;
+
+  &:hover {
+    border-color: $primary-start;
+    background: rgba(102,126,234,0.04);
+  }
+
+  ngx-dropzone-label {
+    text-align: center;
+    display: block;
+    padding: 1.5rem 0;
+    color: $text-muted;
+
+    i {
+      font-size: 1.8rem;
+      color: $primary-start;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    span {
+      display: block;
+      font-weight: 600;
+    }
+
+    small {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i {
+    color: $primary-start;
+  }
+}
+
+// =============================================
+// FOOTER
+// =============================================
+.modern-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.btn-primary-modern {
+  padding: 0.6rem 1.4rem;
+  border: none;
+  border-radius: $radius-sm;
+  background: linear-gradient(135deg, $primary-start, $primary-end);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-light-modern {
+  padding: 0.6rem 1.2rem;
+  border-radius: $radius-sm;
+  border: 1px solid $border-light;
+  background: white;
+  color: $text-muted;
+}
+
+// =============================================
+// LOADING
+// =============================================
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.7);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: $text-muted;
+}
+
+.spinner-ring {
+  width: 42px;
+  height: 42px;
+  border: 4px solid rgba(102,126,234,0.2);
+  border-top-color: $primary-start;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

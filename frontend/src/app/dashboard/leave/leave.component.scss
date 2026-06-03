@@ -1,0 +1,310 @@
+// ============================================
+// LEAVE REQUEST DESIGN SYSTEM
+// ============================================
+
+$violet: #6C63FF;
+$violet-dark: #4C46C8;
+$teal: #00C9A7;
+$teal-dark: #009E84;
+$rose: #FF6B6B;
+$text: #1A1D2E;
+$muted: #8A91A8;
+$border: #E8EAF0;
+$surface: #FFFFFF;
+$bg: #F4F5FA;
+
+.leave-page {
+  padding: 1.5rem;
+}
+
+/* HEADER */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.page-header-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, $violet, $violet-dark);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .8rem;
+
+  a {
+    color: $violet;
+  }
+}
+
+.bc-active {
+  font-weight: 700;
+}
+
+.page-header-badge {
+  background: rgba(108,99,255,.08);
+  color: $violet;
+  padding: .6rem 1rem;
+  border-radius: 50px;
+  font-weight: 700;
+}
+
+/* MAIN CARD */
+
+.leave-card {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  background: white;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid $border;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+/* SIDEBAR */
+
+.leave-side {
+  padding: 2rem;
+  background: linear-gradient(160deg,$violet,$violet-dark);
+  color: white;
+}
+
+.leave-side-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.leave-side-title {
+  margin-top: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+
+.leave-side-desc {
+  opacity: .8;
+  line-height: 1.7;
+}
+
+.leave-tips {
+  list-style: none;
+  padding: 0;
+  margin-top: 2rem;
+
+  li {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: .75rem;
+    align-items: center;
+  }
+
+  i {
+    color: $teal;
+  }
+}
+
+/* BODY */
+
+.leave-body {
+  padding: 2rem;
+}
+
+.step-badge {
+  background: rgba(108,99,255,.1);
+  color: $violet;
+  padding: .35rem .85rem;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: .75rem;
+}
+
+.panel-heading {
+  margin-top: .8rem;
+  font-weight: 800;
+}
+
+.panel-subheading {
+  color: $muted;
+}
+
+/* FORM */
+
+.field-group {
+  margin-bottom: 1.25rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: .45rem;
+  font-weight: 800;
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+
+.star {
+  color: $rose;
+}
+
+.field-wrap {
+  position: relative;
+}
+
+.field-ico {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $violet;
+}
+
+.field-input {
+  width: 100%;
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: .8rem 1rem .8rem 2.8rem;
+  background: #fafbff;
+
+  &:focus {
+    outline: none;
+    border-color: $violet;
+    box-shadow: 0 0 0 4px rgba(108,99,255,.12);
+  }
+}
+
+.field-select {
+  appearance: none;
+}
+
+.field-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* DATES */
+
+.date-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.date-card {
+  border: 1px solid $border;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.date-card-header {
+  padding: .9rem 1rem;
+  color: white;
+  font-weight: 700;
+}
+
+.start-header {
+  background: linear-gradient(135deg,$teal,$teal-dark);
+}
+
+.end-header {
+  background: linear-gradient(135deg,$violet,$violet-dark);
+}
+
+.date-card .field-input,
+.date-card input {
+  border: none;
+  border-radius: 0;
+}
+
+/* FILE */
+
+.upload-card {
+  border: 2px dashed rgba(108,99,255,.2);
+  border-radius: 18px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.upload-header {
+  font-weight: 800;
+  color: $violet;
+  margin-bottom: 1rem;
+}
+
+/* BUTTONS */
+
+.panel-footer {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-submit {
+  border: none;
+  background: linear-gradient(135deg,$teal,$teal-dark);
+  color: white;
+  padding: .85rem 1.6rem;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.btn-prev {
+  border: 1px solid $border;
+  background: white;
+  padding: .85rem 1.6rem;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+@media(max-width:768px) {
+
+  .leave-card {
+    grid-template-columns: 1fr;
+  }
+
+  .leave-side {
+    display: none;
+  }
+
+  .date-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-footer {
+    flex-direction: column;
+  }
+
+  .btn-submit,
+  .btn-prev {
+    width: 100%;
+  }
+}

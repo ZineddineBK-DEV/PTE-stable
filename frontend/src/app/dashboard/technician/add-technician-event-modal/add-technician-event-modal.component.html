@@ -1,0 +1,234 @@
+<div class="modal-header-modern">
+    <div class="modal-title-section">
+        <div class="icon-circle">
+            <i class="fas fa-calendar-plus"></i>
+        </div>
+        <div>
+            <h4 class="modal-title">Add Technician Event</h4>
+            <p class="modal-subtitle">Schedule a new assignment for the technician</p>
+        </div>
+    </div>
+    <button type="button" class="btn-close-modern" (click)="activeModal.dismiss()">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body-modern">
+
+    <!-- Type Selection -->
+    <div class="type-selector">
+        <div class="type-label">Select reservation type:</div>
+        <div class="type-buttons">
+            <button class="type-btn" [class.active]="forTicket" (click)="altTicket()">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Ticket Reservation</span>
+            </button>
+            <button class="type-btn" [class.active]="forProject" (click)="altProject()">
+                <i class="fas fa-project-diagram"></i>
+                <span>Project Reservation</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Case Number Input (Ticket) -->
+    <div class="ref-section" *ngIf="forTicket">
+        <div class="form-group-modern">
+            <label class="form-label-modern">
+                <i class="fas fa-hashtag"></i>
+                Case Number
+                <span class="required">*</span>
+            </label>
+            <input type="text" class="form-control-modern"
+                   placeholder="Enter case number..."
+                   (input)="handleCaseNumber($event)"
+                   [class.is-valid]="validTicket"
+                   [class.is-invalid]="outputRES && !validTicket">
+            <div class="feedback-box" *ngIf="outputRES.length > 0">
+                <div class="feedback-msg" [class.error]="!validTicket" [class.success]="validTicket">
+                    <i class="fas" [class.fa-exclamation-circle]="!validTicket" [class.fa-check-circle]="validTicket"></i>
+                    {{ outputRES }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Ref Input (Project) -->
+    <div class="ref-section" *ngIf="forProject">
+        <div class="form-group-modern">
+            <label class="form-label-modern">
+                <i class="fas fa-tasks"></i>
+                Task Reference
+                <span class="required">*</span>
+            </label>
+            <input type="text" class="form-control-modern"
+                   placeholder="Enter task reference..."
+                   (input)="handleTaskRef($event)"
+                   [class.is-valid]="validTask"
+                   [class.is-invalid]="outputRES && !validTask">
+            <div class="feedback-box" *ngIf="outputRES.length > 0">
+                <div class="feedback-msg" [class.error]="!validTask" [class.success]="validTask">
+                    <i class="fas" [class.fa-exclamation-circle]="!validTask" [class.fa-check-circle]="validTask"></i>
+                    {{ outputRES }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Form (Ticket) -->
+    <div *ngIf="validTicket || validTask">
+        <form [formGroup]="EventForm" (ngSubmit)="onSubmit(EventForm)">
+
+            <div class="form-divider">
+                <span>Event Details</span>
+            </div>
+
+            <!-- Title -->
+            <div class="form-group-modern">
+                <label class="form-label-modern">
+                    <i class="fas fa-heading"></i>
+                    Title
+                    <span class="required">*</span>
+                </label>
+                <input type="text" class="form-control-modern" placeholder="Title"
+                       formControlName="title" readonly>
+                <small class="error-message"
+                       *ngIf="!EventForm.get('title')?.valid && EventForm.get('title')?.touched">
+                    <i class="fas fa-exclamation-circle"></i> Title is required
+                </small>
+            </div>
+
+            <!-- Dates Row -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">
+                            <i class="fas fa-calendar-plus"></i>
+                            Start Date
+                            <span class="required">*</span>
+                        </label>
+                        <input type="datetime-local" class="form-control-modern" formControlName="start">
+                        <small class="error-message"
+                               *ngIf="!EventForm.get('start')?.valid && EventForm.get('start')?.touched">
+                            <i class="fas fa-exclamation-circle"></i> Start date is required
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">
+                            <i class="fas fa-calendar-check"></i>
+                            End Date
+                            <span class="required">*</span>
+                        </label>
+                        <input type="datetime-local" class="form-control-modern" formControlName="end">
+                        <small class="error-message"
+                               *ngIf="!EventForm.get('end')?.valid && EventForm.get('end')?.touched">
+                            <i class="fas fa-exclamation-circle"></i> End date is required
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job -->
+            <div class="form-group-modern">
+                <label class="form-label-modern">
+                    <i class="fas fa-briefcase"></i>
+                    Job
+                    <span class="required">*</span>
+                </label>
+                <input type="text" class="form-control-modern" placeholder="Job"
+                       formControlName="job" readonly>
+                <small class="error-message"
+                       *ngIf="!EventForm.get('job')?.valid && EventForm.get('job')?.touched">
+                    <i class="fas fa-exclamation-circle"></i> Job is required
+                </small>
+            </div>
+
+            <!-- Map -->
+            <div class="form-group-modern">
+                <label class="form-label-modern">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Destination
+                    <span class="required">*</span>
+                </label>
+                <div class="map-wrapper">
+                    <div leaflet style="height: 300px; width: 100%;"
+                         [leafletOptions]="mapOptions"
+                         (leafletMapReady)="onMapReady($event)">
+                    </div>
+                    <div class="map-hint" *ngIf="distance">
+                        <i class="fas fa-road"></i>
+                        Estimated distance: <strong>{{distance | number:'1.1-1'}} km</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Need a Ride -->
+            <div class="form-divider">
+                <span>Vehicle</span>
+            </div>
+
+            <div class="ride-question">
+                <div class="ride-label">
+                    <i class="fas fa-car"></i>
+                    <strong>Need a ride?</strong>
+                </div>
+                <div class="ride-toggle">
+                    <button type="button" class="ride-btn" [class.active]="needCar" (click)="needCar=true">
+                        <i class="fas fa-check"></i> Yes
+                    </button>
+                    <button type="button" class="ride-btn" [class.inactive]="!needCar" (click)="needCar=false">
+                        <i class="fas fa-times"></i> No
+                    </button>
+                </div>
+            </div>
+
+            <!-- Car Selection -->
+            <div class="car-section" *ngIf="needCar">
+                <div *ngIf="endDateValue">
+                    <div class="car-availability-note">
+                        <i class="fas fa-info-circle"></i>
+                        Cars available from
+                        <strong>{{EventForm.get('start')?.value | date:'short'}}</strong>
+                        to
+                        <strong>{{EventForm.get('end')?.value | date:'short'}}</strong>.
+                        Choose your preferred vehicle:
+                    </div>
+                    <div class="car-grid">
+                        <div class="car-card" *ngFor="let car of vehicles"
+                             (click)="selectCar(car._id)"
+                             [class.selected]="selectedcar === car._id">
+                            <div class="car-icon">
+                                <i class="fas fa-car" *ngIf="car.type === 'civil'"></i>
+                                <i class="fas fa-truck" *ngIf="car.type === 'commercial'"></i>
+                            </div>
+                            <div class="car-info">
+                                <strong>{{car.model}}</strong>
+                                <span>{{car.registration_number}}</span>
+                            </div>
+                            <div class="car-check" *ngIf="selectedcar === car._id">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="no-date-warning" *ngIf="!endDateValue">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Please select the end date first to see available cars
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer-modern">
+                <button type="button" class="btn-modern btn-secondary"
+                        (click)="activeModal.close('Close click')">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="submit" class="btn-modern btn-primary"
+                        [disabled]="!EventForm.valid">
+                    <i class="fas fa-plus-circle"></i> Add Event
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+<div class="modal-header equipment-modal-header">
+    <div class="modal-header-left">
+        <div class="modal-header-icon">
+            <i class="fas fa-laptop"></i>
+        </div>
+        <div>
+            <h5 class="modal-title">Edit Equipment</h5>
+            <p class="modal-subtitle">Update the equipment details below</p>
+        </div>
+    </div>
+    <button type="button" class="modal-close-btn" aria-label="Close" (click)="activeModal.dismiss()">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body equipment-modal-body">
+    <form [formGroup]="equipmentForm" (ngSubmit)="onSubmit(equipmentForm)">
+
+        <!-- Name -->
+        <div class="form-field mb-3">
+            <label class="field-label">Name <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+                <i class="fas fa-tag input-icon"></i>
+                <input type="text" class="modern-input form-control"
+                    placeholder="Equipment name…" formControlName="name" required>
+            </div>
+            <small class="field-error"
+                *ngIf="!equipmentForm.get('name')?.valid && equipmentForm.get('name')?.touched">
+                <i class="fas fa-exclamation-circle"></i> Name is required
+            </small>
+        </div>
+
+        <div class="row">
+            <!-- Brand -->
+            <div class="col-xl-4 col-md-4 col-sm-12">
+                <div class="form-field mb-3">
+                    <label class="field-label">Brand <span class="required-star">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-industry input-icon"></i>
+                        <input type="text" class="modern-input form-control"
+                            placeholder="Brand name…" formControlName="brand" required>
+                    </div>
+                    <small class="field-error"
+                        *ngIf="!equipmentForm.get('brand')?.valid && equipmentForm.get('brand')?.touched">
+                        <i class="fas fa-exclamation-circle"></i> Brand is required
+                    </small>
+                </div>
+            </div>
+
+            <!-- Model -->
+            <div class="col-xl-4 col-md-4 col-sm-12">
+                <div class="form-field mb-3">
+                    <label class="field-label">Model <span class="required-star">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-cube input-icon"></i>
+                        <input type="text" class="modern-input form-control"
+                            placeholder="Model name…" formControlName="model" required>
+                    </div>
+                    <small class="field-error"
+                        *ngIf="!equipmentForm.get('model')?.valid && equipmentForm.get('model')?.touched">
+                        <i class="fas fa-exclamation-circle"></i> Model is required
+                    </small>
+                </div>
+            </div>
+
+            <!-- Serial Number -->
+            <div class="col-xl-4 col-md-4 col-sm-12">
+                <div class="form-field mb-3">
+                    <label class="field-label">Serial Number</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-barcode input-icon"></i>
+                        <input type="text" class="modern-input form-control"
+                            placeholder="Serial number…" formControlName="serial_number">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="form-footer">
+            <button type="button" class="btn-cancel" (click)="activeModal.dismiss()">
+                Cancel
+            </button>
+            <button type="submit" class="btn-save" [disabled]="!equipmentForm.valid">
+                <i class="fas fa-check"></i> Save Changes
+            </button>
+        </div>
+
+    </form>
+</div>

@@ -1,0 +1,324 @@
+<section class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-header-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <div>
+                <h2 class="page-title">Internship Offer Details</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb-modern">
+                        <li><a routerLink="/dashboard/main"><i class="fas fa-home"></i></a></li>
+                        <li><i class="fas fa-chevron-right"></i></li>
+                        <li><span>Internship</span></li>
+                        <li><i class="fas fa-chevron-right"></i></li>
+                        <li class="active">Details</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="details-layout">
+
+        <!-- ══════════════════════════════════════
+         LEFT COLUMN — Offer Info
+    ══════════════════════════════════════ -->
+        <div class="col-left">
+
+            <!-- Offer Card -->
+            <div class="detail-card offer-card" *ngIf="offer">
+                <!-- Card accent bar driven by department -->
+                <div class="offer-accent-bar" [ngClass]="{
+            'bar-dark':    offer.departement === 'Cyber Security',
+            'bar-primary': offer.departement === 'Development',
+            'bar-secondary': offer.departement === 'System',
+            'bar-info':    offer.departement === 'Networking'
+          }">
+                </div>
+
+                <div class="offer-card-body">
+                    <!-- Title + badge -->
+                    <div class="offer-title-row">
+                        <h3 class="offer-title">{{ offer.title }}</h3>
+                        <span class="dept-badge" [ngClass]="{
+                'badge-dark':    offer.departement === 'Cyber Security',
+                'badge-primary': offer.departement === 'Development',
+                'badge-secondary': offer.departement === 'System',
+                'badge-info':    offer.departement === 'Networking'
+              }">
+                            {{ offer.departement }}
+                        </span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="offer-section">
+                        <div class="offer-section-label">
+                            <i class="fas fa-align-left"></i> Description
+                        </div>
+                        <p class="offer-description">{{ offer.description }}</p>
+                    </div>
+
+                    <!-- Technologies -->
+                    <div class="offer-section">
+                        <div class="offer-section-label">
+                            <i class="fas fa-code"></i> Technologies Required
+                        </div>
+                        <div class="tech-tags">
+                            <span class="tech-tag" *ngFor="let tech of offer.technologies?.split(',')">
+                                {{ tech.trim() }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Meta row -->
+                    <div class="offer-meta-row">
+                        <div class="meta-item">
+                            <div class="meta-icon bg-blue">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="meta-info">
+                                <span class="meta-label">Duration</span>
+                                <span class="meta-value">
+                                    {{ offer.period }} {{ (offer.period ?? 0) >= 2 ? 'months' : 'month' }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="meta-item">
+                            <div class="meta-icon bg-purple">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="meta-info">
+                                <span class="meta-label">Interns Needed</span>
+                                <span class="meta-value">
+                                    {{ offer.internsNumber }} {{ (offer.internsNumber ?? 0) >= 2 ? 'interns' : 'intern'
+                                    }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="meta-item">
+                            <div class="meta-icon bg-amber">
+                                <i class="fas fa-calendar-times"></i>
+                            </div>
+                            <div class="meta-info">
+                                <span class="meta-label">Expiration Date</span>
+                                <span class="meta-value">{{ offer.expirationDate | date:'mediumDate' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Form Card -->
+            <div class="detail-card question-card" *ngIf="formVisibility">
+                <div class="detail-card-header">
+                    <div class="header-icon bg-teal">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h5 class="header-title">Add Question to Quiz</h5>
+                </div>
+
+                <div class="detail-card-body">
+                    <form [formGroup]="questionForm" (ngSubmit)="onSubmitQuestion(questionForm)">
+
+                        <!-- Question -->
+                        <div class="form-field mb-4">
+                            <label class="field-label">
+                                Question <span class="required-star">*</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-question input-icon"></i>
+                                <input type="text" class="form-control modern-input"
+                                    placeholder="Write the quiz question here..." formControlName="question" required />
+                            </div>
+                            <small class="field-error"
+                                *ngIf="!questionForm.get('question')?.valid && questionForm.get('question')?.touched">
+                                Question is required
+                            </small>
+                        </div>
+
+                        <!-- Responses -->
+                        <div class="responses-grid">
+
+                            <div class="response-item" *ngFor="let n of [1,2,3]">
+                                <div class="response-header">
+                                    <div class="response-number">{{ n }}</div>
+                                    <label class="field-label mb-0">Response {{ n }} <span
+                                            class="required-star">*</span></label>
+                                </div>
+                                <div class="input-wrapper mb-2">
+                                    <i class="fas fa-pen input-icon"></i>
+                                    <input type="text" class="form-control modern-input"
+                                        placeholder="Write the response here..." [formControlName]="'response' + n"
+                                        required />
+                                </div>
+                                <label class="correct-toggle">
+                                    <input type="checkbox" [formControlName]="'isCorrect' + n"
+                                        class="toggle-checkbox" />
+                                    <span class="toggle-track">
+                                        <span class="toggle-thumb"></span>
+                                    </span>
+                                    <span class="toggle-label">Mark as correct answer</span>
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <div class="form-footer">
+                            <button type="submit" class="btn-save-question" [disabled]="questionForm.invalid">
+                                <i class="fas fa-save"></i> Save Question
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ══════════════════════════════════════
+         RIGHT COLUMN — Mentor, Quizzes, Results
+    ══════════════════════════════════════ -->
+        <div class="col-right">
+
+            <!-- Mentor Card -->
+            <div class="detail-card mentor-card" *ngIf="encadrant">
+                <div class="detail-card-header">
+                    <div class="header-icon bg-purple">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h5 class="header-title">Professional Mentor</h5>
+                </div>
+                <div class="detail-card-body">
+                    <div class="mentor-row">
+                        <div class="mentor-avatar-wrap">
+                            <img src="{{ picsUrl + encadrant.image }}" class="mentor-avatar"
+                                alt="{{ encadrant.firstName }}" />
+                            <span class="mentor-online-dot"></span>
+                        </div>
+                        <div class="mentor-info">
+                            <div class="mentor-name">{{ encadrant.firstName + ' ' + encadrant.lastName }}</div>
+                            <div class="mentor-meta">
+                                <span class="mentor-role-tag">{{ encadrant.roles }}</span>
+                                <span class="mentor-dept">
+                                    <i class="fas fa-building"></i> {{ encadrant.departement }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quizzes Card -->
+            <div class="detail-card quiz-card" *ngIf="offer">
+                <div class="detail-card-header">
+                    <div class="header-icon bg-blue">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h5 class="header-title">Quizzes</h5>
+                    <button *ngIf="offer.encadrant === userId && !offer.archived" class="btn-add-quiz"
+                        (click)="assignQuizModal(offer._id!)" ngbPopover="Create quiz" triggers="mouseenter:mouseleave"
+                        placement="bottom">
+                        <i class="fas fa-plus"></i> Add Quiz
+                    </button>
+                </div>
+
+                <div class="detail-card-body">
+                    <!-- Quiz list -->
+                    <div class="quiz-item" *ngFor="let quiz of quizzes" (mouseenter)="hoverQuiz = quiz._id"
+                        (mouseleave)="hoverQuiz = null">
+                        <div class="quiz-item-left" (click)="getResults(quiz._id)">
+                            <div class="quiz-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <span class="quiz-title-text">{{ quiz.title }}</span>
+                        </div>
+
+                        <div class="quiz-item-actions"
+                            *ngIf="offer.encadrant === userId && hoverQuiz === quiz._id && !offer.archived">
+                            <button class="quiz-action-btn btn-fill" (click)="fillQuiz(quiz._id)"
+                                ngbPopover="Add Question" triggers="mouseenter:mouseleave" placement="top">
+                                <i class="fas fa-book"></i>
+                            </button>
+                            <button class="quiz-action-btn btn-edit" (click)="editQuiz(quiz)" ngbPopover="Edit quiz"
+                                triggers="mouseenter:mouseleave" placement="top">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button class="quiz-action-btn btn-delete" (click)="deleteQuiz(quiz._id)"
+                                ngbPopover="Delete quiz" triggers="mouseenter:mouseleave" placement="top">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Empty state -->
+                    <div class="quiz-empty" *ngIf="!quizzes || quizzes.length === 0">
+                        <i class="fas fa-clipboard"></i>
+                        <span>No quizzes assigned yet</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Card -->
+            <div class="detail-card results-card">
+                <div class="detail-card-header">
+                    <div class="header-icon bg-green">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h5 class="header-title">Quiz Results</h5>
+                </div>
+
+                <div class="detail-card-body">
+
+                    <!-- Prompt state -->
+                    <div class="results-placeholder" *ngIf="!showQuizResult && results.length < 1">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <p>Pick a quiz above to see the results</p>
+                    </div>
+
+                    <!-- No results yet -->
+                    <div class="results-placeholder" *ngIf="showQuizResult && results.length < 1">
+                        <i class="fas fa-inbox"></i>
+                        <p>No results available yet</p>
+                    </div>
+
+                    <!-- Results list -->
+                    <ng-container *ngIf="showQuizResult && results.length > 0">
+                        <div class="result-item" *ngFor="let result of results">
+                            <img src="{{ picsUrl + result.userId.image }}" class="result-avatar"
+                                alt="{{ result.userId.firstName }}" />
+                            <div class="result-info">
+                                <div class="result-name">{{ result.userId.firstName + ' ' + result.userId.lastName }}
+                                </div>
+                                <div class="result-meta">{{ result.userId.role }} · {{ result.userId.departement }}
+                                </div>
+                                <div class="result-score-bar">
+                                    <div class="score-track">
+                                        <div class="score-fill"
+                                            [style.width.%]="(result.score / +questionsLength) * 100"></div>
+                                    </div>
+                                    <span class="score-label">{{ result.score }}/{{ questionsLength }}</span>
+                                </div>
+                            </div>
+                            <button class="btn-select-intern" (click)="selectIntern(result)"
+                                ngbPopover="Select intern to interview" triggers="mouseenter:mouseleave"
+                                placement="left">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </ng-container>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /col-right -->
+
+    </div>
+    <!-- /details-layout -->
+
+</section>

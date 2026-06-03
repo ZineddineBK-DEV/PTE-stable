@@ -1,0 +1,228 @@
+<div class="add-intern-modal">
+
+  <!-- Modal Header -->
+  <div class="modal-header-custom">
+    <div class="modal-header-left">
+      <div class="modal-header-icon">
+        <i class="fas fa-user-graduate"></i>
+      </div>
+      <div>
+        <h5 class="modal-title-text">
+          {{ payload.action === 'add' ? 'Add Pre-selected Intern' : 'Edit Intern' }}
+        </h5>
+        <span class="modal-subtitle">
+          {{ payload.action === 'add' ? 'Fill in the details to register a new intern' : 'Update intern account information' }}
+        </span>
+      </div>
+    </div>
+    <button class="modal-close-btn" (click)="activeModal.dismiss()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body-custom">
+    <form [formGroup]="internForm" (ngSubmit)="onSubmit()">
+
+      <!-- ── Section: Personal Info ── -->
+      <div class="form-section">
+        <div class="form-section-title">
+          <div class="section-icon bg-blue">
+            <i class="fas fa-user"></i>
+          </div>
+          <span>Personal Information</span>
+        </div>
+
+        <div class="row gy-3">
+
+          <div class="col-md-6">
+            <div class="form-field">
+              <label class="field-label">First Name <span class="required-star">*</span></label>
+              <div class="input-wrapper">
+                <i class="fas fa-user input-icon"></i>
+                <input type="text" class="form-control modern-input" formControlName="firstName" placeholder="Enter first name" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-field">
+              <label class="field-label">Last Name <span class="required-star">*</span></label>
+              <div class="input-wrapper">
+                <i class="fas fa-user input-icon"></i>
+                <input type="text" class="form-control modern-input" formControlName="lastName" placeholder="Enter last name" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="payload.action === 'add'">
+            <div class="form-field">
+              <label class="field-label">Email <span class="required-star">*</span></label>
+              <div class="input-wrapper">
+                <i class="fas fa-envelope input-icon"></i>
+                <input type="email" class="form-control modern-input" formControlName="email" placeholder="Enter email address" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-field">
+              <label class="field-label">Phone <span class="required-star">*</span></label>
+              <div class="input-wrapper">
+                <i class="fas fa-phone input-icon"></i>
+                <input type="text" class="form-control modern-input" formControlName="phone" placeholder="Enter phone number" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Section: Academic Info ── -->
+      <div class="form-section">
+        <div class="form-section-title">
+          <div class="section-icon bg-purple">
+            <i class="fas fa-university"></i>
+          </div>
+          <span>Academic Information</span>
+        </div>
+
+        <div class="row gy-3">
+
+          <div class="col-md-6">
+            <div class="form-field">
+              <label class="field-label">Department</label>
+              <div class="input-wrapper">
+                <i class="fas fa-building input-icon"></i>
+                <select class="form-control modern-input modern-select" formControlName="departement">
+                  <option value="">Select department</option>
+                  <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-field">
+              <label class="field-label">University</label>
+              <div class="input-wrapper">
+                <i class="fas fa-graduation-cap input-icon"></i>
+                <select class="form-control modern-input modern-select" formControlName="university" (change)="onUniversityChange($event)">
+                  <option value="">Select university</option>
+                  <option *ngFor="let u of universities" [value]="u">{{ u }}</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12" *ngIf="isCustomUniversity">
+            <div class="form-field">
+              <label class="field-label">Specify University</label>
+              <div class="input-wrapper">
+                <i class="fas fa-pen input-icon"></i>
+                <input #customUniversityInput type="text" class="form-control modern-input" formControlName="customUniversity" placeholder="Enter university name" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Diploma — full width on add -->
+          <div class="col-md-12" *ngIf="payload.action === 'add'">
+            <div class="form-field">
+              <label class="field-label">Diploma</label>
+              <div class="input-wrapper">
+                <i class="fas fa-scroll input-icon"></i>
+                <select class="form-control modern-input modern-select" formControlName="diploma">
+                  <option value="">Select diploma</option>
+                  <option *ngFor="let d of diplomas" [value]="d">{{ d }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Diploma — half width on edit -->
+          <div class="col-md-6" *ngIf="payload.action !== 'add'">
+            <div class="form-field">
+              <label class="field-label">Diploma</label>
+              <div class="input-wrapper">
+                <i class="fas fa-scroll input-icon"></i>
+                <select class="form-control modern-input modern-select" formControlName="diploma">
+                  <option value="">Select diploma</option>
+                  <option *ngFor="let d of diplomas" [value]="d">{{ d }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Section: Resume Upload (add only) ── -->
+      <div class="form-section" *ngIf="payload.action === 'add'">
+        <div class="form-section-title">
+          <div class="section-icon bg-teal">
+            <i class="far fa-file-pdf"></i>
+          </div>
+          <span>Resume / CV <span class="required-star">*</span></span>
+        </div>
+
+        <!-- Dropzone (empty state) -->
+        <ngx-dropzone
+          *ngIf="files.length === 0"
+          class="custom-dropzone"
+          [multiple]="false"
+          accept=".pdf"
+          (change)="onSelect($event)"
+        >
+          <ngx-dropzone-label>
+            <div class="dropzone-inner">
+              <i class="fas fa-file-pdf dropzone-icon"></i>
+              <span class="dropzone-title">Drag & drop a PDF here, or click to select</span>
+              <small class="dropzone-hint">Only PDF files are accepted</small>
+            </div>
+          </ngx-dropzone-label>
+        </ngx-dropzone>
+
+        <!-- File Preview Card -->
+        <div *ngFor="let f of files" class="pdf-preview-card">
+          <div class="pdf-preview-left">
+            <div class="pdf-icon-wrap">
+              <i class="fas fa-file-pdf"></i>
+            </div>
+            <div class="pdf-info">
+              <span class="pdf-name">{{ f.name }}</span>
+              <span class="pdf-meta">PDF Document · Ready to upload</span>
+            </div>
+          </div>
+          <button type="button" class="btn-remove-file" (click)="onRemove(f)">
+            <i class="fas fa-times"></i> Remove
+          </button>
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer-custom">
+    <button type="button" class="btn-cancel" (click)="activeModal.dismiss()">
+      <i class="fas fa-times"></i> Cancel
+    </button>
+    <button
+      type="button"
+      class="btn-save"
+      [disabled]="internForm.invalid || loading"
+      (click)="onSubmit()"
+    >
+      <ng-container *ngIf="!loading">
+        <i class="fas fa-save"></i>
+        {{ payload.action === 'add' ? 'Create Intern' : 'Save Changes' }}
+      </ng-container>
+      <ng-container *ngIf="loading">
+        <span class="spinner-ring-sm"></span> Saving...
+      </ng-container>
+    </button>
+  </div>
+
+</div>

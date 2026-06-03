@@ -1,0 +1,182 @@
+<div class="edit-offer-modal">
+
+    <!-- Modal Header -->
+    <div class="modal-header-custom">
+        <div class="modal-header-left">
+            <div class="modal-header-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <div>
+                <h5 class="modal-title-text">Edit Internship Offer</h5>
+                <span class="modal-subtitle">Update the details of this internship offer</span>
+            </div>
+        </div>
+        <button class="modal-close-btn" (click)="activeModal.dismiss()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body-custom">
+        <form [formGroup]="offerForm" (ngSubmit)="onSubmit(offerForm)">
+
+            <!-- ── Section: Offer Information ── -->
+            <div class="form-section">
+                <div class="form-section-title">
+                    <div class="section-icon bg-blue">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <span>Offer Information</span>
+                </div>
+
+                <div class="row gy-3">
+
+                    <!-- Title -->
+                    <div class="col-12">
+                        <div class="form-field">
+                            <label class="field-label">Title <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-heading input-icon"></i>
+                                <input type="text" class="form-control modern-input" placeholder="Enter offer title"
+                                    formControlName="title" required />
+                            </div>
+                            <small class="field-error"
+                                *ngIf="!offerForm.get('title')?.valid && offerForm.get('title')?.touched">
+                                Title is required
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="col-12">
+                        <div class="form-field">
+                            <label class="field-label">Description <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-align-left input-icon textarea-icon"></i>
+                                <textarea class="form-control modern-input modern-textarea"
+                                    placeholder="Write the offer description here..." formControlName="description"
+                                    rows="4"></textarea>
+                            </div>
+                            <small class="field-error"
+                                *ngIf="!offerForm.get('description')?.valid && offerForm.get('description')?.touched">
+                                Description is required
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Technologies -->
+                    <div class="col-12">
+                        <div class="form-field">
+                            <label class="field-label">Technologies <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-code input-icon"></i>
+                                <input type="text" class="form-control modern-input"
+                                    placeholder="e.g. Python, Angular, Java" formControlName="technologies" />
+                            </div>
+                            <small class="field-error"
+                                *ngIf="!offerForm.get('technologies')?.valid && offerForm.get('technologies')?.touched">
+                                Technologies field is required
+                            </small>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ── Section: Offer Details ── -->
+            <div class="form-section">
+                <div class="form-section-title">
+                    <div class="section-icon bg-purple">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <span>Offer Details</span>
+                </div>
+
+                <div class="row gy-3">
+
+                    <!-- Number of Interns -->
+                    <div class="col-md-6">
+                        <div class="form-field">
+                            <label class="field-label">Number of Interns <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-users input-icon"></i>
+                                <input type="number" class="form-control modern-input" formControlName="internsNumber"
+                                    min="1" max="10" placeholder="1 – 10" />
+                            </div>
+                            <small class="field-error"
+                                *ngIf="!offerForm.get('internsNumber')?.valid && offerForm.get('internsNumber')?.touched">
+                                Number of interns is required
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Internship Duration -->
+                    <div class="col-md-6">
+                        <div class="form-field">
+                            <label class="field-label">Internship Duration <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-clock input-icon"></i>
+                                <input type="number" class="form-control modern-input" formControlName="period" min="1"
+                                    max="6" placeholder="Months (1 – 6)" />
+                            </div>
+                            <small class="field-error"
+                                *ngIf="!offerForm.get('period')?.valid && offerForm.get('period')?.touched">
+                                Internship duration is required
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Expiration Date -->
+                    <div class="col-md-6">
+                        <div class="form-field">
+                            <label class="field-label">Expiration Date <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-calendar-times input-icon"></i>
+                                <input type="date" class="form-control modern-input" formControlName="expirationDate" />
+                            </div>
+                            <small class="field-error"
+                                *ngIf="!offerForm.get('expirationDate')?.valid && offerForm.get('expirationDate')?.touched">
+                                Expiration date is invalid
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Department -->
+                    <div class="col-md-6">
+                        <div class="form-field">
+                            <label class="field-label">Department <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-building input-icon"></i>
+                                <select class="form-control modern-input modern-select" formControlName="departement">
+                                    <option disabled selected value="">Choose department...</option>
+                                    <option value="Administration">Administration</option>
+                                    <option value="System">System</option>
+                                    <option value="Networking">Networking</option>
+                                    <option value="Development">Development</option>
+                                    <option value="Cyber Security">Cyber Security</option>
+                                </select>
+                            </div>
+                            <small class="field-error"
+                                *ngIf="!offerForm.get('departement')?.valid && offerForm.get('departement')?.touched">
+                                Department is required
+                            </small>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer-custom">
+        <button type="button" class="btn-cancel" (click)="activeModal.close('Close click')">
+            <i class="fas fa-times"></i> Close
+        </button>
+        <button type="button" class="btn-save" [disabled]="offerForm.invalid" (click)="onSubmit(offerForm)">
+            <i class="fas fa-save"></i> Save Changes
+        </button>
+    </div>
+
+</div>

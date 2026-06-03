@@ -1,0 +1,392 @@
+// Interns Meeting Requests - Modern Styles
+$primary-start: #667eea;
+$primary-end: #764ba2;
+$accent-blue: #4facfe;
+$accent-cyan: #00f2fe;
+$accent-green: #43e97b;
+$accent-teal: #38f9d7;
+$accent-pink: #f093fb;
+$accent-red: #f5576c;
+$accent-amber: #f7971e;
+$accent-gold: #ffd200;
+$text-dark: #2c3e50;
+$text-muted: #7f8c8d;
+$border-light: #f0f2f5;
+$bg-soft: #f8f9fc;
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.07);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+$shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.15);
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+
+// Page Header
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    border: 1px solid #f0f0f0;
+
+    .page-header-left {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+
+        .header-icon {
+            width: 62px;
+            height: 62px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.35);
+        }
+
+        h4 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0 0 0.2rem;
+        }
+
+        p {
+            color: #95a5a6;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+    }
+
+    .requests-summary {
+        .summary-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 167, 38, 0.1);
+            border: 1.5px solid rgba(255, 167, 38, 0.3);
+            color: #FFA726;
+            padding: 0.5rem 1.25rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.925rem;
+
+            i { font-size: 0.875rem; }
+        }
+    }
+}
+
+// Sidebar Card
+.sidebar-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+    height: 100%;
+
+    .sidebar-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+
+        i { font-size: 1.15rem; }
+
+        .count-badge {
+            margin-left: auto;
+            background: rgba(255, 255, 255, 0.25);
+            padding: 0.2rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+    }
+
+    // Empty State
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2rem;
+        text-align: center;
+
+        .empty-img {
+            width: 120px;
+            opacity: 0.7;
+            margin-bottom: 1.25rem;
+        }
+
+        h5 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: #95a5a6;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+    }
+
+    // Requests List
+    .requests-list {
+        padding: 0.5rem 0;
+
+        .request-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid #f5f5f5;
+
+            &:last-child { border-bottom: none; }
+
+            &:hover {
+                background: rgba(102, 126, 234, 0.04);
+
+                .arrow-icon {
+                    transform: translateX(4px);
+                    color: #667eea;
+                }
+            }
+
+            .request-avatar {
+                position: relative;
+                flex-shrink: 0;
+
+                img {
+                    width: 46px;
+                    height: 46px;
+                    min-width: 46px;
+                    min-height: 46px;
+                    border-radius: 12px;
+                    object-fit: cover;
+                    object-position: center;
+                    border: 2px solid #e9ecef;
+                    display: block;
+                }
+
+                .avatar-pulse {
+                    position: absolute;
+                    top: -2px;
+                    right: -2px;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+                    background: #FFA726;
+                    border: 2px solid white;
+                    animation: pulse 2s infinite;
+                }
+            }
+
+            .request-info {
+                flex: 1;
+                min-width: 0;
+
+                .request-name {
+                    display: block;
+                    font-weight: 700;
+                    font-size: 0.9rem;
+                    color: #2c3e50;
+                    margin-bottom: 0.15rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .request-dept {
+                    display: block;
+                    font-size: 0.775rem;
+                    color: #667eea;
+                    font-weight: 500;
+                    margin-bottom: 0.15rem;
+                }
+
+                .request-title {
+                    display: block;
+                    font-size: 0.775rem;
+                    color: #95a5a6;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
+            .request-status {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 0.5rem;
+                flex-shrink: 0;
+
+                .status-pill {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.35rem;
+                    padding: 0.275rem 0.75rem;
+                    border-radius: 20px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+
+                    i { font-size: 0.65rem; }
+
+                    &.pending {
+                        background: rgba(255, 167, 38, 0.1);
+                        color: #FFA726;
+                        border: 1px solid rgba(255, 167, 38, 0.25);
+                    }
+
+                    &.approved {
+                        background: rgba(102, 187, 106, 0.1);
+                        color: #66BB6A;
+                        border: 1px solid rgba(102, 187, 106, 0.25);
+                    }
+                }
+
+                .arrow-icon {
+                    font-size: 0.75rem;
+                    color: #c5ccd8;
+                    transition: all 0.2s;
+                }
+            }
+        }
+    }
+}
+
+// Calendar Card
+.calendar-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+
+    .calendar-header {
+        padding: 1.3rem 1.5rem;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: flex-end;
+        background: linear-gradient(135deg, $primary-start 0%, $primary-end 100%);
+        .calendar-legend {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.875rem;
+                color: #cfd8d8;
+                font-weight: 500;
+
+                .legend-dot {
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+
+                    &.approved { background: #66BB6A; }
+                    &.pending  { background: #EF5350; }
+                }
+            }
+        }
+    }
+
+    .calendar-body {
+        padding: 1.5rem;
+    }
+}
+.detail-card-body {
+    padding: 1.35rem 1.5rem;
+
+    &.calendar-body { padding: 1rem; }
+}
+// Pulse animation for pending badge
+@keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255, 167, 38, 0.5); }
+    70%  { box-shadow: 0 0 0 6px rgba(255, 167, 38, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 167, 38, 0); }
+}
+
+// Responsive
+@media (max-width: 992px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .sidebar-card { margin-bottom: 1.5rem; }
+}
+
+@media (max-width: 576px) {
+    .page-header .page-header-left {
+        .header-icon { width: 50px; height: 50px; font-size: 1.4rem; }
+        h4 { font-size: 1.2rem; }
+    }
+}
+
+// =============================================
+// FULLCALENDAR OVERRIDES
+// =============================================
+:host ::ng-deep {
+    .fc {
+        font-family: 'Nunito', 'Segoe UI', sans-serif;
+        font-size: 0.875rem;
+
+        .fc-toolbar-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: $text-dark;
+        }
+
+        .fc-button-primary {
+            background: linear-gradient(135deg, $primary-start, $primary-end) !important;
+            border: none !important;
+            border-radius: $radius-sm !important;
+            font-weight: 700 !important;
+            font-size: 0.8rem !important;
+            box-shadow: none !important;
+            transition: opacity 0.2s !important;
+
+            &:hover { opacity: 0.88 !important; }
+            &.fc-button-active { background: $primary-end !important; }
+        }
+
+        .fc-daygrid-day-number,
+        .fc-col-header-cell-cushion {
+            color: $text-dark;
+            font-weight: 700;
+        }
+
+        .fc-event {
+            border-radius: $radius-sm !important;
+            border: none !important;
+            padding: 0.15rem 0.4rem !important;
+            font-size: 0.78rem !important;
+            font-weight: 700 !important;
+        }
+
+        .fc-event-primary {
+            background: linear-gradient(135deg, $primary-start, $primary-end) !important;
+        }
+
+        .fc-daygrid-day.fc-day-today {
+            background: rgba(102, 126, 234, 0.05) !important;
+            color: #f0f2f5;
+        }
+    }
+}

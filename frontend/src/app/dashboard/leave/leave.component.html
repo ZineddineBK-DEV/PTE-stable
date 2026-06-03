@@ -1,0 +1,347 @@
+<section class="main-content"style="margin-top: 20px;">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-header-icon">
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+
+      <div>
+        <h1 class="page-title">Leave Request</h1>
+
+        <nav class="breadcrumb-nav">
+          <a routerLink="/dashboard/main">
+            <i class="fas fa-home"></i>
+          </a>
+
+          <span class="bc-sep">
+            <i class="fas fa-chevron-right"></i>
+          </span>
+
+          <span>Leave</span>
+
+          <span class="bc-sep">
+            <i class="fas fa-chevron-right"></i>
+          </span>
+
+          <span class="bc-active">
+            Make a Leave Request
+          </span>
+        </nav>
+      </div>
+    </div>
+
+    <div class="page-header-badge">
+      <i class="fas fa-paper-plane"></i>
+      New Request
+    </div>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="leave-card">
+
+    <!-- SIDEBAR -->
+    <div class="leave-side">
+
+      <div class="leave-side-icon">
+        <i class="fas fa-umbrella-beach"></i>
+      </div>
+
+      <h3 class="leave-side-title">
+        Request<br>
+        Your Leave
+      </h3>
+
+      <p class="leave-side-desc">
+        Submit your leave request and select the supervisor responsible for approval.
+      </p>
+
+      <ul class="leave-tips">
+        <li>
+          <i class="fas fa-check-circle"></i>
+          Choose the correct leave type
+        </li>
+
+        <li>
+          <i class="fas fa-check-circle"></i>
+          Verify your requested dates
+        </li>
+
+        <li>
+          <i class="fas fa-check-circle"></i>
+          Select your supervisor
+        </li>
+
+        <li>
+          <i class="fas fa-check-circle"></i>
+          Upload medical proof if needed
+        </li>
+      </ul>
+
+    </div>
+
+    <!-- FORM -->
+    <div class="leave-body">
+
+      <div class="panel-header-row">
+        <span class="step-badge">
+          Leave Management
+        </span>
+
+        <h4 class="panel-heading">
+          Leave Information
+        </h4>
+
+        <p class="panel-subheading">
+          Complete the form below to submit your leave request.
+        </p>
+      </div>
+
+      <form [formGroup]="leaveForm"
+            (ngSubmit)="onSubmit()">
+
+        <!-- TYPE -->
+
+        <div class="field-group">
+          <label class="label">
+            Leave Type
+            <span class="star">*</span>
+          </label>
+
+          <div class="field-wrap">
+            <i class="fas fa-list field-ico"></i>
+
+            <select
+              class="field-input field-select"
+              formControlName="type">
+
+              <option value="">
+                Select type
+              </option>
+
+              <option value="Personal Leave">
+                Personal Leave
+              </option>
+
+              <option value="1/2 day">
+                1/2 Day
+              </option>
+
+              <option value="Authorization">
+                Authorization
+              </option>
+
+              <option value="Annual Leave">
+                Annual Leave
+              </option>
+
+              <option value="Maternity Leave">
+                Maternity Leave
+              </option>
+
+              <option value="Unpaid Leave">
+                Unpaid Leave
+              </option>
+
+            </select>
+          </div>
+        </div>
+
+        <ng-container *ngIf="leaveForm.value.type">
+
+          <!-- DATES -->
+
+          <div
+            class="date-grid"
+            *ngIf="leaveForm.value.type !== 'Authorization' && leaveForm.value.type !== '1/2 day'">
+
+            <div class="date-card">
+
+              <div class="date-card-header start-header">
+                <i class="fas fa-calendar-check"></i>
+                Start Date
+              </div>
+
+              <input
+                type="date"
+                class="field-input"
+                formControlName="startDate">
+
+            </div>
+
+            <div class="date-card">
+
+              <div class="date-card-header end-header">
+                <i class="fas fa-calendar-times"></i>
+                End Date
+              </div>
+
+              <input
+                type="date"
+                class="field-input"
+                formControlName="endDate">
+
+            </div>
+
+          </div>
+
+          <div
+            class="date-grid"
+            *ngIf="leaveForm.value.type == 'Authorization' || leaveForm.value.type == '1/2 day'">
+
+            <div class="date-card">
+
+              <div class="date-card-header start-header">
+                <i class="fas fa-clock"></i>
+                Start Date
+              </div>
+
+              <input
+                type="datetime-local"
+                class="field-input"
+                formControlName="startDate">
+
+            </div>
+
+            <div class="date-card">
+
+              <div class="date-card-header end-header">
+                <i class="fas fa-clock"></i>
+                End Date
+              </div>
+
+              <input
+                type="datetime-local"
+                class="field-input"
+                formControlName="endDate">
+
+            </div>
+
+          </div>
+
+          <!-- SUPERVISOR -->
+
+          <div class="field-group">
+
+            <label class="label">
+              Supervisor
+              <span class="star">*</span>
+            </label>
+
+            <div class="field-wrap">
+              <i class="fas fa-user-tie field-ico"></i>
+
+              <select
+                class="field-input field-select"
+                formControlName="supervisor">
+
+                <option disabled selected>
+                  Select your supervisor
+                </option>
+
+                <option
+                  *ngFor="let supervisor of supervisors"
+                  [value]="supervisor._id">
+
+                  {{ supervisor.firstName + " " + supervisor.lastName }}
+
+                </option>
+
+              </select>
+            </div>
+
+          </div>
+
+          <!-- NOTE -->
+
+          <div class="field-group">
+
+            <label class="label">
+              Leave Note
+              <span class="star">*</span>
+            </label>
+
+            <div class="field-wrap textarea-wrap">
+
+              <i class="fas fa-align-left field-ico textarea-ico"></i>
+
+              <textarea
+                rows="6"
+                class="field-input field-textarea"
+                placeholder="Describe your leave request..."
+                formControlName="note">
+              </textarea>
+
+            </div>
+
+          </div>
+
+          <!-- MATERNITY -->
+
+          <div
+            class="upload-card"
+            *ngIf="leaveForm.value.type=='Maternity Leave'">
+
+            <div class="upload-header">
+              <i class="fas fa-file-medical"></i>
+              Medical Certificate
+            </div>
+
+            <ngx-dropzone
+              [multiple]="false"
+              (change)="onSelect($event)">
+
+              <ngx-dropzone-label>
+                Click or drag your medical certificate here
+              </ngx-dropzone-label>
+
+              <ngx-dropzone-preview
+                *ngFor="let f of files"
+                [removable]="true"
+                (removed)="onRemove(f)">
+
+                <ngx-dropzone-label>
+                  {{ f.name }}
+                </ngx-dropzone-label>
+
+              </ngx-dropzone-preview>
+
+            </ngx-dropzone>
+
+          </div>
+
+          <!-- ACTIONS -->
+
+          <div class="panel-footer">
+
+            <button
+              type="submit"
+              class="btn-submit"
+              [disabled]="!leaveForm.valid">
+
+              <i class="fas fa-paper-plane"></i>
+              Submit Request
+
+            </button>
+
+            <!-- <button
+              type="button"
+              class="btn-prev">
+
+              <i class="fas fa-times"></i>
+              Cancel
+
+            </button> -->
+
+          </div>
+
+        </ng-container>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>

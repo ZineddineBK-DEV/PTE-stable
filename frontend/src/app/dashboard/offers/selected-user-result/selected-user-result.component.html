@@ -1,0 +1,143 @@
+<div class="selected-user-result-modal">
+
+  <!-- Modal Header -->
+  <div class="modal-header-custom">
+    <div class="modal-header-left">
+      <div class="modal-header-icon">
+        <i class="fas fa-chart-bar"></i>
+      </div>
+      <div>
+        <h5 class="modal-title-text">Quiz Result</h5>
+        <span class="modal-subtitle">Detailed answers and score breakdown</span>
+      </div>
+    </div>
+    <button class="modal-close-btn" (click)="activeModal.dismiss()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body-custom">
+
+    <!-- ── Intern Profile & Score ── -->
+    <div class="profile-score-row">
+
+      <!-- Intern Info -->
+      <div class="intern-profile">
+        <div class="intern-avatar-wrap">
+          <img class="intern-avatar" src="{{ picsUrl + payload.userId.image }}" alt="user image" />
+          <span class="intern-online-dot"></span>
+        </div>
+        <div class="intern-info">
+          <h5 class="intern-name">{{ payload.userId.firstName + ' ' + payload.userId.lastName }}</h5>
+          <div class="intern-meta">
+            <span class="intern-role-tag">{{ payload.userId.role }}</span>
+            <span class="intern-dept">
+              <i class="fas fa-building"></i> {{ payload.userId.departement }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Score Card (flip on hover) -->
+      <div class="score-flip-card">
+        <div class="score-flip-inner">
+
+          <!-- Front -->
+          <div class="score-flip-front">
+            <div class="score-icon">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <div class="score-numbers">
+              <span class="score-value">{{ payload.score }}</span>
+              <span class="score-divider">/</span>
+              <span class="score-total">{{ questionsLength }}</span>
+            </div>
+            <span class="score-label">Score</span>
+          </div>
+
+          <!-- Back -->
+          <div class="score-flip-back">
+            <button class="btn-select-intern" (click)="selectIntern()">
+              <i class="fas fa-user-check"></i>
+              <span>Select Intern</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Quiz Info ── -->
+    <div class="quiz-info-card">
+      <div class="quiz-info-header">
+        <div class="quiz-info-icon">
+          <i class="fas fa-clipboard-list"></i>
+        </div>
+        <div>
+          <h5 class="quiz-title">{{ payload.quizId.title }}</h5>
+          <p class="quiz-description">{{ payload.quizId.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Questions & Answers ── -->
+    <div class="questions-section">
+      <div class="section-label">
+        <i class="fas fa-list-ol"></i> Questions &amp; Answers
+      </div>
+
+      <div class="question-block" *ngFor="let response of payload.responses; let qi = index">
+
+        <div class="question-header">
+          <div class="question-number">Q{{ qi + 1 }}</div>
+          <h6 class="question-text">{{ response.questionId.question }}</h6>
+        </div>
+
+        <div class="answers-list">
+          <div
+            class="answer-item"
+            *ngFor="let answer of response.questionId.responses"
+            [ngClass]="{
+              'answer-correct-chosen':  answer.isCorrect && response.chosenResponseIds === answer._id,
+              'answer-wrong-chosen':    !answer.isCorrect && response.chosenResponseIds === answer._id,
+              'answer-correct-missed':  answer.isCorrect && response.chosenResponseIds !== answer._id
+            }"
+          >
+            <div class="answer-indicator">
+              <i class="fas fa-check-circle"
+                *ngIf="(answer.isCorrect && response.chosenResponseIds !== answer._id) ||
+                       (answer.isCorrect && response.chosenResponseIds === answer._id)">
+              </i>
+              <i class="fas fa-times-circle"
+                *ngIf="!answer.isCorrect && response.chosenResponseIds === answer._id">
+              </i>
+              <i class="far fa-circle"
+                *ngIf="!answer.isCorrect && response.chosenResponseIds !== answer._id">
+              </i>
+            </div>
+            <span class="answer-text">{{ answer.text }}</span>
+            <span class="answer-tag" *ngIf="answer.isCorrect && response.chosenResponseIds === answer._id">Correct</span>
+            <span class="answer-tag tag-wrong" *ngIf="!answer.isCorrect && response.chosenResponseIds === answer._id">Wrong</span>
+            <span class="answer-tag tag-missed" *ngIf="answer.isCorrect && response.chosenResponseIds !== answer._id">Missed</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- /modal-body-custom -->
+
+  <!-- Modal Footer -->
+  <!-- <div class="modal-footer-custom">
+    <button type="button" class="btn-cancel" (click)="activeModal.dismiss()">
+      <i class="fas fa-times"></i> Close
+    </button>
+    <button type="button" class="btn-select" (click)="selectIntern()">
+      <i class="fas fa-user-check"></i> Select Intern
+    </button>
+  </div> -->
+
+</div>

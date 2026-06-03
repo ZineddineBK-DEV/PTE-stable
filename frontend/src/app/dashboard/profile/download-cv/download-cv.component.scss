@@ -1,0 +1,437 @@
+// =============================================
+// CV Download Modal
+// Purple/Blue Design System
+// =============================================
+
+$violet:    #6c63ff;
+$violet-dk: #4c46c8;
+$primary-start: #667eea;
+$primary-end:   #764ba2;
+$text:      #1a1d2e;
+$muted:     #6f7690;
+$border:    #e8eaf0;
+$bg-soft:   #f7f8fd;
+$accent-green: #43e97b;
+$accent-teal:  #38f9d7;
+
+// =============================================
+// MODAL WRAPPER
+// =============================================
+.cv-modal {
+  padding: 0;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+// =============================================
+// MODAL HEADER
+// =============================================
+.cv-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, $primary-start 0%, $primary-end 100%);
+  border-radius: 0;
+
+  .cv-modal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+
+    .header-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: white;
+      margin: 0 0 0.15rem;
+    }
+
+    .header-sub {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.75);
+      margin: 0;
+    }
+  }
+
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    background: white;
+    color: $primary-start;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+
+    i { font-size: 0.8rem; }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.92);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    }
+  }
+}
+
+// =============================================
+// CV PRINT ROOT
+// =============================================
+.cv-print-root {
+  background: #fff;
+  overflow: hidden;
+}
+
+// =============================================
+// HERO HEADER
+// =============================================
+.cv-hero {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border-bottom: 2px solid $border;
+
+  .cv-hero-accent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: linear-gradient(180deg, $primary-start, $primary-end);
+  }
+
+  .cv-hero-content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.25rem;
+    padding: 1.25rem 1.25rem 1.25rem 1.75rem;
+    align-items: center;
+  }
+
+  .cv-name {
+    margin: 0 0 0.3rem;
+    color: $text;
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+  }
+
+  .cv-role {
+    margin: 0;
+    color: $violet;
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+  }
+
+  .cv-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    min-width: 230px;
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+
+      .contact-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        background: rgba(108, 99, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
+        color: $violet;
+        flex-shrink: 0;
+      }
+
+      .contact-label {
+        display: block;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: $muted;
+        line-height: 1;
+        margin-bottom: 0.1rem;
+      }
+
+      .contact-value {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: $text;
+        line-height: 1.2;
+      }
+    }
+  }
+}
+
+// =============================================
+// CV GRID
+// =============================================
+.cv-grid {
+  display: grid;
+  grid-template-columns: 32% 1fr;
+}
+
+.cv-left {
+  border-right: 1.5px solid $border;
+  background: $bg-soft;
+  padding: 1.1rem;
+}
+
+.cv-right {
+  background: #fff;
+  padding: 1.1rem;
+}
+
+// =============================================
+// SECTION
+// =============================================
+.cv-section {
+  margin-bottom: 1.1rem;
+
+  &:last-child { margin-bottom: 0; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1.5px solid $border;
+
+    .section-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, $primary-start, $primary-end);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: $text;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+  }
+}
+
+// =============================================
+// ITEMS
+// =============================================
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item {
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 0.6rem 0.7rem;
+  background: #fff;
+  page-break-inside: avoid;
+}
+
+// Timeline item (experience & projects)
+.timeline-item {
+  position: relative;
+  border: none;
+  border-radius: 0;
+  padding: 0 0 0.75rem 1.1rem;
+  border-left: 2px solid $border;
+  background: transparent;
+
+  &:last-child { padding-bottom: 0; }
+
+  .timeline-dot {
+    position: absolute;
+    left: -5px;
+    top: 0.25rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $primary-start, $primary-end);
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.25);
+
+    &.project {
+      background: linear-gradient(135deg, $accent-green, $accent-teal);
+      box-shadow: 0 0 0 2px rgba(67, 233, 123, 0.25);
+    }
+  }
+
+  .item-body { padding-left: 0; }
+
+  .item-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+// Cert grid
+.certs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+
+  .cert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.6rem;
+
+    .cert-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.12), rgba(76, 70, 200, 0.12));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: $violet;
+      flex-shrink: 0;
+    }
+  }
+}
+
+// Text styles
+.item-title {
+  margin: 0 0 0.1rem;
+  color: $text;
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.item-date {
+  margin: 0 0 0.15rem;
+  color: $violet;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+
+  i { font-size: 0.62rem; opacity: 0.7; }
+}
+
+.item-sub {
+  margin: 0.1rem 0 0;
+  color: $muted;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  i { font-size: 0.62rem; color: $violet; opacity: 0.65; }
+}
+
+.item-org {
+  margin: 0.2rem 0 0;
+  color: $muted;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  i { font-size: 0.6rem; color: $violet; opacity: 0.65; }
+}
+
+.item-desc {
+  margin: 0.25rem 0 0;
+  color: #454b65;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.summary {
+  margin: 0;
+  color: #454b65;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+// =============================================
+// CHIPS
+// =============================================
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.chip {
+  border: 1px solid rgba(108, 99, 255, 0.2);
+  background: rgba(108, 99, 255, 0.07);
+  color: $violet-dk;
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.2;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(108, 99, 255, 0.14);
+    border-color: rgba(108, 99, 255, 0.35);
+  }
+}
+
+// =============================================
+// RESPONSIVE
+// =============================================
+@media (max-width: 900px) {
+  .cv-hero .cv-hero-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .cv-contact { min-width: 0; }
+
+  .cv-grid { grid-template-columns: 1fr; }
+
+  .cv-left {
+    border-right: none;
+    border-bottom: 1.5px solid $border;
+  }
+
+  .certs-grid { grid-template-columns: 1fr; }
+}

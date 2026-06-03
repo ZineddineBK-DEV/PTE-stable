@@ -1,0 +1,469 @@
+// =============================================
+// Add Intern Modal — Redesign
+// Consistent with the purple/blue design system
+// =============================================
+
+$primary-start: #667eea;
+$primary-end:   #764ba2;
+$accent-blue:   #4facfe;
+$accent-cyan:   #00f2fe;
+$accent-green:  #43e97b;
+$accent-teal:   #38f9d7;
+$accent-pink:   #f093fb;
+$accent-red:    #f5576c;
+$text-dark:     #2c3e50;
+$text-muted:    #7f8c8d;
+$border-light:  #f0f2f5;
+$bg-soft:       #f8f9fc;
+$shadow-sm:     0 2px 8px rgba(0,0,0,0.07);
+$shadow-md:     0 4px 16px rgba(0,0,0,0.12);
+$radius-sm:     8px;
+$radius-md:     12px;
+$radius-lg:     16px;
+
+// =============================================
+// MODAL WRAPPER
+// =============================================
+.add-intern-modal {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  // border-radius: $radius-lg;
+  overflow: hidden;
+}
+
+// =============================================
+// MODAL HEADER
+// =============================================
+.modal-header-custom {
+  background: linear-gradient(135deg, $primary-start 0%, $primary-end 100%);
+  padding: 1.35rem 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  .modal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .modal-header-icon {
+    width: 46px;
+    height: 46px;
+    background: rgba(255,255,255,0.2);
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .modal-title-text {
+    color: white;
+    font-weight: 800;
+    font-size: 1.05rem;
+    margin: 0 0 0.15rem;
+    letter-spacing: -0.3px;
+  }
+
+  .modal-subtitle {
+    color: rgba(255,255,255,0.72);
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .modal-close-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: $radius-sm;
+    background: rgba(255,255,255,0.18);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+    flex-shrink: 0;
+
+    &:hover { background: rgba(255,255,255,0.3); }
+  }
+}
+
+// =============================================
+// MODAL BODY
+// =============================================
+.modal-body-custom {
+  padding: 1.75rem;
+  background: $bg-soft;
+  overflow-y: auto;
+  max-height: 68vh;
+}
+
+// =============================================
+// FORM SECTION
+// =============================================
+.form-section {
+  background: white;
+  border-radius: $radius-md;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: $shadow-sm;
+  padding: 1.4rem 1.5rem;
+  margin-bottom: 1.25rem;
+  animation: fadeInUp 0.4s ease-out both;
+
+  &:nth-child(1) { animation-delay: 0.05s; }
+  &:nth-child(2) { animation-delay: 0.1s; }
+  &:nth-child(3) { animation-delay: 0.15s; }
+
+  &:last-child { margin-bottom: 0; }
+}
+
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1.5px solid $border-light;
+
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: white;
+    flex-shrink: 0;
+
+    &.bg-blue   { background: linear-gradient(135deg, $accent-blue, $accent-cyan); }
+    &.bg-purple { background: linear-gradient(135deg, $primary-start, $primary-end); }
+    &.bg-teal   { background: linear-gradient(135deg, $accent-green, $accent-teal); }
+  }
+
+  span {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: $text-dark;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+}
+
+// =============================================
+// FORM FIELDS
+// =============================================
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.field-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: $text-dark;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 0;
+}
+
+.required-star {
+  color: $accent-red;
+  margin-left: 2px;
+}
+
+.input-wrapper {
+  position: relative;
+
+  .input-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $primary-start;
+    font-size: 0.82rem;
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+.modern-input {
+  border-radius: $radius-sm !important;
+  border: 1.5px solid #e2e8f0 !important;
+  padding: 0.6rem 1rem 0.6rem 2.4rem !important;
+  font-size: 0.9rem !important;
+  color: $text-dark !important;
+  background: white !important;
+  transition: all 0.2s !important;
+  box-shadow: none !important;
+
+  &::placeholder { color: #b2bec3; }
+
+  &:focus {
+    border-color: $primary-start !important;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.12) !important;
+    outline: none !important;
+  }
+
+  &.ng-invalid.ng-touched {
+    border-color: $accent-red !important;
+    box-shadow: 0 0 0 3px rgba(245,87,108,0.1) !important;
+  }
+}
+
+.modern-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.9rem center !important;
+  padding-right: 2.5rem !important;
+  cursor: pointer;
+}
+
+// =============================================
+// CV DROPZONE
+// =============================================
+.custom-dropzone {
+  background: $bg-soft !important;
+  border: 2px dashed rgba(102,126,234,0.35) !important;
+  border-radius: $radius-md !important;
+  min-height: 120px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $primary-start !important;
+    background: rgba(102,126,234,0.04) !important;
+  }
+}
+
+.dropzone-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.dropzone-icon {
+  font-size: 2.4rem;
+  background: linear-gradient(135deg, $accent-red, #c0392b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.dropzone-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: $text-dark;
+}
+
+.dropzone-hint {
+  font-size: 0.78rem;
+  color: $text-muted;
+  font-weight: 500;
+}
+
+// =============================================
+// PDF PREVIEW CARD
+// =============================================
+.pdf-preview-card {
+  background: $bg-soft;
+  border: 1.5px solid rgba(102,126,234,0.2);
+  border-radius: $radius-md;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  animation: fadeInUp 0.3s ease-out;
+
+  .pdf-preview-left {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-width: 0;
+  }
+
+  .pdf-icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-sm;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 3px 8px rgba(231,76,60,0.3);
+  }
+
+  .pdf-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    .pdf-name {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: $text-dark;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pdf-meta {
+      font-size: 0.75rem;
+      color: $text-muted;
+      font-weight: 500;
+    }
+  }
+
+  .btn-remove-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: $radius-sm;
+    border: 1.5px solid rgba(245,87,108,0.3);
+    background: rgba(245,87,108,0.06);
+    color: $accent-red;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    &:hover {
+      background: $accent-red;
+      border-color: $accent-red;
+      color: white;
+    }
+  }
+}
+
+// =============================================
+// MODAL FOOTER
+// =============================================
+.modal-footer-custom {
+  padding: 1rem 1.75rem;
+  background: white;
+  border-top: 1.5px solid $border-light;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+
+  .btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.6rem 1.35rem;
+    border-radius: $radius-sm;
+    border: 1.5px solid #e2e8f0;
+    background: $bg-soft;
+    color: $text-muted;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: $accent-red;
+      color: $accent-red;
+      background: rgba(245,87,108,0.05);
+    }
+  }
+
+  .btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.6rem;
+    border-radius: $radius-sm;
+    border: none;
+    background: linear-gradient(135deg, $primary-start, $primary-end);
+    color: white;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+    transition: all 0.25s;
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 6px 18px rgba(102,126,234,0.55);
+      transform: translateY(-2px);
+    }
+
+    &:active:not(:disabled) { transform: translateY(0); }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-spinner {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+}
+
+// =============================================
+// INLINE SPINNER (Save button)
+// =============================================
+.spinner-ring-sm {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+// =============================================
+// ANIMATIONS
+// =============================================
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// =============================================
+// RESPONSIVE
+// =============================================
+@media (max-width: 576px) {
+  .modal-body-custom { padding: 1.1rem; }
+  .modal-header-custom { padding: 1.1rem 1.25rem; }
+  .modal-footer-custom {
+    padding: 0.9rem 1.25rem;
+    flex-direction: column-reverse;
+    .btn-cancel, .btn-save { width: 100%; justify-content: center; }
+  }
+  .form-section { padding: 1.1rem; }
+}

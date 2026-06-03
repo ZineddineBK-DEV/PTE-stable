@@ -1,0 +1,193 @@
+<div class="assign-quiz-modal">
+
+  <!-- Modal Header -->
+  <div class="modal-header-custom">
+    <div class="modal-header-left">
+      <div class="modal-header-icon">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+      <div>
+        <h5 class="modal-title-text">
+          {{ action === 'edit' ? 'Edit Quiz' : 'Create Quiz' }}
+        </h5>
+        <span class="modal-subtitle">
+          {{ action === 'edit' ? 'Update quiz details and questions' : 'Assign a new quiz to this offer' }}
+        </span>
+      </div>
+    </div>
+    <button class="modal-close-btn" (click)="activeModal.dismiss()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body-custom">
+
+    <!-- ── Section: Quiz Details ── -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <div class="section-icon bg-blue">
+          <i class="fas fa-info-circle"></i>
+        </div>
+        <span>Quiz Details</span>
+      </div>
+
+      <form [formGroup]="quizForm">
+        <div class="row gy-3">
+
+          <!-- Title -->
+          <div class="col-12">
+            <div class="form-field">
+              <label class="field-label">Title <span class="required-star">*</span></label>
+              <div class="input-wrapper">
+                <i class="fas fa-heading input-icon"></i>
+                <input
+                  type="text"
+                  class="form-control modern-input"
+                  placeholder="Enter quiz title"
+                  formControlName="title"
+                />
+              </div>
+              <small class="field-error"
+                *ngIf="!quizForm.get('title')?.valid && quizForm.get('title')?.touched">
+                Title is required
+              </small>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="col-12">
+            <div class="form-field">
+              <label class="field-label">Description <span class="required-star">*</span></label>
+              <div class="input-wrapper">
+                <i class="fas fa-align-left input-icon textarea-icon"></i>
+                <textarea
+                  class="form-control modern-input modern-textarea"
+                  placeholder="Describe what this quiz covers..."
+                  formControlName="description"
+                  rows="3"
+                ></textarea>
+              </div>
+              <small class="field-error"
+                *ngIf="!quizForm.get('description')?.valid && quizForm.get('description')?.touched">
+                Description is required
+              </small>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+    <!-- ── Edit Questions Toggle (edit mode only) ── -->
+    <div class="toggle-section" *ngIf="action === 'edit'">
+      <button class="btn-toggle-questions" (click)="editQuestionToggle()">
+        <i class="fas fa-pen-to-square"></i>
+        <span>{{ editQuestion ? 'Hide question editor' : 'Edit questions?' }}</span>
+        <i class="fas fa-chevron-down toggle-chevron" [class.rotated]="editQuestion"></i>
+      </button>
+    </div>
+
+    <!-- ── Section: Question Editor ── -->
+    <div class="form-section question-section" *ngIf="editQuestion">
+      <div class="form-section-title">
+        <div class="section-icon bg-purple">
+          <i class="fas fa-question-circle"></i>
+        </div>
+        <span>Edit Question</span>
+      </div>
+
+      <!-- Question Selector -->
+      <div class="form-field mb-3" *ngIf="questions.length">
+        <label class="field-label">Select Question</label>
+        <div class="input-wrapper">
+          <i class="fas fa-list input-icon"></i>
+          <select
+            class="form-control modern-input modern-select"
+            (change)="selectQuestionByIndex($event)"
+          >
+            <option *ngFor="let q of questions; let i = index" [value]="i">
+              {{ q.question }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Question Form -->
+      <form [formGroup]="questionForm" *ngIf="selectedQuestion">
+
+        <!-- Question text -->
+        <div class="form-field mb-4">
+          <label class="field-label">Question Text</label>
+          <div class="input-wrapper">
+            <i class="fas fa-question input-icon"></i>
+            <input
+              type="text"
+              class="form-control modern-input"
+              placeholder="Write the question here..."
+              formControlName="question"
+            />
+          </div>
+        </div>
+
+        <!-- Responses -->
+        <div class="field-label mb-2">Responses</div>
+        <div formArrayName="responses">
+          <div
+            class="response-item"
+            *ngFor="let resp of responses.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <div class="response-header">
+              <div class="response-number">{{ i + 1 }}</div>
+              <label class="field-label mb-0">Response {{ i + 1 }}</label>
+            </div>
+            <div class="input-wrapper mb-2">
+              <i class="fas fa-pen input-icon"></i>
+              <input
+                type="text"
+                class="form-control modern-input"
+                placeholder="Write the response here..."
+                formControlName="text"
+              />
+            </div>
+            <label class="correct-toggle">
+              <input type="checkbox" formControlName="isCorrect" class="toggle-checkbox" />
+              <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+              </span>
+              <span class="toggle-label">Mark as correct answer</span>
+            </label>
+          </div>
+        </div>
+
+      </form>
+
+      <!-- Empty state -->
+      <div class="quiz-empty" *ngIf="!questions.length">
+        <i class="fas fa-clipboard"></i>
+        <span>No questions found for this quiz</span>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- /modal-body-custom -->
+
+  <!-- Modal Footer -->
+  <div class="modal-footer-custom">
+    <button type="button" class="btn-cancel" (click)="activeModal.dismiss()">
+      <i class="fas fa-times"></i> Cancel
+    </button>
+    <button
+      type="button"
+      class="btn-save"
+      [disabled]="quizForm.invalid"
+      (click)="onSubmitQuiz()"
+    >
+      <i class="fas fa-save"></i>
+      {{ action === 'edit' ? 'Save Changes' : 'Create Quiz' }}
+    </button>
+  </div>
+
+</div>

@@ -1,0 +1,130 @@
+<div class="modal-header task-modal-header">
+    <div class="modal-header-left">
+        <div class="modal-header-icon">
+            <i class="fas fa-tasks" *ngIf="payload.action==='add'"></i>
+            <i class="fas fa-pen" *ngIf="payload.action==='edit'"></i>
+        </div>
+        <div>
+            <h5 class="modal-title" *ngIf="payload.action==='add'">Create Task</h5>
+            <h5 class="modal-title" *ngIf="payload.action==='edit'">Edit Task</h5>
+            <p class="modal-subtitle">Fill in the details below</p>
+        </div>
+    </div>
+    <button type="button" class="modal-close-btn" aria-label="Close" (click)="activeModal.dismiss()">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body task-modal-body">
+    <form class="task-form" [formGroup]="taskForm" (ngSubmit)="onSubmit(taskForm)">
+
+        <!-- Title -->
+        <div class="form-field mb-3">
+            <label class="field-label">Title <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+                <i class="fas fa-heading input-icon"></i>
+                <input type="text" class="modern-input form-control" placeholder="Enter task title"
+                    formControlName="title" required>
+            </div>
+            <small class="field-error"
+                *ngIf="!taskForm.get('title')?.valid && taskForm.get('title')?.touched">
+                <i class="fas fa-exclamation-circle"></i> Title is required
+            </small>
+        </div>
+
+        <!-- Description -->
+        <div class="form-field mb-3">
+            <label class="field-label">Description <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+                <i class="fas fa-align-left input-icon textarea-icon"></i>
+                <textarea class="modern-input modern-textarea form-control"
+                    placeholder="Describe the task objectives and requirements..."
+                    formControlName="description" rows="3"></textarea>
+            </div>
+            <small class="field-error"
+                *ngIf="!taskForm.get('description')?.valid && taskForm.get('description')?.touched">
+                <i class="fas fa-exclamation-circle"></i> Description is required
+            </small>
+        </div>
+
+        <!-- Priority -->
+        <div class="form-field mb-3">
+            <label class="field-label">Priority <span class="required-star">*</span></label>
+            <div class="priority-options">
+                <label class="priority-option low" [class.selected]="taskForm.get('priority')?.value === 'LOW'">
+                    <input type="radio" formControlName="priority" value="LOW">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>Low</span>
+                </label>
+                <label class="priority-option medium" [class.selected]="taskForm.get('priority')?.value === 'MEDIUM'">
+                    <input type="radio" formControlName="priority" value="MEDIUM">
+                    <i class="fas fa-equals"></i>
+                    <span>Medium</span>
+                </label>
+                <label class="priority-option high" [class.selected]="taskForm.get('priority')?.value === 'HIGH'">
+                    <input type="radio" formControlName="priority" value="HIGH">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>High</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Assign To -->
+        <div class="form-field mb-3">
+            <label class="field-label">Assign To</label>
+            <div class="input-wrapper">
+                <i class="fas fa-user input-icon"></i>
+                <select class="modern-input form-control" formControlName="assignedTo" required>
+                    <option value="" disabled selected>Select an intern</option>
+                    <option *ngFor="let applicant of offerApplicants" [value]="applicant._id">
+                        {{applicant.firstName + " " + applicant.lastName}}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Date Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-field mb-3">
+                    <label class="field-label">Start Date <span class="required-star">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-calendar-alt input-icon"></i>
+                        <input type="date" class="modern-input form-control" formControlName="startDate">
+                    </div>
+                    <small class="field-error"
+                        *ngIf="!taskForm.get('startDate')?.valid && taskForm.get('startDate')?.touched">
+                        <i class="fas fa-exclamation-circle"></i> Start date is required
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-field mb-3">
+                    <label class="field-label">End Date <span class="required-star">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-calendar-check input-icon"></i>
+                        <input type="date" class="modern-input form-control" formControlName="endDate">
+                    </div>
+                    <small class="field-error"
+                        *ngIf="!taskForm.get('endDate')?.valid && taskForm.get('endDate')?.touched">
+                        <i class="fas fa-exclamation-circle"></i> End date is required
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="form-footer">
+            <button type="button" class="btn-cancel" (click)="activeModal.close('Close click')">
+                Cancel
+            </button>
+            <button type="submit" *ngIf="payload.action==='edit'" class="btn-save-question">
+                <i class="fas fa-check"></i> Save Changes
+            </button>
+            <button type="submit" *ngIf="payload.action==='add'" class="btn-save-question">
+                <i class="fas fa-plus"></i> Create Task
+            </button>
+        </div>
+
+    </form>
+</div>

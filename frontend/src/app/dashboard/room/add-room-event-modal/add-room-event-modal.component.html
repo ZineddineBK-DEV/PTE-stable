@@ -1,0 +1,76 @@
+<div class="modal-header room-event-modal-header">
+    <div class="modal-header-left">
+        <div class="modal-header-icon">
+            <i class="fas fa-calendar-plus"></i>
+        </div>
+        <div>
+            <h5 class="modal-title">Add Room Event</h5>
+            <p class="modal-subtitle" *ngIf="room">{{room.label}} · {{room.location}}</p>
+        </div>
+    </div>
+    <button type="button" class="modal-close-btn" aria-label="Close" (click)="activeModal.dismiss()">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body room-event-modal-body">
+    <form [formGroup]="EventForm" (ngSubmit)="onSubmit(EventForm)">
+
+        <!-- Title -->
+        <div class="form-field mb-3">
+            <label class="field-label">Title <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+                <i class="fas fa-heading input-icon"></i>
+                <input type="text" class="modern-input form-control"
+                    placeholder="Event title…" formControlName="title" required>
+            </div>
+            <small class="field-error"
+                *ngIf="!EventForm.get('title')?.valid && EventForm.get('title')?.touched">
+                <i class="fas fa-exclamation-circle"></i> Title is required
+            </small>
+        </div>
+
+        <!-- Date row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-field mb-3">
+                    <label class="field-label">Start Date <span class="required-star">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-calendar-check input-icon"></i>
+                        <input type="datetime-local" class="modern-input form-control"
+                            formControlName="start" required>
+                    </div>
+                    <small class="field-error"
+                        *ngIf="!EventForm.get('start')?.valid && EventForm.get('start')?.touched">
+                        <i class="fas fa-exclamation-circle"></i> Start date is required
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-field mb-3">
+                    <label class="field-label">End Date <span class="required-star">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-calendar-times input-icon"></i>
+                        <input type="datetime-local" class="modern-input form-control"
+                            formControlName="end" required>
+                    </div>
+                    <small class="field-error"
+                        *ngIf="!EventForm.get('end')?.valid && EventForm.get('end')?.touched">
+                        <i class="fas fa-exclamation-circle"></i> End date is required
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="form-footer">
+            <button type="button" class="btn-cancel" (click)="activeModal.close('Close click')">
+                Cancel
+            </button>
+            <button type="submit" class="btn-save" [disabled]="!EventForm.valid">
+                <i class="fas fa-plus"></i> Add Event
+            </button>
+        </div>
+
+    </form>
+</div>

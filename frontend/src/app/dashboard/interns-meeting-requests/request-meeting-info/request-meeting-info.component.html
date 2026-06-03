@@ -1,0 +1,163 @@
+<div class="modal-header-modern">
+    <div class="modal-title-section">
+        <div class="icon-circle">
+            <i class="fas fa-handshake"></i>
+        </div>
+        <div>
+            <h4 class="modal-title">Meeting Request</h4>
+            <p class="modal-subtitle">Review and approve the meeting request</p>
+        </div>
+    </div>
+    <button type="button" class="btn-close-modern" (click)="activeModal.close()">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body-modern" *ngIf="event">
+
+    <!-- Event Title & Status -->
+    <div class="event-hero">
+        <div class="event-hero-left">
+            <h3 class="event-title">{{event.title}}</h3>
+            <span class="status-badge" [ngClass]="event.status ? 'approved' : 'pending'">
+                <i class="fas" [ngClass]="event.status ? 'fa-check-circle' : 'fa-clock'"></i>
+                {{event.status ? 'Approved' : 'Pending Approval'}}
+            </span>
+        </div>
+    </div>
+
+    <!-- Date Section -->
+    <div class="section-divider">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Schedule</span>
+    </div>
+
+    <div class="dates-grid">
+        <!-- Start -->
+        <div class="date-card">
+            <div class="date-card-icon start">
+                <i class="fas fa-calendar-plus"></i>
+            </div>
+            <div class="date-card-content">
+                <label>Start</label>
+                <div *ngIf="event.start">
+                    <p class="date-value">{{event.start | date:'EEEE, MMM d, y'}}</p>
+                    <p class="time-value">{{event.start | date:'shortTime'}}</p>
+                </div>
+                <div *ngIf="!event.start" class="date-input-wrapper">
+                    <input type="datetime-local" class="form-control-modern" [(ngModel)]="start" required>
+                    <small class="error-text" *ngIf="!start">
+                        <i class="fas fa-exclamation-circle"></i> Date & time required
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- End -->
+        <div class="date-card">
+            <div class="date-card-icon end">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="date-card-content">
+                <label>End</label>
+                <div *ngIf="event.end">
+                    <p class="date-value">{{event.end | date:'EEEE, MMM d, y'}}</p>
+                    <p class="time-value">{{event.end | date:'shortTime'}}</p>
+                </div>
+                <div *ngIf="!event.end" class="date-input-wrapper">
+                    <input type="datetime-local" class="form-control-modern" [(ngModel)]="end" required>
+                    <small class="error-text" *ngIf="!end">
+                        <i class="fas fa-exclamation-circle"></i> Date & time required
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- People Section -->
+    <div class="section-divider">
+        <i class="fas fa-users"></i>
+        <span>Participants</span>
+    </div>
+
+    <div class="people-grid">
+        <!-- Intern -->
+        <div class="person-card intern">
+            <div class="person-card-header">
+                <img [src]="internImagesURL + event.intern?.image"
+                     [alt]="event.intern?.firstName"
+                     width="64" height="64"
+                     class="person-avatar"
+                    >
+                <span class="person-role-tag intern-tag">
+                    <i class="fas fa-user-graduate"></i> Intern
+                </span>
+            </div>
+            <div class="person-card-body">
+                <h5>{{event.intern.firstName}} {{event.intern.lastName}}</h5>
+                <span class="person-dept">
+                    <i class="fas fa-building"></i>
+                    {{event.intern.departement}}
+                </span>
+                <a class="person-email" [href]="'mailto:' + event.intern.email">
+                    <i class="fas fa-envelope"></i>
+                    {{event.intern.email}}
+                </a>
+            </div>
+        </div>
+
+        <!-- Mentor -->
+        <div class="person-card mentor" *ngIf="mentor">
+            <div class="person-card-header">
+                <img [src]="imagesURL + mentor?.image"
+                     [alt]="mentor?.firstName"
+                     width="64" height="64"
+                     class="person-avatar"
+                     >
+                <span class="person-role-tag mentor-tag">
+                    <i class="fas fa-chalkboard-teacher"></i> Mentor
+                </span>
+            </div>
+            <div class="person-card-body">
+                <h5>{{mentor.firstName}} {{mentor.lastName}}</h5>
+                <span class="person-dept">
+                    <i class="fas fa-building"></i>
+                    {{mentor.departement}}
+                </span>
+                <a class="person-email" [href]="'mailto:' + mentor.email">
+                    <i class="fas fa-envelope"></i>
+                    {{mentor.email}}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Section -->
+    <div class="section-divider">
+        <i class="fas fa-sticky-note"></i>
+        <span>Note</span>
+    </div>
+
+    <div class="note-box">
+        <i class="fas fa-quote-left quote-icon"></i>
+        <p>{{event.note || 'No notes provided.'}}</p>
+    </div>
+
+    <!-- Footer Action -->
+    <div class="modal-footer-modern" *ngIf="!event.status">
+        <button class="btn-modern btn-secondary" (click)="activeModal.close()">
+            <i class="fas fa-times"></i> Close
+        </button>
+        <button class="btn-modern btn-approve" (click)="acceptMeeting()" [disabled]="loading">
+            <span class="spinner" *ngIf="loading"></span>
+            <i class="fas fa-check-circle" *ngIf="!loading"></i>
+            {{loading ? 'Approving...' : 'Accept Meeting'}}
+        </button>
+    </div>
+
+    <div class="modal-footer-modern" *ngIf="event.status">
+        <button class="btn-modern btn-secondary" (click)="activeModal.close()">
+            <i class="fas fa-times"></i> Close
+        </button>
+    </div>
+</div>

@@ -1,0 +1,131 @@
+<div class="modal-header vehicle-modal-header">
+    <div class="modal-header-left">
+        <div class="modal-header-icon">
+            <i class="fas fa-pen"></i>
+        </div>
+        <div>
+            <h5 class="modal-title">Edit Vehicle</h5>
+            <p class="modal-subtitle">Update the vehicle details below</p>
+        </div>
+    </div>
+    <button type="button" class="modal-close-btn" aria-label="Close" (click)="activeModal.dismiss()">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body vehicle-modal-body">
+    <form [formGroup]="vehicleEdittForm" (ngSubmit)="onSubmit()">
+
+        <!-- Model -->
+        <div class="form-field mb-3">
+            <label class="field-label">Model <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+                <i class="fas fa-car-side input-icon"></i>
+                <input type="text" class="modern-input form-control"
+                    placeholder="Vehicle model…" formControlName="model" required>
+            </div>
+            <small class="field-error"
+                *ngIf="!vehicleEdittForm.get('model')?.valid && vehicleEdittForm.get('model')?.touched">
+                <i class="fas fa-exclamation-circle"></i> Model is required
+            </small>
+        </div>
+
+        <!-- Registration Number -->
+        <div class="form-field mb-3">
+            <label class="field-label">Registration Number <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+                <i class="fas fa-hashtag input-icon"></i>
+                <input type="text" class="modern-input form-control"
+                    placeholder="e.g. 123 TU 4567…" formControlName="registration_number" required>
+            </div>
+            <small class="field-error"
+                *ngIf="!vehicleEdittForm.get('registration_number')?.valid && vehicleEdittForm.get('registration_number')?.touched">
+                <i class="fas fa-exclamation-circle"></i> Registration number is required
+            </small>
+        </div>
+
+        <!-- Type -->
+        <div class="form-field mb-3">
+            <label class="field-label">Type <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+                <i class="fas fa-tag input-icon"></i>
+                <select class="modern-input form-control" formControlName="type" required>
+                    <option value="" disabled>Select vehicle type…</option>
+                    <option value="commercial">Commercial</option>
+                    <option value="civil">Civil</option>
+                </select>
+            </div>
+            <small class="field-error"
+                *ngIf="!vehicleEdittForm.get('type')?.valid && vehicleEdittForm.get('type')?.touched">
+                <i class="fas fa-exclamation-circle"></i> Type is required
+            </small>
+        </div>
+
+        <!-- Gas Card Toggle -->
+        <div class="gas-card-toggle mb-3">
+            <div class="gas-card-toggle-label">
+                <i class="fas fa-credit-card"></i>
+                Edit gas card?
+            </div>
+            <div class="gas-card-toggle-options">
+                <button type="button" class="toggle-option" [class.selected]="needCard"
+                    (click)="needCardYes()">
+                    <i class="fas fa-check-circle"></i> Yes
+                </button>
+                <button type="button" class="toggle-option" [class.selected]="!needCard"
+                    (click)="needCardNo()">
+                    <i class="fas fa-times-circle"></i> No
+                </button>
+            </div>
+        </div>
+
+        <!-- Gas Card Fields -->
+        <div class="gas-card-fields" *ngIf="needCard">
+            <div class="gas-card-fields-header">
+                <i class="fas fa-credit-card"></i>
+                Gas Card Details
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-field mb-3">
+                        <label class="field-label">Card Number <span class="required-star">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-credit-card input-icon"></i>
+                            <input type="text" class="modern-input form-control"
+                                placeholder="Card number…" formControlName="card_number">
+                        </div>
+                        <small class="field-error"
+                            *ngIf="!vehicleEdittForm.get('card_number')?.valid && vehicleEdittForm.get('card_number')?.touched">
+                            <i class="fas fa-exclamation-circle"></i> Card number is required
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-field mb-3">
+                        <label class="field-label">Balance <span class="required-star">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-coins input-icon"></i>
+                            <input type="text" class="modern-input form-control"
+                                placeholder="Balance…" formControlName="balance">
+                        </div>
+                        <small class="field-error"
+                            *ngIf="!vehicleEdittForm.get('balance')?.valid && vehicleEdittForm.get('balance')?.touched">
+                            <i class="fas fa-exclamation-circle"></i> Balance is required
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="form-footer">
+            <button type="button" class="btn-cancel" (click)="activeModal.close('Close click')">
+                Cancel
+            </button>
+            <button type="submit" class="btn-save" [disabled]="!vehicleEdittForm.valid">
+                <i class="fas fa-check"></i> Save Changes
+            </button>
+        </div>
+
+    </form>
+</div>

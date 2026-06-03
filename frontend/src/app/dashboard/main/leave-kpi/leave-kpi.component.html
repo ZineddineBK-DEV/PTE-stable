@@ -1,0 +1,396 @@
+<header class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
+    <h4 class="mb-0 fw-semibold text-primary">Leave Statistics</h4>
+    <small class="text-muted fst-italic" *ngIf="stats.lastUpdated">
+        Updated: {{ stats.lastUpdated | date:'short' }}
+    </small>
+</header>
+
+<form [formGroup]="filterForm" class="filter-bar mb-5">
+    <div class="row g-3 align-items-end">
+        <div class="col-6 col-md-3 col-lg-2">
+            <label class="form-label small fw-medium text-muted">Period</label>
+            <select formControlName="period" class="form-select">
+                <option value="" disabled selected>Select period</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="quarter">This Quarter</option>
+                <option value="year">This Year</option>
+            </select>
+        </div>
+
+        <div class="col-6 col-md-3 col-lg-3">
+            <label class="form-label small fw-medium text-muted">Leave Type</label>
+            <select class="form-select form-control" formControlName="type">
+                <option value="" disabled selected>Select type</option>
+                <option value="Personal Leave">Personal Leave </option>
+                <option value="1/2 day">1/2 day </option>
+                <option value="Authorization">Authorization</option>
+                <option value="Annual Leave">Annual Leave</option>
+                <option value="Maternity Leave">Maternity Leave</option>
+                <option value="Unpaid Leave">Unpaid Leave</option>
+            </select>
+        </div>
+
+        <div class="col-6 col-md-2">
+            <label class="form-label small fw-medium text-muted">From</label>
+            <input type="date" formControlName="startDate" class="form-control" />
+        </div>
+
+        <div class="col-6 col-md-2">
+            <label class="form-label small fw-medium text-muted">To</label>
+            <input type="date" formControlName="endDate" class="form-control" />
+        </div>
+
+        <div class="col-12 col-md-auto mt-3 mt-md-0">
+            <button type="button" class="btn btn-outline-secondary px-4" (click)="resetFilters()">
+                <i class="fas fa-undo-alt me-2"></i>Reset
+            </button>
+        </div>
+    </div>
+    <small class="d-block mt-2 text-muted fst-italic small">
+        Filters update automatically
+    </small>
+</form>
+
+<div class="row g-3 mb-5">
+    <div class="col">
+        <div class="kpi-card pending">
+            <div class="kpi-content">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="kpi-label">Pending</div>
+                    <span tabindex="0" class="info-icon"
+                        ngbPopover="Number of leave requests that are still waiting for full approval (not yet approved by both supervisor and manager)."
+                        placement="top" triggers="hover focus" container="body">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </div>
+                <div class="kpi-value">{{ stats.pendingLeaves ?? 0 }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="kpi-card approval">
+            <div class="kpi-content">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="kpi-label">Approval Rate</div>
+                    <span tabindex="0" class="info-icon"
+                        ngbPopover="Percentage of leave requests that were fully approved (both supervisor and manager accepted)."
+                        placement="top" triggers="hover focus" container="body">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </div>
+                <div class="kpi-value">{{ (stats.approvalRate ?? 0) | number:'1.1-1' }}%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="kpi-card total-days">
+            <div class="kpi-content">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="kpi-label">Approved Days</div>
+                    <span tabindex="0" class="info-icon"
+                        ngbPopover="Total number of calendar days from all fully approved leave requests in the selected period."
+                        placement="top" triggers="hover focus" container="body">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </div>
+                <div class="kpi-value">{{ (stats.totalApprovedLeaveDays ?? 0) | number:'1.1-1' }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="kpi-card avg">
+            <div class="kpi-content">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="kpi-label">Avg Days / Emp.</div>
+                    <span tabindex="0" class="info-icon"
+                        ngbPopover="Average number of approved leave days per unique employee who took at least one approved leave in the period."
+                        placement="top" triggers="hover focus" container="body">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </div>
+                <div class="kpi-value">{{ (stats.leaveDaysPerEmployee ?? 0) | number:'1.1-1' }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="kpi-card time">
+            <div class="kpi-content">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="kpi-label">Avg Approval Time</div>
+                    <span tabindex="0" class="info-icon"
+                        ngbPopover="Average time (in days) from request creation to full approval (both supervisor and manager accepted)."
+                        placement="top" triggers="hover focus" container="body">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </div>
+                <div class="kpi-value">{{ (stats.averageApprovalTime ?? 0) | number:'1.1-1' }} days</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-4 mb-5">
+    <div class="col-lg-6">
+        <div class="chart-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h6 class="chart-title mb-0 d-flex align-items-center gap-2">
+                    <i class="fas fa-chart-pie text-primary"></i>
+                    Leave Distribution by Type
+                    <span tabindex="0" class="info-icon ms-2"
+                        ngbPopover="Shows the percentage breakdown of total approved leave days by leave type (e.g. annual, Personal... ) in the selected period."
+                        placement="top" triggers="hover focus" container="body">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </h6>
+            </div>
+            <div class="chart-container">
+                <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="chart-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h6 class="chart-title mb-0 d-flex align-items-center gap-2">
+                    <i class="fas fa-chart-line text-success"></i>
+                    Monthly Leave Trend
+                    <span tabindex="0" class="info-icon ms-2"
+                        ngbPopover="Displays the total approved and pending leave days per month over time. Helps identify seasonal patterns, peaks, or increasing backlogs."
+                        placement="top" triggers="hover focus" container="body">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </h6>
+            </div>
+            <div class="chart-container">
+                <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-4 mb-5">
+    <div class="col-6 col-6 col-md-12">
+        <div class="chart-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h6 class="chart-title mb-0 d-flex align-items-center gap-2">
+                    <i class="fas fa-building-columns text-info"></i>
+                    Leave by Department
+                    <span tabindex="0" class="info-icon ms-2"
+                        ngbPopover="Shows total approved leave days grouped by department. Helps identify which teams use the most leave."
+                        placement="top" triggers="hover focus" container="body">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </h6>
+            </div>
+            <div class="chart-container" style="height: 380px;">
+                <canvas baseChart [data]="departmentChartData" [options]="departmentChartOptions"
+                    [type]="departmentChartType"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+<hr>
+<div class="row g-4">
+    <div class="table-section col-lg-8 col-8 col-md-12">
+        <h5 class="section-title mb-3">Top Leave Takers</h5>
+        <div class="table-responsive shadow-sm rounded overflow-auto">
+            <table class="table table-hover modern-table mb-0">
+                <thead>
+                    <tr>
+                        <th (click)="sortTopTakers('fullName')" class="sortable"
+                            [class.active]="sortColumn === 'fullName'">
+                            Name
+                            <span tabindex="0" class="info-icon ms-2"
+                                ngbPopover="The full name of the employee or user who submitted the approved leave requests."
+                                placement="top" triggers="hover focus" container="body">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <i class="fas ms-1" [ngClass]="{
+        'fa-sort': sortColumn !== 'fullName',
+        'fa-sort-up': sortColumn === 'fullName' && sortDirection === 'asc',
+        'fa-sort-down': sortColumn === 'fullName' && sortDirection === 'desc'
+      }"></i>
+                        </th>
+
+                        <th (click)="sortTopTakers('department')" class="sortable text-center"
+                            [class.active]="sortColumn === 'department'">
+                            Department
+                            <span tabindex="0" class="info-icon ms-2"
+                                ngbPopover="The department/team the employee belongs to (taken from their user profile)."
+                                placement="top" triggers="hover focus" container="body">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <i class="fas ms-1" [ngClass]="{
+        'fa-sort': sortColumn !== 'department',
+        'fa-sort-up': sortColumn === 'department' && sortDirection === 'asc',
+        'fa-sort-down': sortColumn === 'department' && sortDirection === 'desc'
+      }"></i>
+                        </th>
+
+                        <th (click)="sortTopTakers('days')" class="sortable text-end"
+                            [class.active]="sortColumn === 'days'">
+                            Total Days
+                            <span tabindex="0" class="info-icon ms-2"
+                                ngbPopover="Total number of calendar days of approved leave taken by this person in the selected period."
+                                placement="top" triggers="hover focus" container="body">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <i class="fas ms-1" [ngClass]="{
+        'fa-sort': sortColumn !== 'days',
+        'fa-sort-up': sortColumn === 'days' && sortDirection === 'asc',
+        'fa-sort-down': sortColumn === 'days' && sortDirection === 'desc'
+      }"></i>
+                        </th>
+
+                        <th (click)="sortTopTakers('count')" class="sortable text-end"
+                            [class.active]="sortColumn === 'count'">
+                            Requests
+                            <span tabindex="0" class="info-icon ms-2"
+                                ngbPopover="Number of separate approved leave requests submitted by this person in the period."
+                                placement="top" triggers="hover focus" container="body">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <i class="fas ms-1" [ngClass]="{
+        'fa-sort': sortColumn !== 'count',
+        'fa-sort-up': sortColumn === 'count' && sortDirection === 'asc',
+        'fa-sort-down': sortColumn === 'count' && sortDirection === 'desc'
+      }"></i>
+                        </th>
+
+                        <th (click)="sortTopTakers('avgDaysPerRequest')" class="sortable text-end"
+                            [class.active]="sortColumn === 'avgDaysPerRequest'">
+                            Avg / Req.
+                            <span tabindex="0" class="info-icon ms-2"
+                                ngbPopover="Average length of each approved leave request (Total Days ÷ Requests). Shows if they take many short leaves or few long ones."
+                                placement="top" triggers="hover focus" container="body">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <i class="fas ms-1" [ngClass]="{
+        'fa-sort': sortColumn !== 'avgDaysPerRequest',
+        'fa-sort-up': sortColumn === 'avgDaysPerRequest' && sortDirection === 'asc',
+        'fa-sort-down': sortColumn === 'avgDaysPerRequest' && sortDirection === 'desc'
+      }"></i>
+                        </th>
+
+                        <th (click)="sortTopTakers('percentageOfTotal')" class="sortable text-end"
+                            [class.active]="sortColumn === 'percentageOfTotal'">
+                            % Total
+                            <span tabindex="0" class="info-icon ms-2"
+                                ngbPopover="This person's share of ALL approved leave days in the company during the selected period (their days ÷ total approved days × 100)."
+                                placement="top" triggers="hover focus" container="body">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <i class="fas ms-1" [ngClass]="{
+        'fa-sort': sortColumn !== 'percentageOfTotal',
+        'fa-sort-up': sortColumn === 'percentageOfTotal' && sortDirection === 'asc',
+        'fa-sort-down': sortColumn === 'percentageOfTotal' && sortDirection === 'desc'
+      }"></i>
+                        </th>
+
+                        <th (click)="sortTopTakers('lastLeaveDate')" class="sortable text-end"
+                            [class.active]="sortColumn === 'lastLeaveDate'">
+                            Last Leave
+                            <span tabindex="0" class="info-icon ms-2"
+                                ngbPopover="Date of the most recent approved leave start for this person. Shows how recently they were absent."
+                                placement="top" triggers="hover focus" container="body">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <i class="fas ms-1" [ngClass]="{
+        'fa-sort': sortColumn !== 'lastLeaveDate',
+        'fa-sort-up': sortColumn === 'lastLeaveDate' && sortDirection === 'asc',
+        'fa-sort-down': sortColumn === 'lastLeaveDate' && sortDirection === 'desc'
+      }"></i>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let taker of sortedTopTakers">
+                        <td class="fw-medium">{{ taker.fullName || 'Unknown' }}</td>
+                        <td class="text-center">
+                            <span class="badge rounded-pill px-3 py-2 fw-medium" [ngClass]="{
+                                    'bg-warning text-dark': taker.department === 'System',
+                                    'bg-success text-white': taker.department === 'Networking',
+                                    'bg-primary text-white': taker.department === 'Development',
+                                    'bg-info text-white':   taker.department === 'Cyber Security',
+                                    'bg-danger text-white':   taker.department === 'Administration',
+                                    'bg-secondary text-white': !taker.department
+                                  }">
+                                {{ taker.department || '—' }}
+                            </span>
+                        </td>
+                        <td class="text-end">{{ taker.days || 0 | number:'1.0-0' }}</td>
+                        <td class="text-end">{{ taker.count || 0 }}</td>
+                        <td class="text-end">{{ (taker.avgDaysPerRequest || 0) | number:'1.1-1' }}</td>
+                        <td class="text-end">{{ (taker.percentageOfTotal || 0) | number:'1.1-1' }}%</td>
+                        <td class="text-end">{{ taker.lastLeaveDate | date:'mediumDate' || '—' }}</td>
+                    </tr>
+                    <tr *ngIf="!(stats.topLeaveTakers?.length)">
+                        <td colspan="7" class="text-center text-muted py-5">
+                            <i class="fas fa-inbox fa-2x mb-3 d-block opacity-50"></i>
+                            No data available
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-4 col-md-12">
+        <div class="table-section">
+            <h5 class="section-title mb-3">Peak Overlap Days</h5>
+            <div class="table-responsive shadow-sm rounded overflow-auto">
+                <table class="table table-hover modern-table mb-0">
+                    <thead>
+                        <tr>
+                            <th (click)="sortPeakDays('_id')" class="sortable"
+                                [class.active]="peakSortColumn === '_id'">
+                                Date
+                                <span tabindex="0" class="info-icon ms-2"
+                                    ngbPopover="The specific calendar date (YYYY-MM-DD) when the highest number of approved leaves overlapped (multiple people on leave on the same day)."
+                                    placement="top" triggers="hover focus" container="body">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                                <i class="fas ms-1" [ngClass]="{
+        'fa-sort': peakSortColumn !== '_id',
+        'fa-sort-up': peakSortColumn === '_id' && peakSortDirection === 'asc',
+        'fa-sort-down': peakSortColumn === '_id' && peakSortDirection === 'desc'
+      }"></i>
+                            </th>
+                            <th (click)="sortPeakDays('overlapping')" class="sortable text-end"
+                                [class.active]="peakSortColumn === 'overlapping'">
+                                Overlapping Leaves
+                                <span tabindex="0" class="info-icon ms-2"
+                                    ngbPopover="The number of approved leave requests that were active on that date (how many people were on leave simultaneously). Higher number = bigger staffing gap/risk."
+                                    placement="left" triggers="hover focus" container="body">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                                <i class="fas ms-1" [ngClass]="{
+        'fa-sort': peakSortColumn !== 'overlapping',
+        'fa-sort-up': peakSortColumn === 'overlapping' && peakSortDirection === 'asc',
+        'fa-sort-down': peakSortColumn === 'overlapping' && peakSortDirection === 'desc'
+      }"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let peak of sortedPeakDays">
+                            <td>{{ peak._id | date:'mediumDate' }}</td>
+                            <td class="text-end fw-medium">{{ peak.overlapping || 0 }}</td>
+                        </tr>
+                        <tr *ngIf="!(stats.peakOverlapDays?.length)">
+                            <td colspan="2" class="text-center text-muted py-5">
+                                <i class="fas fa-calendar-times fa-2x mb-3 d-block opacity-50"></i>
+                                No peak overlap data
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,137 @@
+/* ─── Header ────────────────────────────────────────────────────────────── */
+header {
+  border-bottom: 1px solid rgba(229, 231, 235, 0.6);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* ─── Filter Bar ────────────────────────────────────────────────────────── */
+.filter-bar {
+  background: rgba(99, 102, 241, 0.04);
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.12);
+}
+
+/* ─── KPI Cards ─────────────────────────────────────────────────────────── */
+.kpi-card {
+  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #6366f1, #a78bfa);
+    opacity: 0.7;
+  }
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  }
+
+  .kpi-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .kpi-label {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .kpi-value {
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(90deg, #6366f1, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+
+  &.pending   { &::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); } }
+  &.approval  { &::before { background: linear-gradient(90deg, #10b981, #34d399); } }
+  &.total-days { &::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); } }
+  &.avg        { &::before { background: linear-gradient(90deg, #8b5cf6, #c084fc); } }
+  &.time       { &::before { background: linear-gradient(90deg, #ec4899, #f472b6); } }
+}
+
+/* ─── Chart Cards ───────────────────────────────────────────────────────── */
+.chart-card {
+  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #6366f1, #a78bfa);
+    opacity: 0.7;
+  }
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  }
+
+  .chart-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+/* ─── Info Icon ─────────────────────────────────────────────────────────── */
+.info-icon {
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 0.95rem;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+    color: #6366f1;
+    transform: scale(1.15);
+  }
+}
+
+/* ─── Table Styles (unchanged but matched) ──────────────────────────────── */
+.modern-table th {
+  background: rgba(226, 232, 240, 0.7);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  color: #475569;
+  padding: 0.9rem 1rem;
+  border-bottom: 2px solid #cbd5e1;
+}
+
+.modern-table tr:hover {
+  background: rgba(99, 102, 241, 0.06);
+}

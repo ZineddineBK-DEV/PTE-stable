@@ -1,0 +1,72 @@
+<div class="modal-header room-modal-header">
+    <div class="modal-header-left">
+        <div class="modal-header-icon">
+            <i class="fas fa-door-open"></i>
+        </div>
+        <div>
+            <h5 class="modal-title">Add Room</h5>
+            <p class="modal-subtitle">Fill in the room details below</p>
+        </div>
+    </div>
+    <button type="button" class="modal-close-btn" aria-label="Close" (click)="activeModal.dismiss()">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body room-modal-body">
+    <form [formGroup]="roomAddForm" (ngSubmit)="onSubmit(roomAddForm)">
+
+        <!-- Label -->
+        <div class="form-field mb-3">
+            <label class="field-label">Label <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+                <i class="fas fa-tag input-icon"></i>
+                <input type="text" class="modern-input form-control"
+                    placeholder="Room label…" formControlName="label" required>
+            </div>
+            <small class="field-error"
+                *ngIf="!roomAddForm.get('label')?.valid && roomAddForm.get('label')?.touched">
+                <i class="fas fa-exclamation-circle"></i> Label is required
+            </small>
+        </div>
+
+        <!-- Location -->
+        <div class="form-field mb-3">
+            <label class="field-label">Location <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+                <i class="fas fa-map-marker-alt input-icon"></i>
+                <input type="text" class="modern-input form-control"
+                    placeholder="Room location…" formControlName="location" required>
+            </div>
+            <small class="field-error"
+                *ngIf="!roomAddForm.get('location')?.valid && roomAddForm.get('location')?.touched">
+                <i class="fas fa-exclamation-circle"></i> Location is required
+            </small>
+        </div>
+
+        <!-- Capacity -->
+        <div class="form-field mb-3">
+            <label class="field-label">Capacity <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+                <i class="fas fa-users input-icon"></i>
+                <input type="text" class="modern-input form-control"
+                    placeholder="Max capacity…" formControlName="capacity" required>
+            </div>
+            <small class="field-error"
+                *ngIf="!roomAddForm.get('capacity')?.valid && roomAddForm.get('capacity')?.touched">
+                <i class="fas fa-exclamation-circle"></i> Capacity is required
+            </small>
+        </div>
+
+        <!-- Footer -->
+        <div class="form-footer">
+            <button type="button" class="btn-cancel" (click)="activeModal.close('Close click')">
+                Cancel
+            </button>
+            <button type="submit" class="btn-save" [disabled]="!roomAddForm.valid">
+                <i class="fas fa-plus"></i> Add Room
+            </button>
+        </div>
+
+    </form>
+</div>

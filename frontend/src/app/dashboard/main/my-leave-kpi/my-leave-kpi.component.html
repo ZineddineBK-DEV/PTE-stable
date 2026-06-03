@@ -1,0 +1,168 @@
+<header class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
+  <h4 class="mb-0 fw-bold text-primary">My Leave Statistics</h4>
+  <div class="d-flex align-items-center gap-4 flex-wrap">
+    <div class="d-flex align-items-center gap-3">
+      <label class="small fw-medium text-muted mb-0">Year:</label>
+      <select class="form-select w-auto" [(ngModel)]="currentYear" (change)="loadStats()">
+        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+      </select>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <label class="small fw-medium text-muted mb-0">Month:</label>
+      <select class="form-select w-auto" [(ngModel)]="currentMonth" (change)="loadStats()">
+        <option value="">All months</option>
+        <option *ngFor="let m of months" [value]="m.value">{{ m.name }}</option>
+      </select>
+    </div>
+    <small class="text-muted fst-italic" *ngIf="stats">
+      Updated: {{ currentTime | date:'short' }}
+    </small>
+  </div>
+</header>
+
+<!-- KPI Cards -->
+<div class="row g-4 mb-5">
+  <div class="col-xl-3 col-lg-4 col-md-6">
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Total Requests</div>
+          <span tabindex="0" class="info-icon ms-1" ngbPopover="Total number of leave requests I have submitted in the selected period." placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value">{{ totalRequests }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-lg-4 col-md-6">
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Approved Days</div>
+          <span tabindex="0" class="info-icon ms-1" ngbPopover="Total approved leave days = Σ (endDate - startDate) for all fully approved leaves." placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value">{{ approvedDays.toFixed(1) }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-lg-4 col-md-6">
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Pending Requests</div>
+          <span tabindex="0" class="info-icon ms-1" ngbPopover="Requests where managerAccepted = false OR supervisorAccepted = false." placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value">{{ pendingRequests }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-lg-4 col-md-6">
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Total Days This Year</div>
+          <span tabindex="0" class="info-icon ms-1" ngbPopover="Total approved leave days taken from January 1st of current year until now." placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value text-primary">{{ totalDaysThisYear.toFixed(1) }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts -->
+<div class="row g-4 mb-5">
+  <div class="col-lg-6">
+    <div class="chart-card">
+      <h6 class="chart-title mb-3 d-flex align-items-center gap-2">
+        <i class="fas fa-chart-pie text-info"></i>
+        Leave by Type
+        <span tabindex="0" class="info-icon ms-2" ngbPopover="Distribution of my approved leave days by leave type." placement="top" triggers="hover focus" container="body">
+          <i class="fas fa-info-circle"></i>
+        </span>
+      </h6>
+      <div class="chart-container" style="height: 340px;">
+        <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" type="pie"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="chart-card">
+      <h6 class="chart-title mb-3 d-flex align-items-center gap-2">
+        <i class="fas fa-chart-line text-success"></i>
+        Monthly Leave Trend
+        <span tabindex="0" class="info-icon ms-2" ngbPopover="My approved leave days per month in the selected period." placement="top" triggers="hover focus" container="body">
+          <i class="fas fa-info-circle"></i>
+        </span>
+      </h6>
+      <div class="chart-container" style="height: 340px;">
+        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" type="line"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Last 5 Leaves Table -->
+<div class="row g-4">
+  <div class="col-12">
+    <div class="chart-card">
+      <h6 class="chart-title mb-3 d-flex align-items-center gap-2">
+        <i class="fas fa-history text-warning"></i>
+        Last 5 Leaves
+      </h6>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle modern-table">
+          <thead class="table-light">
+            <tr>
+              <th>Request Date</th>
+              <th>Type</th>
+              <th>Period</th>
+              <th class="text-end">Duration</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let leave of last5Leaves">
+              <td>{{ formatRequestDate(leave) }}</td>
+              <td><strong>{{ leave.type }}</strong></td>
+              
+              <!-- Period Column - Clean formatted date range with time for short leaves -->
+              <td>{{ formatPeriod(leave) }}</td>
+              
+              <!-- Duration Column - Restored to your original version -->
+              <td class="text-end fw-medium">
+                <span *ngIf="leave.type === 'Authorization'; else daysFormat">
+                  {{ leave.durationHours?.toFixed(1) || leave.durationDays * 9.5 | number:'1.1-1' }} h
+                </span>
+                <ng-template #daysFormat>
+                  {{ leave.durationDays?.toFixed(2) || '—' }} d
+                </ng-template>
+              </td>
+              
+              <td>
+                <span class="badge"
+                      [ngClass]="{
+                        'bg-success': leave.managerAccepted && leave.supervisorAccepted,
+                        'bg-warning': leave.managerAccepted && !leave.supervisorAccepted,
+                        'bg-info': !leave.managerAccepted && leave.supervisorAccepted,
+                        'bg-danger': !(leave.managerAccepted || leave.supervisorAccepted)
+                      }">
+                  {{ getStatusText(leave) }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="last5Leaves.length === 0">
+              <td colspan="5" class="text-center text-muted py-4">No leave records found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

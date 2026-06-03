@@ -1,0 +1,44 @@
+<div class="modal-header forward-modal-header">
+    <div class="modal-header-left">
+        <div class="modal-header-icon">
+            <i class="fas fa-share-square"></i>
+        </div>
+        <div>
+            <h5 class="modal-title">Forward {{payload.action | titlecase}}</h5>
+            <p class="modal-subtitle">Select a user to transfer this item</p>
+        </div>
+    </div>
+    <button type="button" class="modal-close-btn" aria-label="Close" (click)="activeModal.dismiss()">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body forward-modal-body">
+    <form [formGroup]="forwardForm" (ngSubmit)="onSubmit(forwardForm)">
+
+        <div class="form-field">
+            <label class="field-label">
+                Forward to <span class="required-star">*</span>
+            </label>
+            <div class="input-wrapper">
+                <i class="fas fa-user input-icon"></i>
+                <select class="modern-input form-control" formControlName="user" required>
+                    <option value="" disabled selected>Select a user…</option>
+                    <option *ngFor="let user of users" [value]="user._id">
+                        {{user.firstName + " " + user.lastName}}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button type="button" class="btn-cancel" (click)="activeModal.dismiss()">
+                Cancel
+            </button>
+            <button type="submit" class="btn-save" [disabled]="!forwardForm.valid">
+                <i class="fas fa-share-square"></i> Send {{payload.action | titlecase}}
+            </button>
+        </div>
+
+    </form>
+</div>

@@ -1,0 +1,94 @@
+<div class="modal-header gas-modal-header">
+    <div class="modal-header-left">
+        <div class="modal-header-icon">
+            <i class="fas fa-credit-card"></i>
+        </div>
+        <div>
+            <h5 class="modal-title">Gas Card</h5>
+            <p class="modal-subtitle">{{payload.model}} · {{payload.registration_number}}</p>
+        </div>
+    </div>
+    <button type="button" class="modal-close-btn" aria-label="Close" (click)="activeModal.dismiss()">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body gas-modal-body">
+
+    <!-- Gas Card Visual -->
+    <div class="gas-card-visual">
+        <!-- Card top row -->
+        <div class="gas-card-top">
+            <img src="/assets/images/total_logo.png" alt="Total" class="gas-card-logo">
+            <span class="gas-card-type-badge">
+                {{payload.type | titlecase}}
+            </span>
+        </div>
+
+        <!-- Chip + info -->
+        <div class="gas-card-mid">
+            <div class="chip-wrap">
+                <img src="/assets/images/cardShip.png" alt="Chip" class="chip-icon">
+            </div>
+            <div class="gas-card-vehicle-info">
+                <span class="gas-card-company">PROLOGIC TUNISIE</span>
+                <span class="gas-card-model">{{payload.model}}</span>
+                <span class="gas-card-reg">{{payload.registration_number}}</span>
+            </div>
+        </div>
+
+        <!-- Balance + card number -->
+        <div class="gas-card-bottom" *ngIf="card">
+            <div class="gas-card-bottom-item">
+                <span class="gas-card-bottom-label">Balance</span>
+                <span class="gas-card-bottom-value">{{card.balance}} DT</span>
+            </div>
+            <div class="gas-card-bottom-divider"></div>
+            <div class="gas-card-bottom-item align-end">
+                <span class="gas-card-bottom-label">Card Number</span>
+                <span class="gas-card-bottom-value">{{card.card_number}}</span>
+            </div>
+        </div>
+
+        <!-- No card placeholder -->
+        <div class="gas-card-no-card" *ngIf="!card">
+            <i class="fas fa-exclamation-circle"></i>
+            No gas card attached
+        </div>
+    </div>
+
+    <!-- Add Consumption Toggle -->
+    <div class="consumption-section" *ngIf="card">
+        <button class="btn-consumption-toggle" (click)="toggleTextField()">
+            <i class="fas" [ngClass]="showTextField ? 'fa-chevron-up' : 'fa-gas-pump'"></i>
+            {{showTextField ? 'Cancel' : 'Add Consumption'}}
+        </button>
+
+        <div class="consumption-form" *ngIf="showTextField">
+            <div class="consumption-input-row">
+                <div class="input-wrapper">
+                    <i class="fas fa-coins input-icon"></i>
+                    <input type="number" class="modern-input form-control"
+                        [(ngModel)]="amount"
+                        (input)="validateAmount()"
+                        [placeholder]="'Amount (0 – ' + (payload.type === 'commercial' ? 350 : 200) + ')'"
+                        min="0"
+                        [max]="payload.type === 'commercial' ? 350 : 200">
+                    <span class="input-unit">DT</span>
+                </div>
+                <button class="btn-send" (click)="sendAmount()" [disabled]="!!amountError || !amount">
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
+            </div>
+            <div class="consumption-limit-hint">
+                <i class="fas fa-info-circle"></i>
+                Max allowed: <strong>{{payload.type === 'commercial' || 'Utility' ? 350 : 200}} DT</strong>
+                for {{payload.type}} vehicles
+            </div>
+            <small class="field-error" *ngIf="amountError">
+                <i class="fas fa-exclamation-circle"></i> {{amountError}}
+            </small>
+        </div>
+    </div>
+
+</div>

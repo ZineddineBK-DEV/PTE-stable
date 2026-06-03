@@ -1,0 +1,353 @@
+<section class="main-content">
+    <ul class="breadcrumb breadcrumb-style">
+        <li class="breadcrumb-item">
+            <h5 class="page-title m-b-0">Users Management</h5>
+        </li>
+        <li class="breadcrumb-item bcrumb-1">
+            <a routerLink="/dashboard/main">
+                <i class="fas fa-home font-17"></i>
+            </a>
+        </li>
+        <li class="breadcrumb-item">Users</li>
+        <li class="breadcrumb-item">List</li>
+    </ul>
+
+    <div class="section-body">
+        <!-- Stats Cards Row -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{employeesCount}}</h3>
+                        <p>Total Users</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-success">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{ activeUsersCount }}</h3>
+                        <p>Active Users</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-warning">
+                        <i class="fas fa-user-times"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{ inactiveUsersCount }}</h3>
+                        <p>Inactive Users</p>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-info">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{getUniqueDepartments().length}}</h3>
+                        <p>Departments</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4" *ngIf="!loadingIndicator">
+            <div class="col-xl-6 col-lg-6 mb-3">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h6 class="mb-0">User Status Distribution</h6>
+                    </div>
+                    <div class="card-body">
+                        <apx-chart [series]="userStatsChartOptions.series" [chart]="userStatsChartOptions.chart"
+                            [labels]="userStatsChartOptions.labels" [colors]="userStatsChartOptions.colors"
+                            [legend]="userStatsChartOptions.legend" [dataLabels]="userStatsChartOptions.dataLabels"
+                            [plotOptions]="userStatsChartOptions.plotOptions"></apx-chart>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 col-lg-6 mb-3">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Users by Department</h6>
+                    </div>
+                    <div class="card-body">
+                        <apx-chart [series]="departmentChartOptions.series" [chart]="departmentChartOptions.chart"
+                            [plotOptions]="departmentChartOptions.plotOptions"
+                            [dataLabels]="departmentChartOptions.dataLabels" [colors]="departmentChartOptions.colors"
+                            [xaxis]="departmentChartOptions.xaxis" [yaxis]="departmentChartOptions.yaxis"
+                            [grid]="departmentChartOptions.grid"></apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Card -->
+        <div class="card modern-card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-users text-primary me-2"></i>
+                        Users Directory
+                    </h4>
+                    <div class="view-toggle">
+                        <button class="btn btn-sm" [class.active]="viewMode === 'cards'"
+                            (click)="toggleViewMode('cards')">
+                            <i class="fas fa-th"></i> Cards
+                        </button>
+                        <button class="btn btn-sm" [class.active]="viewMode === 'table'"
+                            (click)="toggleViewMode('table')">
+                            <i class="fas fa-list"></i> Table
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <!-- Advanced Filters -->
+                <div class="filters-section mb-4">
+                    <div class="row g-3">
+                        <!-- Search -->
+                        <div class="col-xl-4 col-lg-6 col-md-6">
+                            <div class="filter-group">
+                                <label><i class="fas fa-search"></i> Search</label>
+                                <input type="text" class="form-control" placeholder="Search users..."
+                                    [(ngModel)]="searchQuery" (keyup)="applyFilters()">
+                            </div>
+                        </div>
+
+                        <!-- Role Filter -->
+                        <div class="col-xl-2 col-lg-6 col-md-6">
+                            <div class="filter-group">
+                                <label><i class="fas fa-user-tag"></i> Role</label>
+                                <select class="form-control" [(ngModel)]="selectedRole" (change)="applyFilters()">
+                                    <option value="all">All Roles</option>
+                                    <option *ngFor="let role of getUniqueRoles()" [value]="role">{{role}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div class="col-xl-2 col-lg-6 col-md-6">
+                            <div class="filter-group">
+                                <label><i class="fas fa-toggle-on"></i> Status</label>
+                                <select class="form-control" [(ngModel)]="selectedStatus" (change)="applyFilters()">
+                                    <option value="all">All Status</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Department Filter -->
+                        <div class="col-xl-3 col-lg-6 col-md-6">
+                            <div class="filter-group">
+                                <label><i class="fas fa-building"></i> Department</label>
+                                <select class="form-control" [(ngModel)]="selectedDepartment" (change)="applyFilters()">
+                                    <option value="all">All Departments</option>
+                                    <option *ngFor="let dept of getUniqueDepartments()" [value]="dept">{{dept}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Clear Filters -->
+                        <div class="col-xl-1 col-lg-6 col-md-6 d-flex align-items-end">
+                            <button class="btn btn-outline-secondary w-100" (click)="clearFilters()"
+                                ngbTooltip="Clear all filters">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Active Filters Display -->
+                    <div class="active-filters mt-3"
+                        *ngIf="selectedRole !== 'all' || selectedStatus !== 'all' || selectedDepartment !== 'all' || searchQuery">
+                        <span class="filter-label">Active Filters:</span>
+                        <span class="filter-badge" *ngIf="searchQuery">
+                            Search: "{{searchQuery}}" <i class="fas fa-times"
+                                (click)="searchQuery=''; applyFilters()"></i>
+                        </span>
+                        <span class="filter-badge" *ngIf="selectedRole !== 'all'">
+                            Role: {{selectedRole}} <i class="fas fa-times"
+                                (click)="selectedRole='all'; applyFilters()"></i>
+                        </span>
+                        <span class="filter-badge" *ngIf="selectedStatus !== 'all'">
+                            Status: {{selectedStatus}} <i class="fas fa-times"
+                                (click)="selectedStatus='all'; applyFilters()"></i>
+                        </span>
+                        <span class="filter-badge" *ngIf="selectedDepartment !== 'all'">
+                            Dept: {{selectedDepartment}} <i class="fas fa-times"
+                                (click)="selectedDepartment='all'; applyFilters()"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Results Count -->
+                <div class="results-count mb-3">
+                    <span>Showing <strong>{{filteredRows.length}}</strong> of <strong>{{employeesCount}}</strong>
+                        users</span>
+                </div>
+
+                <!-- Loading Indicator -->
+                <div *ngIf="loadingIndicator" class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Cards View -->
+                <div *ngIf="!loadingIndicator && viewMode === 'cards'" class="row">
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4" *ngFor="let user of filteredRows">
+                        <div class="user-card">
+                            <div class="user-card-header">
+                                <img [src]="picsUrl + user.image" class="user-avatar" alt="{{user.firstName}}">
+                                <div class="user-status" [class.status-active]="user.isEnabled === 'Active'"
+                                    [class.status-inactive]="user.isEnabled === 'Inactive'">
+                                </div>
+                            </div>
+                            <div class="user-card-body">
+                                <h5 class="user-name">{{user.firstName}} {{user.lastName}}</h5>
+                                <span class="user-role-badge" [ngClass]="getRoleBadgeClass(user.roles[0])">
+                                    {{user.roles[0]}}
+                                </span>
+                                <div class="user-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>{{user.email}}</span>
+                                    </div>
+                                    <div class="info-item" *ngIf="user.phone">
+                                        <i class="fas fa-phone"></i>
+                                        <span>{{user.phone}}</span>
+                                    </div>
+                                    <div class="info-item" *ngIf="user.departement">
+                                        <i class="fas fa-building"></i>
+                                        <span>{{user.departement}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="user-card-footer" *ngIf="user.isEnabled==='Active'">
+                                <button class="btn-icon btn-primary" (click)="showUserDetailsModal(user)"
+                                    ngbTooltip="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button *ngIf="userRole == 'ADMIN'" class="btn-icon btn-danger"
+                                    (click)="switchToExternalUser(user._id)" ngbTooltip="Switch to External">
+                                    <i class="fas fa-archive"></i>
+                                </button>
+                                <button class="btn-icon btn-info" [routerLink]="'/dashboard/user-profile/' + user._id"
+                                    ngbTooltip="Go to Profile">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                                <button *ngIf="userRole == 'ADMIN'" class="btn-icon btn-secondary"
+                                    (click)="changeRole(user._id)" ngbTooltip="Change Role">
+                                    <i class="fas fa-user-cog"></i>
+                                </button>
+                            </div>
+                            <div class="user-card-footer" *ngIf="user.isEnabled==='Inactive'">
+                               <span class="text-warning">This user isn't accpted yet.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- No Results -->
+                    <div *ngIf="filteredRows.length === 0" class="col-12">
+                        <div class="no-results">
+                            <i class="fas fa-search"></i>
+                            <h5>No users found</h5>
+                            <p>Try adjusting your filters or search criteria</p>
+                            <button class="btn btn-primary" (click)="clearFilters()">Clear Filters</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table View -->
+                <div *ngIf="!loadingIndicator && viewMode === 'table'" class="table-view">
+                    <ngx-datatable #table class="material modern-table" [rows]="filteredRows"
+                        [sortType]="SortType.multi" [loadingIndicator]="loadingIndicator" columnMode="force"
+                        [headerHeight]="50" [footerHeight]="50" rowHeight="auto" [limit]="10"
+                        [scrollbarH]="scrollBarHorizontal" [reorderable]="reorderable">
+
+                        <ngx-datatable-column [width]="280" name="User">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="table-user-cell">
+                                    <img [src]="picsUrl + row.image" class="table-user-img" />
+                                    <div class="table-user-info">
+                                        <div class="user-name-text">{{row.firstName}} {{row.lastName}}</div>
+                                        <div class="user-email-text">{{row.email}}</div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Phone">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class="phone-text">{{row.phone || 'N/A'}}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="150" name="Role">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class="role-badge" [ngClass]="getRoleBadgeClass(row.roles[0])">
+                                    {{row.roles[0]}}
+                                </span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="120" name="Status">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class="status-badge" [class.badge-active]="row.isEnabled === 'Active'"
+                                    [class.badge-inactive]="row.isEnabled === 'Inactive'">
+                                    <i class="fas fa-circle"></i> {{row.isEnabled}}
+                                </span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="150" name="Department">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class="dept-text">{{row.departement || 'N/A'}}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="180" name="Actions" [sortable]="false">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="table-actions">
+                                    <button class="btn-table-action btn-primary" (click)="showUserDetailsModal(row)"
+                                        ngbTooltip="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button *ngIf="userRole == 'ADMIN'" class="btn-table-action btn-danger"
+                                        (click)="switchToExternalUser(row._id)" ngbTooltip="Switch to External">
+                                        <i class="fas fa-archive"></i>
+                                    </button>
+                                    <button class="btn-table-action btn-info"
+                                        [routerLink]="'/dashboard/user-profile/' + row._id" ngbTooltip="Go to Profile">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                    <button *ngIf="userRole == 'ADMIN'" class="btn-table-action btn-secondary"
+                                        (click)="changeRole(row._id)" ngbTooltip="Change Role">
+                                        <i class="fas fa-user-cog"></i>
+                                    </button>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

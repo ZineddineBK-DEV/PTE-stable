@@ -1,0 +1,226 @@
+<div class="modal-header-modern">
+    <div class="modal-title-section">
+        <div class="icon-circle">
+            <i class="fas fa-file-signature"></i>
+        </div>
+        <div>
+            <h4 class="modal-title">Technicians Logs</h4>
+            <p class="modal-subtitle">Generate and export mission reports</p>
+        </div>
+    </div>
+    <button type="button" class="btn-close-modern" (click)="activeModal.dismiss()">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body-modern">
+
+    <!-- Filter Options -->
+    <div class="options-grid">
+        <!-- Date Options -->
+        <div class="option-group">
+            <div class="option-group-title">
+                <i class="fas fa-calendar-alt"></i>
+                Date Filter
+            </div>
+            <div class="option-cards">
+                <label class="option-card" [class.selected]="selectedDateOption === 'dateRang'">
+                    <input type="radio" name="dateOption" [value]="'dateRang'" [(ngModel)]="selectedDateOption" hidden>
+                    <div class="option-card-icon">
+                        <i class="fas fa-calendar-week"></i>
+                    </div>
+                    <span>Date Range</span>
+                    <div class="option-check"><i class="fas fa-check"></i></div>
+                </label>
+                <label class="option-card" [class.selected]="selectedDateOption === 'oneDay'">
+                    <input type="radio" name="dateOption" [value]="'oneDay'" [(ngModel)]="selectedDateOption" hidden>
+                    <div class="option-card-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <span>Specific Day</span>
+                    <div class="option-check"><i class="fas fa-check"></i></div>
+                </label>
+            </div>
+        </div>
+
+        <!-- User Options -->
+        <div class="option-group">
+            <div class="option-group-title">
+                <i class="fas fa-users"></i>
+                User Filter
+            </div>
+            <div class="option-cards">
+                <label class="option-card" [class.selected]="selectedUserOption === 'allUsers'">
+                    <input type="radio" name="userOption" [value]="'allUsers'" [(ngModel)]="selectedUserOption" hidden>
+                    <div class="option-card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span>All Users</span>
+                    <div class="option-check"><i class="fas fa-check"></i></div>
+                </label>
+                <label class="option-card" [class.selected]="selectedUserOption === 'oneUser'">
+                    <input type="radio" name="userOption" [value]="'oneUser'" [(ngModel)]="selectedUserOption" hidden>
+                    <div class="option-card-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>Specific User</span>
+                    <div class="option-check"><i class="fas fa-check"></i></div>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="logForm" (ngSubmit)="onSubmit(logForm)">
+
+        <!-- Date Range -->
+        <div class="form-row" *ngIf="selectedDateOption === 'dateRang'">
+            <div class="form-group-modern">
+                <label class="form-label-modern">
+                    <i class="fas fa-calendar-plus"></i>
+                    Start Date <span class="required">*</span>
+                </label>
+                <input type="date" class="form-control-modern" formControlName="dateRangStart">
+            </div>
+            <div class="form-group-modern">
+                <label class="form-label-modern">
+                    <i class="fas fa-calendar-check"></i>
+                    End Date <span class="required">*</span>
+                </label>
+                <input type="date" class="form-control-modern" formControlName="dateRangEnd">
+            </div>
+        </div>
+
+        <!-- Specific Day -->
+        <div class="form-group-modern" *ngIf="selectedDateOption === 'oneDay'">
+            <label class="form-label-modern">
+                <i class="fas fa-calendar-day"></i>
+                Date <span class="required">*</span>
+            </label>
+            <input type="date" class="form-control-modern" formControlName="day">
+        </div>
+
+        <!-- Technician Select -->
+        <div class="form-group-modern" *ngIf="selectedUserOption === 'oneUser'">
+            <label class="form-label-modern">
+                <i class="fas fa-user-cog"></i>
+                Choose Technician <span class="required">*</span>
+            </label>
+            <select class="form-control-modern" formControlName="tech">
+                <option selected disabled value="">Please select a technician</option>
+                <option *ngFor="let tech of payload" [value]="tech._id">
+                    {{tech.firstName + " " + tech.lastName}}
+                </option>
+            </select>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-bar">
+            <div class="action-bar-left">
+                <button type="button" class="btn-export pdf" (click)="download()" [disabled]="!log">
+                    <div class="btn-export-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="btn-export-text">
+                        <span class="btn-export-label">Export</span>
+                        <span class="btn-export-type">PDF</span>
+                    </div>
+                </button>
+                <button type="button" class="btn-export excel" (click)="downloadExcel()" [disabled]="!log">
+                    <div class="btn-export-icon">
+                        <i class="fas fa-file-excel"></i>
+                    </div>
+                    <div class="btn-export-text">
+                        <span class="btn-export-label">Export</span>
+                        <span class="btn-export-type">Excel</span>
+                    </div>
+                </button>
+            </div>
+            <div class="action-bar-right">
+                <!-- <button type="button" class="btn-modern btn-secondary" (click)="activeModal.close('Close click')">
+                    <i class="fas fa-times"></i> Close
+                </button> -->
+                <button type="submit" class="btn-modern btn-primary">
+                    <i class="fas fa-search"></i> Show Results
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Results Table -->
+    <div class="results-section" *ngIf="log" #pdfContent>
+        <div class="results-header">
+            <div class="results-title">
+                <i class="fas fa-table"></i>
+                Mission Table
+            </div>
+            <div class="results-period">
+                <span *ngIf="selectedDateOption === 'dateRang'">
+                    <i class="fas fa-calendar-alt"></i>
+                    {{logForm.value.dateRangStart | date:'dd/MM/yyyy'}}
+                    &rarr;
+                    {{logForm.value.dateRangEnd | date:'dd/MM/yyyy'}}
+                </span>
+                <span *ngIf="selectedDateOption === 'oneDay'">
+                    <i class="fas fa-calendar-day"></i>
+                    {{logForm.value.day | date:'dd/MM/yyyy'}}
+                </span>
+            </div>
+            <div class="results-count">
+                <span class="count-badge">{{sortedLog?.length}} records</span>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Matricule</th>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Destination</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let l of sortedLog; let i = index">
+                        <td class="row-num">{{i + 1}}</td>
+                        <td>
+                            <span class="badge-matricule">{{l.engineer.matricule || 'N/A'}}</span>
+                        </td>
+                        <td class="email-cell">{{l.engineer.email}}</td>
+                        <td class="name-cell">
+                            {{l.engineer.firstName.toUpperCase() + ' ' + l.engineer.lastName.toUpperCase()}}
+                        </td>
+                        <td>
+                            <div class="date-cell">
+                                <i class="fas fa-sign-out-alt"></i>
+                                {{l.start | date:'dd/MM/yyyy HH:mm'}}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="date-cell arrival">
+                                <i class="fas fa-sign-in-alt"></i>
+                                {{l.end | date:'dd/MM/yyyy HH:mm'}}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="destination-cell">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{l.title}}
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Empty Results -->
+        <div class="no-results" *ngIf="sortedLog?.length === 0">
+            <i class="fas fa-inbox"></i>
+            <p>No records found for the selected filters</p>
+        </div>
+    </div>
+</div>

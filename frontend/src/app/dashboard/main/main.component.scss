@@ -1,0 +1,215 @@
+
+:root {
+  --card-bg: #ffffff;
+  --text-primary: #1f2937;
+  --text-muted: #6b7280;
+  --shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+.dark {
+  --card-bg: #111827;
+  --text-primary: #f3f4f6;
+  --text-muted: #9ca3af;
+  --shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.card-stat {
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.card-stat:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+.card-gradient {
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.card-stat:hover .card-gradient { opacity: 0.5; }
+
+.users-gradient    { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+.vehicles-gradient { background: linear-gradient(135deg, #288f6d 0%, #0f3024 100%); }
+.rooms-gradient    { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+.posts-gradient    { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); }
+
+/* Progress Ring */
+.progress-ring__bg {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 6;
+  opacity: 0.2;
+}
+.progress-ring__progress {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.accent-link {
+  color: inherit;
+  background: linear-gradient(to right, currentColor, currentColor) no-repeat right bottom / 0% 2px;
+  transition: background-size 0.3s;
+}
+.accent-link:hover {
+  background-size: 100% 2px;
+}
+
+/* Tiny text for % change */
+.tiny-text {
+  font-size: 0.75rem;
+  display: block;
+}
+
+
+
+
+/* Modern Tabs - Underline with gradient animation */
+.modern-tabs {
+  border: none !important;
+  gap: 2rem;               /* space between tabs */
+  padding-bottom: 0.5rem;
+  position: relative;
+}
+
+.modern-tabs .nav-link {
+  color: #6b7280;          /* muted gray */
+  font-weight: 500;
+  font-size: 1.05rem;
+  padding: 0.75rem 0;
+  border: none !important;
+  background: none !important;
+  position: relative;
+  transition: color 0.3s ease;
+  margin-bottom: -1px;     /* overlap underline */
+}
+
+.modern-tabs .nav-link:hover {
+  color: #4f46e5;          /* indigo accent */
+}
+
+.modern-tabs .nav-link.active {
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+/* Animated gradient underline */
+.modern-tabs .nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 3px;
+  bottom: -2px;
+  left: 50%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6); /* indigo → purple gradient */
+  border-radius: 3px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+}
+
+.modern-tabs .nav-link:hover::after,
+.modern-tabs .nav-link.active::after {
+  width: 100%;
+  left: 0;
+  transform: translateX(0);
+}
+
+/* Card styling */
+.modern-tabs-card {
+  background: var(--card-bg, #ffffff);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.dark .modern-tabs-card {
+  --card-bg: #1f2937;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* Content area fade-in feel */
+.tab-content-modern {
+  padding: 1.5rem 1rem;
+  background: var(--card-bg, #ffffff);
+  border-radius: 0 0 1rem 1rem;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Optional: subtle hover lift on whole card */
+.modern-tabs-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+.modern-pills .nav-link {
+  border-radius: 25px;
+  padding: 0.65rem 1.5rem;
+  color: #4b5563;
+  transition: all 0.3s ease;
+}
+
+.modern-pills .nav-link.active {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  color: white;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.modern-pills .nav-link:hover:not(.active) {
+  background: rgba(99, 102, 241, 0.1);
+  color: #4f46e5;
+}
+
+
+
+
+
+
+
+
+// .v{
+//     color: #f0ad4e ;
+// }
+// .r{
+//     color: #5cb85c ;
+// }
+// .t{
+//     color: #0275d8 ;
+// }
+// .collapseButton{
+//     width: 100%;
+//     font-size: 2em;
+//     padding: 20px;
+//     color: rgb(138, 137, 137);
+//     background-color: transparent;
+//     border: none;
+//     font-weight: bolder;
+//     text-align: left;
+// }
+// .collapseButton:hover{
+//     color:#3656b0 ;
+//     background-color: transparent;
+//     text-align: left;
+// }
+
+// .icon{
+//     font-size: 0.9em;
+//     // margin-left: 100px;
+//     float: right;
+// }
+// .noLink{
+//     color:#8592F2 ;
+// }

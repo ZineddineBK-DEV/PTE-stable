@@ -1,0 +1,326 @@
+<div class="intern-docs-modal">
+
+  <!-- Modal Header -->
+  <div class="modal-header-custom">
+    <div class="modal-header-left">
+      <div class="modal-header-icon">
+        <i class="far fa-folder-open"></i>
+      </div>
+      <div>
+        <h5 class="modal-title-text" *ngIf="userDoc && userDoc[0]">
+          {{ userDoc[0].user.firstName + ' ' + userDoc[0].user.lastName }}
+        </h5>
+        <span class="modal-subtitle">Internship Documents</span>
+      </div>
+    </div>
+    <button class="modal-close-btn" (click)="activeModal.dismiss()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body-custom" *ngIf="userDoc">
+
+    <!-- Upload Certificate Banner (only when rapport exists and attestation missing) -->
+    <div class="upload-banner" *ngIf="userDoc[0].rapport !== '' && userDoc[0].attestation === ''">
+      <div class="upload-banner-icon">
+        <i class="fas fa-certificate"></i>
+      </div>
+      <div class="upload-banner-content">
+        <h6>Upload Internship Certificate</h6>
+        <p>A report has been submitted. You can now upload the internship certificate.</p>
+      </div>
+      <div class="upload-zone-wrapper">
+        <ngx-dropzone
+          class="custom-dropzone"
+          [multiple]="false"
+          (change)="onSelectCertifFiles($event)"
+        >
+          <ngx-dropzone-label>
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>Click or drag & drop</span>
+            <small>PDF or image files only</small>
+          </ngx-dropzone-label>
+          <ngx-dropzone-preview
+            *ngFor="let f of certifFiles"
+            [file]="f"
+            [removable]="true"
+            (removed)="onRemoveCertifFiles(f)"
+          >
+            <ngx-dropzone-label>
+              <i class="far fa-file-pdf"></i>
+              <br />{{ f.name }}
+            </ngx-dropzone-label>
+          </ngx-dropzone-preview>
+        </ngx-dropzone>
+      </div>
+      <button class="btn-upload" (click)="uploadCertif()" [disabled]="certifFiles.length === 0">
+        <i class="fas fa-upload"></i>
+        <span>Upload Certificate</span>
+      </button>
+    </div>
+
+    <!-- Section Title -->
+    <div class="docs-section-header">
+      <div class="docs-section-line"></div>
+      <span class="docs-section-label">
+        <i class="fas fa-paperclip"></i> Uploaded Files
+      </span>
+      <div class="docs-section-line"></div>
+    </div>
+
+    <!-- Documents Grid -->
+    <div class="docs-grid">
+
+      <!-- Internship Request -->
+      <div class="doc-card">
+        <div class="doc-card-header">
+          <div class="doc-icon-wrap bg-blue">
+            <i class="far fa-file-alt"></i>
+          </div>
+          <div class="doc-card-title">Internship Request</div>
+        </div>
+        <div class="doc-card-body" *ngIf="userDoc[0].demande_stage !== ''">
+          <span class="doc-filename" title="{{ userDoc[0].demande_stage }}">
+            {{ userDoc[0].demande_stage }}
+          </span>
+          <a
+            class="doc-action-btn btn-download"
+            href="{{ requestUrl + '/' + userDoc[0].demande_stage }}"
+            target="_blank"
+            ngbPopover="Download internship request"
+            triggers="mouseenter:mouseleave"
+            placement="top"
+          >
+            <i class="fas fa-download"></i>
+          </a>
+        </div>
+        <div class="doc-card-empty" *ngIf="userDoc[0].demande_stage === ''">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>No file uploaded yet</span>
+        </div>
+      </div>
+
+      <!-- Internship Agreement -->
+      <div class="doc-card">
+        <div class="doc-card-header">
+          <div class="doc-icon-wrap bg-purple">
+            <i class="far fa-file-alt"></i>
+          </div>
+          <div class="doc-card-title">Internship Agreement</div>
+        </div>
+        <div class="doc-card-body" *ngIf="userDoc[0].convention !== ''">
+          <span class="doc-filename" title="{{ userDoc[0].convention }}">
+            {{ userDoc[0].convention }}
+          </span>
+          <a
+            class="doc-action-btn btn-download"
+            href="{{ conventionUrl + '/' + userDoc[0].convention }}"
+            target="_blank"
+            ngbPopover="Download internship agreement"
+            triggers="mouseenter:mouseleave"
+            placement="top"
+          >
+            <i class="fas fa-download"></i>
+          </a>
+        </div>
+        <div class="doc-card-empty" *ngIf="userDoc[0].convention === ''">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>No file uploaded yet</span>
+        </div>
+      </div>
+
+      <!-- Identity Card -->
+      <div class="doc-card">
+        <div class="doc-card-header">
+          <div class="doc-icon-wrap bg-teal">
+            <i class="far fa-id-card"></i>
+          </div>
+          <div class="doc-card-title">Identity Card</div>
+        </div>
+        <div class="doc-card-body" *ngIf="userDoc[0].cin !== ''">
+          <span class="doc-filename" title="{{ userDoc[0].cin }}">
+            {{ userDoc[0].cin }}
+          </span>
+          <a
+            class="doc-action-btn btn-download"
+            href="{{ cinUrl + '/' + userDoc[0].cin }}"
+            target="_blank"
+            ngbPopover="Download identity card"
+            triggers="mouseenter:mouseleave"
+            placement="top"
+          >
+            <i class="fas fa-download"></i>
+          </a>
+        </div>
+        <div class="doc-card-empty" *ngIf="userDoc[0].cin === ''">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>No file uploaded yet</span>
+        </div>
+      </div>
+
+      <!-- Assignment Letter -->
+      <div class="doc-card">
+        <div class="doc-card-header">
+          <div class="doc-icon-wrap bg-amber">
+            <i class="far fa-envelope"></i>
+          </div>
+          <div class="doc-card-title">Assignment Letter</div>
+        </div>
+        <div class="doc-card-body" *ngIf="userDoc[0].lettre_affectation !== ''">
+          <span class="doc-filename" title="{{ userDoc[0].lettre_affectation }}">
+            {{ userDoc[0].lettre_affectation }}
+          </span>
+          <a
+            class="doc-action-btn btn-download"
+            href="{{ letterUrl + '/' + userDoc[0].lettre_affectation }}"
+            target="_blank"
+            ngbPopover="Download assignment letter"
+            triggers="mouseenter:mouseleave"
+            placement="top"
+          >
+            <i class="fas fa-download"></i>
+          </a>
+        </div>
+        <div class="doc-card-empty" *ngIf="userDoc[0].lettre_affectation === ''">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>No file uploaded yet</span>
+        </div>
+      </div>
+
+      <!-- Attendance Sheet -->
+      <div class="doc-card">
+        <div class="doc-card-header">
+          <div class="doc-icon-wrap bg-green">
+            <i class="far fa-calendar-check"></i>
+          </div>
+          <div class="doc-card-title">Attendance Sheet</div>
+        </div>
+        <div class="doc-card-body" *ngIf="userDoc[0].fiche_presence !== ''">
+          <span class="doc-filename" title="{{ userDoc[0].fiche_presence }}">
+            {{ userDoc[0].fiche_presence }}
+          </span>
+          <a
+            class="doc-action-btn btn-download"
+            href="{{ presenceUrl + '/' + userDoc[0].fiche_presence }}"
+            target="_blank"
+            ngbPopover="Download attendance sheet"
+            triggers="mouseenter:mouseleave"
+            placement="top"
+          >
+            <i class="fas fa-download"></i>
+          </a>
+        </div>
+        <div class="doc-card-empty" *ngIf="userDoc[0].fiche_presence === ''">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>No file uploaded yet</span>
+        </div>
+      </div>
+
+      <!-- Internship Report -->
+      <div class="doc-card">
+        <div class="doc-card-header">
+          <div class="doc-icon-wrap bg-indigo">
+            <i class="far fa-file-pdf"></i>
+          </div>
+          <div class="doc-card-title">Internship Report</div>
+        </div>
+        <div class="doc-card-body" *ngIf="userDoc[0].rapport !== ''">
+          <span class="doc-filename" title="{{ userDoc[0].rapport }}">
+            {{ userDoc[0].rapport }}
+          </span>
+          <a
+            class="doc-action-btn btn-download"
+            href="{{ reportUrl + '/' + userDoc[0].rapport }}"
+            target="_blank"
+            ngbPopover="Download internship report"
+            triggers="mouseenter:mouseleave"
+            placement="top"
+          >
+            <i class="fas fa-download"></i>
+          </a>
+        </div>
+        <div class="doc-card-empty" *ngIf="userDoc[0].rapport === ''">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>No file uploaded yet</span>
+        </div>
+      </div>
+
+      <!-- Internship Certificate -->
+      <div class="doc-card">
+        <div class="doc-card-header">
+          <div class="doc-icon-wrap bg-gold">
+            <i class="fas fa-certificate"></i>
+          </div>
+          <div class="doc-card-title">Internship Certificate</div>
+        </div>
+        <div class="doc-card-body" *ngIf="userDoc[0].attestation !== ''">
+          <span class="doc-filename" title="{{ userDoc[0].attestation }}">
+            {{ userDoc[0].attestation }}
+          </span>
+          <button
+            class="doc-action-btn btn-delete"
+            (click)="deleteCertif(userDoc[0]._id)"
+            ngbPopover="Delete internship certificate"
+            triggers="mouseenter:mouseleave"
+            placement="top"
+          >
+            <i class="far fa-trash-alt"></i>
+          </button>
+        </div>
+        <div class="doc-card-empty" *ngIf="userDoc[0].attestation === ''">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>No file uploaded yet</span>
+        </div>
+      </div>
+
+      <!-- CV -->
+      <div class="doc-card">
+        <div class="doc-card-header">
+          <div class="doc-icon-wrap bg-pink">
+            <i class="far fa-address-card"></i>
+          </div>
+          <div class="doc-card-title">Curriculum Vitae</div>
+        </div>
+        <div class="doc-card-body" *ngIf="userDoc[0].cv_file !== ''">
+          <span class="doc-filename" title="{{ userDoc[0].cv_file }}">
+            {{ userDoc[0].cv_file }}
+          </span>
+          <button
+            class="doc-action-btn btn-download"
+            (click)="downloadCv(userDoc[0].cv_file)"
+            ngbPopover="Download CV"
+            triggers="mouseenter:mouseleave"
+            placement="top"
+          >
+            <i class="fas fa-download"></i>
+          </button>
+        </div>
+        <div class="doc-card-empty" *ngIf="userDoc[0].cv_file === ''">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>No file uploaded yet</span>
+        </div>
+      </div>
+
+    </div>
+    <!-- /docs-grid -->
+
+  </div>
+  <!-- /modal-body-custom -->
+
+  <!-- Loading skeleton while userDoc not ready -->
+  <div class="modal-body-custom loading-state" *ngIf="!userDoc">
+    <div class="spinner-wrapper">
+      <div class="spinner-ring"></div>
+      <span>Loading documents...</span>
+    </div>
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer-custom">
+    <button class="btn-close-modal" (click)="activeModal.dismiss()">
+      <i class="fas fa-times me-2"></i> Close
+    </button>
+  </div>
+
+</div>

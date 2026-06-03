@@ -1,0 +1,201 @@
+<div class="cv-modal">
+
+  <!-- Modal Header -->
+  <div class="cv-modal-header">
+    <div class="cv-modal-header-left">
+      <div class="header-icon">
+        <i class="fas fa-file-alt"></i>
+      </div>
+      <div>
+        <h5 class="header-title">Curriculum Vitae</h5>
+        <p class="header-sub">Preview and download the CV</p>
+      </div>
+    </div>
+    <button class="download-btn" (click)="DownloadCV()" type="button">
+      <i class="fas fa-download"></i>
+      Download PDF
+    </button>
+  </div>
+
+  <!-- CV Content -->
+  <div #pdfContent class="cv-print-root">
+
+    <!-- Hero Header -->
+    <header class="cv-hero">
+      <div class="cv-hero-accent"></div>
+      <div class="cv-hero-content">
+        <div class="cv-hero-main">
+          <div class="cv-name-block">
+            <h1 class="cv-name">{{ user.firstName + " " + user.lastName }}</h1>
+            <p class="cv-role">{{ user.title }}</p>
+          </div>
+        </div>
+        <div class="cv-contact">
+          <div class="contact-item" *ngIf="user.phone">
+            <div class="contact-icon"><i class="fas fa-phone"></i></div>
+            <div>
+              <span class="contact-label">Phone</span>
+              <strong class="contact-value">{{ user.phone }}</strong>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+            <div>
+              <span class="contact-label">Email</span>
+              <strong class="contact-value">{{ user.email }}</strong>
+            </div>
+          </div>
+          <div class="contact-item" *ngIf="user.departement">
+            <div class="contact-icon"><i class="fas fa-building"></i></div>
+            <div>
+              <span class="contact-label">Department</span>
+              <strong class="contact-value">{{ user.departement }}</strong>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon"><i class="fas fa-car"></i></div>
+            <div>
+              <span class="contact-label">Driving License</span>
+              <strong class="contact-value">{{ lisence }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CV Body Grid -->
+    <main class="cv-grid">
+
+      <!-- Left Sidebar -->
+      <aside class="cv-left">
+
+        <!-- Summary (left if short) -->
+        <section class="cv-section" *ngIf="user.cv.summary != ''">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-user"></i></div>
+            <h3>Profile</h3>
+          </div>
+          <p class="summary">{{ user.cv.summary }}</p>
+        </section>
+
+        <!-- Education -->
+        <section class="cv-section" *ngIf="educations?.length > 0">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-graduation-cap"></i></div>
+            <h3>Education</h3>
+          </div>
+          <div class="item-list">
+            <article class="item" *ngFor="let edu of educations">
+              <p class="item-date">
+                <i class="fas fa-clock"></i>
+                {{ edu.year_start | date:"MM/YYYY" }} — {{ edu.year_end | date:"MM/YYYY" }}
+              </p>
+              <p class="item-title">{{ edu.diploma }}</p>
+              <p class="item-sub">{{ edu.section }}</p>
+              <p class="item-org">
+                <i class="fas fa-university"></i>
+                {{ edu.establishment }}
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Languages -->
+        <section class="cv-section" *ngIf="languages?.length > 0">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-language"></i></div>
+            <h3>Languages</h3>
+          </div>
+          <div class="chip-list">
+            <span class="chip" *ngFor="let lang of languages">{{ lang.name }}</span>
+          </div>
+        </section>
+
+        <!-- Skills -->
+        <section class="cv-section" *ngIf="skills?.length > 0">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-tools"></i></div>
+            <h3>Skills</h3>
+          </div>
+          <div class="chip-list">
+            <span class="chip" *ngFor="let skill of skills">{{ skill.name }}</span>
+          </div>
+        </section>
+
+      </aside>
+
+      <!-- Right Main Content -->
+      <section class="cv-right">
+
+        <!-- Experience -->
+        <section class="cv-section" *ngIf="experiences?.length > 0">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-briefcase"></i></div>
+            <h3>Professional Experience</h3>
+          </div>
+          <div class="item-list">
+            <article class="item timeline-item" *ngFor="let exp of experiences">
+              <div class="timeline-dot"></div>
+              <div class="item-body">
+                <div class="item-top-row">
+                  <p class="item-title">{{ exp.job }}</p>
+                  <p class="item-date">{{ exp.start | date:"MM/YYYY" }} — {{ exp.end | date:"MM/YYYY" }}</p>
+                </div>
+                <p class="item-sub">
+                  <i class="fas fa-building"></i>
+                  {{ exp.company }}
+                </p>
+                <p class="item-desc">{{ exp.task_description }}</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Certifications -->
+        <section class="cv-section" *ngIf="certifications?.length > 0">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-certificate"></i></div>
+            <h3>Certifications</h3>
+          </div>
+          <div class="item-list certs-grid">
+            <article class="item cert-item" *ngFor="let cert of certifications">
+              <div class="cert-badge">
+                <i class="fas fa-award"></i>
+              </div>
+              <div>
+                <p class="item-title">{{ cert.domaine }}</p>
+                <p class="item-date">{{ cert.date | date:"MM/YYYY" }}</p>
+                <p class="item-sub">ID: {{ cert.credential }}</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Projects -->
+        <section class="cv-section" *ngIf="projets?.length > 0">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-project-diagram"></i></div>
+            <h3>Projects</h3>
+          </div>
+          <div class="item-list">
+            <article class="item timeline-item" *ngFor="let proj of projets">
+              <div class="timeline-dot project"></div>
+              <div class="item-body">
+                <div class="item-top-row">
+                  <p class="item-title">{{ proj.title }}</p>
+                  <p class="item-date">{{ proj.date | date:"MM/YYYY" }}</p>
+                </div>
+                <p class="item-sub">
+                  <i class="fas fa-building"></i>
+                  {{ proj.organization }}
+                </p>
+                <p class="item-desc">{{ proj.description }}</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+      </section>
+    </main>
+  </div>
+</div>

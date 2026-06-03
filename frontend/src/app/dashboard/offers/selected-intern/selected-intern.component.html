@@ -1,0 +1,282 @@
+<section class="main-content">
+    <ul class="breadcrumb breadcrumb-style">
+        <li class="breadcrumb-item">
+            <h5 class="page-title m-b-0">Interns Results</h5>
+        </li>
+        <li class="breadcrumb-item bcrumb-1">
+            <a routerLink="/dashboard/main">
+                <i class="fas fa-home font-17"></i>
+            </a>
+        </li>
+        <li class="breadcrumb-item">Interns</li>
+        <li class="breadcrumb-item">Results</li>
+    </ul>
+
+    <div class="section-body">
+
+        <!-- Stats Cards Row -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-primary">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{ internResults_temp.length || 0 }}</h3>
+                        <p>Total Selected</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-success">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{ getUniqueDepartments().length }}</h3>
+                        <p>Departments</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-info">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{ getAverageScore() }}%</h3>
+                        <p>Avg. Score</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-warning">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{ getTopScore() }}%</h3>
+                        <p>Top Score</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Card -->
+        <div class="card modern-card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-user-check me-2"></i>
+                        Selected Interns Directory
+                    </h4>
+                    <div class="view-toggle">
+                        <button class="btn btn-sm" [class.active]="viewMode === 'cards'"
+                            (click)="toggleViewMode('cards')">
+                            <i class="fas fa-th"></i> Cards
+                        </button>
+                        <button class="btn btn-sm" [class.active]="viewMode === 'table'"
+                            (click)="toggleViewMode('table')">
+                            <i class="fas fa-list"></i> Table
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <!-- Filters -->
+                <div class="filters-section mb-4">
+                    <div class="row g-3">
+                        <div class="col-xl-4 col-lg-6 col-md-6">
+                            <div class="filter-group">
+                                <label><i class="fas fa-search"></i> Search</label>
+                                <input type="text" class="form-control"
+                                    placeholder="Search by name, email or department…" (keyup)="updateFilter($event)">
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6">
+                            <div class="filter-group">
+                                <label><i class="fas fa-building"></i> Department</label>
+                                <select class="form-control" [(ngModel)]="selectedDepartment" (change)="applyFilters()">
+                                    <option value="all">All Departments</option>
+                                    <option *ngFor="let dept of getUniqueDepartments()" [value]="dept">{{dept}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6">
+                            <div class="filter-group">
+                                <label><i class="fas fa-sort-amount-down"></i> Min Score</label>
+                                <select class="form-control" [(ngModel)]="minScore" (change)="applyFilters()">
+                                    <option value="0">All Scores</option>
+                                    <option value="50">50% and above</option>
+                                    <option value="70">70% and above</option>
+                                    <option value="90">90% and above</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-6 col-md-6 d-flex align-items-end">
+                            <button class="btn btn-outline-secondary w-100" (click)="clearFilters()"
+                                ngbTooltip="Clear all filters">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Active Filters Display -->
+                    <div class="active-filters mt-3"
+                        *ngIf="selectedDepartment !== 'all' || minScore > 0 || searchQuery">
+                        <span class="filter-label">Active Filters:</span>
+                        <span class="filter-badge" *ngIf="searchQuery">
+                            Search: "{{searchQuery}}"
+                            <i class="fas fa-times" (click)="searchQuery=''; applyFilters()"></i>
+                        </span>
+                        <span class="filter-badge" *ngIf="selectedDepartment !== 'all'">
+                            Dept: {{selectedDepartment}}
+                            <i class="fas fa-times" (click)="selectedDepartment='all'; applyFilters()"></i>
+                        </span>
+                        <span class="filter-badge" *ngIf="minScore > 0">
+                            Score ≥ {{minScore}}%
+                            <i class="fas fa-times" (click)="minScore=0; applyFilters()"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Results Count -->
+                <div class="results-count mb-3">
+                    <span>Showing <strong>{{internResults.length || 0}}</strong> of
+                        <strong>{{internResults_temp.length || 0}}</strong> interns</span>
+                </div>
+
+                <!-- Loading -->
+                <div *ngIf="loadingIndicator" class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Cards View -->
+                <div *ngIf="!loadingIndicator && viewMode === 'cards'" class="row">
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4" *ngFor="let item of internResults">
+                        <div class="user-card">
+                            <div class="user-card-header">
+                                <img [src]="picsUrl + item.userId.image" class="user-avatar"
+                                    onerror="this.src='assets/images/avatar-default.png'"
+                                    alt="{{item.userId.firstName}}">
+                                <div class="score-badge-ring">{{item.score}}%</div>
+                            </div>
+                            <div class="user-card-body">
+                                <h5 class="user-name">{{item.userId.firstName}} {{item.userId.lastName}}</h5>
+                                <span class="user-role-badge badge-intern">{{item.userId.role}}</span>
+                                <div class="score-bar-wrap">
+                                    <div class="score-track">
+                                        <div class="score-fill" [style.width.%]="item.score"></div>
+                                    </div>
+                                    <span class="score-pct">{{item.score}}%</span>
+                                </div>
+                                <div class="user-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>{{item.userId.email}}</span>
+                                    </div>
+                                    <div class="info-item" *ngIf="item.userId.phone">
+                                        <i class="fas fa-phone"></i>
+                                        <span>{{item.userId.phone}}</span>
+                                    </div>
+                                    <div class="info-item" *ngIf="item.userId.departement">
+                                        <i class="fas fa-building"></i>
+                                        <span>{{item.userId.departement}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="user-card-footer" *ngIf="userRole === 'ASSISTANT' || userRole === 'ADMIN'">
+                                <button *ngIf="(userRole === 'ASSISTANT' || userRole === 'ADMIN')"
+                                    class="btn-icon btn-info" (click)="openDocsModal(item.userId._id)"
+                                    title="Show Documents">
+                                    <i class="fas fa-folder-open"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- No results -->
+                    <div *ngIf="internResults?.length === 0" class="col-12">
+                        <div class="no-results">
+                            <i class="fas fa-search"></i>
+                            <h5>No interns found</h5>
+                            <p>Try adjusting your filters or search criteria</p>
+                            <button class="btn btn-primary" (click)="clearFilters()">Clear Filters</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table View -->
+                <div *ngIf="!loadingIndicator && viewMode === 'table'" class="table-view">
+                    <ngx-datatable #table class="material modern-table" [rows]="internResults"
+                        [sortType]="SortType.multi" [loadingIndicator]="loadingIndicator" columnMode="force"
+                        [headerHeight]="50" [footerHeight]="50" rowHeight="auto" [limit]="10"
+                        [scrollbarH]="scrollBarHorizontal" [reorderable]="reorderable">
+
+                        <ngx-datatable-column [width]="280" name="Intern">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="table-user-cell">
+                                    <img [src]="picsUrl + row.userId.image" class="table-user-img"
+                                        onerror="this.src='assets/images/avatar-default.png'" />
+                                    <div class="table-user-info">
+                                        <div class="user-name-text">{{row.userId.firstName}} {{row.userId.lastName}}
+                                        </div>
+                                        <div class="user-email-text">{{row.userId.email}}</div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Phone">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class="phone-text">{{row.userId.phone || 'N/A'}}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="150" name="Role">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class="role-badge badge-intern">{{row.userId.role}}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="160" name="Department">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class="dept-text">{{row.userId.departement || 'N/A'}}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="200" name="Score">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="table-score-cell">
+                                    <div class="score-track">
+                                        <div class="score-fill" [style.width.%]="row.score"></div>
+                                    </div>
+                                    <span class="score-label">{{row.score}}%</span>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="120" name="Actions" [sortable]="false">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="table-actions" *ngIf="userRole === 'ASSISTANT' || userRole === 'ADMIN'">
+                                    <button *ngIf="(userRole === 'ASSISTANT' || userRole === 'ADMIN')"
+                                        class="btn-table-action btn-info" (click)="openDocsModal(row.userId._id)"
+                                        title="Show Documents">
+                                        <i class="fas fa-folder-open"></i>
+                                    </button>
+
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                    </ngx-datatable>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>

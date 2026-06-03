@@ -1,0 +1,109 @@
+<!-- HEADER -->
+<div class="modal-header modern-modal-header">
+  <div class="modal-title-wrapper">
+    <div class="modal-icon">
+      <i class="fas fa-user-plus"></i>
+    </div>
+    <div>
+      <h4 class="modal-title">Add External User</h4>
+      <p class="modal-subtitle">Create a new external profile</p>
+    </div>
+  </div>
+
+  <button type="button" class="btn-close-modern" (click)="activeModal.dismiss()">
+    <i class="fas fa-times"></i>
+  </button>
+</div>
+
+<!-- BODY -->
+<div class="modal-body modern-modal-body">
+
+  <!-- LOADING OVERLAY -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner-wrapper">
+      <div class="spinner-ring"></div>
+      <span>Creating external user...</span>
+    </div>
+  </div>
+
+  <form class="modern-form" [formGroup]="externalForm" (ngSubmit)="onSubmit(externalForm)">
+
+    <!-- NAME -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>First Name <span>*</span></label>
+        <input type="text" formControlName="fname" placeholder="Enter first name" />
+        <small *ngIf="externalForm.get('fname')?.touched && externalForm.get('fname')?.invalid">
+          First name is required
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Last Name <span>*</span></label>
+        <input type="text" formControlName="lname" placeholder="Enter last name" />
+        <small *ngIf="externalForm.get('lname')?.touched && externalForm.get('lname')?.invalid">
+          Last name is required
+        </small>
+      </div>
+    </div>
+
+    <!-- DEPARTMENT -->
+    <div class="form-group">
+      <label>Department <span>*</span></label>
+      <select formControlName="departement">
+        <option value="" disabled selected>Choose department</option>
+        <option value="Administration">Administration</option>
+        <option value="System">System</option>
+        <option value="Networking">Networking</option>
+        <option value="Development">Development</option>
+        <option value="Cyber Security">Cyber Security</option>
+      </select>
+      <small *ngIf="externalForm.get('departement')?.touched && externalForm.get('departement')?.invalid">
+        Department is required
+      </small>
+    </div>
+
+    <!-- FILE UPLOAD -->
+    <div class="form-group">
+      <label>Documents (CV, Certifications, Picture) <span>*</span></label>
+
+      <div class="dropzone-wrapper">
+        <ngx-dropzone [multiple]="true" (change)="onSelect($event)">
+          <ngx-dropzone-label>
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>Drag & drop files or click</span>
+            <small>Only PDF files allowed</small>
+          </ngx-dropzone-label>
+
+          <ngx-dropzone-preview
+            *ngFor="let f of files"
+            [file]="f"
+            [removable]="true"
+            (removed)="onRemove(f)">
+
+            <ngx-dropzone-label>
+              <div class="file-preview">
+                <i class="far fa-file-pdf"></i>
+                <span>{{ f.name }}</span>
+              </div>
+            </ngx-dropzone-label>
+
+          </ngx-dropzone-preview>
+        </ngx-dropzone>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="modal-footer modern-footer">
+      <button type="submit" class="btn-primary-modern" [disabled]="externalForm.invalid">
+        <i class="fas fa-user-plus"></i>
+        Add External
+      </button>
+
+      <button type="button" class="btn-light-modern" (click)="activeModal.close()">
+        Cancel
+      </button>
+    </div>
+
+  </form>
+</div>

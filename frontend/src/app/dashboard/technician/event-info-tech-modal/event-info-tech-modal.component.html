@@ -1,0 +1,205 @@
+<div class="event-modal-wrapper">
+
+  <!-- ── HEADER BANNER ── -->
+  <div class="modal-banner">
+    <div class="banner-avatar-wrap">
+      <img
+        *ngIf="event.engineer.image"
+        [src]="picsUrl + event.engineer.image"
+        [alt]="event.engineer.firstName"
+        class="banner-avatar-img"
+      />
+      <div *ngIf="!event.engineer.image" class="banner-initials">
+        {{ event.engineer.firstName[0] }}{{ event.engineer.lastName[0] }}
+      </div>
+    </div>
+
+    <div class="banner-title-block">
+      <div class="banner-label">
+        <i class="fas fa-user-clock"></i>
+        Technician Event
+      </div>
+      <h2 class="banner-client">{{ event.title }}</h2>
+      <span class="banner-engineer-badge">
+        <i class="fas fa-hard-hat"></i>
+        {{ event.engineer.firstName + ' ' + event.engineer.lastName }}
+      </span>
+    </div>
+
+    <button class="modal-close-btn" aria-label="Close" (click)="activeModal.close('modal closed')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- ── SUBHEADER ── -->
+  <div class="modal-subheader">
+    <div class="status-chips">
+      <!-- <span class="chip chip-active">
+        <span class="chip-dot"></span>
+        Active Event
+      </span> -->
+      <span class="chip chip-case" *ngIf="vehicleEvent?.caseNumber || event.caseNumber">
+        <i class="fas fa-hashtag"></i>
+        {{ vehicleEvent?.caseNumber || event.caseNumber }}
+      </span>
+    </div>
+
+    <button
+      class="btn-delete"
+      *ngIf="event.applicant._id === currentUserId"
+      (click)="deleteEvent(event._id)"
+    >
+      <i class="fas fa-trash"></i>
+      Delete
+    </button>
+  </div>
+
+  <!-- ── BODY ── -->
+  <div class="modal-body-scroll" *ngIf="event || vehicleEvent">
+    <div class="section-label">
+      <div class="section-icon">
+        <i class="fas fa-info"></i>
+      </div>
+      <span>Event Details</span>
+    </div>
+
+    <!-- Info rows -->
+    <div class="info-table">
+
+      <!-- Applicant -->
+      <div class="info-row">
+        <div class="info-icon indigo"><i class="fas fa-user"></i></div>
+        <span class="info-label">Applicant</span>
+        <span class="info-value">{{ event.applicant.firstName + ' ' + event.applicant.lastName }}</span>
+      </div>
+
+      <!-- PMA: project + task ref -->
+      <ng-container *ngIf="caseNumberRes && caseNumberRes.type === 'PMA'">
+        <div class="info-row" *ngIf="caseNumberRes?.data?.Project">
+          <div class="info-icon purple"><i class="fas fa-folder-open"></i></div>
+          <span class="info-label">Project</span>
+          <span class="info-value">{{ caseNumberRes?.data?.Project?.Projectname }}</span>
+        </div>
+        <div class="info-row" *ngIf="caseNumberRes?.data?.Project">
+          <div class="info-icon purple"><i class="fas fa-hashtag"></i></div>
+          <span class="info-label">Task Ref</span>
+          <span class="info-value">{{ vehicleEvent.caseNumber }}</span>
+        </div>
+      </ng-container>
+
+      <!-- Non-PMA: job + case number -->
+      <ng-container *ngIf="caseNumberRes && caseNumberRes.type !== 'PMA'">
+        <div class="info-row">
+          <div class="info-icon blue"><i class="fas fa-briefcase"></i></div>
+          <span class="info-label">Job</span>
+          <span class="info-value">{{ event.job }}</span>
+        </div>
+        <div class="info-row">
+          <div class="info-icon blue"><i class="fas fa-hashtag"></i></div>
+          <span class="info-label">Case Number</span>
+          <span class="info-value">{{ vehicleEvent.caseNumber }}</span>
+        </div>
+      </ng-container>
+
+      <!-- No caseNumberRes -->
+      <ng-container *ngIf="!caseNumberRes">
+        <div class="info-row">
+          <div class="info-icon blue"><i class="fas fa-briefcase"></i></div>
+          <span class="info-label">Job</span>
+          <span class="info-value">{{ event.job }}</span>
+        </div>
+      </ng-container>
+
+      <!-- Dates -->
+      <div class="info-row">
+        <div class="info-icon green"><i class="fas fa-play-circle"></i></div>
+        <span class="info-label">Start Date</span>
+        <span class="info-value">{{ event.start | date:'yyyy/MM/dd HH:mm' }}</span>
+      </div>
+      <div class="info-row">
+        <div class="info-icon red"><i class="fas fa-stop-circle"></i></div>
+        <span class="info-label">End Date</span>
+        <span class="info-value">{{ event.end | date:'yyyy/MM/dd HH:mm' }}</span>
+      </div>
+
+      <!-- Vehicle travel info -->
+      <ng-container *ngIf="vehicleEvent">
+        <div class="info-row">
+          <div class="info-icon orange"><i class="fas fa-map-marker-alt"></i></div>
+          <span class="info-label">Departure</span>
+          <span class="info-value">{{ vehicleEvent.departure }}</span>
+        </div>
+        <div class="info-row">
+          <div class="info-icon orange"><i class="fas fa-flag-checkered"></i></div>
+          <span class="info-label">Destination</span>
+          <span class="info-value">{{ vehicleEvent.destination }}</span>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="!vehicleEvent">
+        <div class="info-row" *ngIf="event.departure">
+          <div class="info-icon orange"><i class="fas fa-map-marker-alt"></i></div>
+          <span class="info-label">Departure</span>
+          <span class="info-value">{{ event?.departure }}</span>
+        </div>
+        <div class="info-row">
+          <div class="info-icon orange"><i class="fas fa-flag-checkered"></i></div>
+          <span class="info-label">Destination</span>
+          <span class="info-value">{{ event?.address }}</span>
+        </div>
+        <div class="info-row" *ngIf="event.caseNumber">
+          <div class="info-icon blue"><i class="fas fa-hashtag"></i></div>
+          <span class="info-label">Case Number</span>
+          <span class="info-value">{{ event?.caseNumber }}</span>
+        </div>
+      </ng-container>
+
+      <!-- Engineer -->
+      <div class="info-row">
+        <div class="info-icon indigo"><i class="fas fa-id-badge"></i></div>
+        <span class="info-label">Technician Title</span>
+        <span class="info-value">{{ event.engineer.title }}</span>
+      </div>
+      <div class="info-row">
+        <div class="info-icon yellow"><i class="fas fa-star"></i></div>
+        <span class="info-label">Experience</span>
+        <span class="info-value">
+          {{ event.engineer.experience }}
+          <span *ngIf="event.engineer.experience > 1">Years</span>
+          <span *ngIf="event.engineer.experience <= 1">Year</span>
+        </span>
+      </div>
+
+    </div><!-- /info-table -->
+
+    <!-- ── Engineer quick card ── -->
+    <div class="engineer-card">
+      <div class="engineer-card-avatar">
+        {{ event.engineer.firstName[0] }}{{ event.engineer.lastName[0] }}
+      </div>
+      <div class="engineer-card-info">
+        <p class="engineer-card-name">{{ event.engineer.firstName + ' ' + event.engineer.lastName }}</p>
+        <p class="engineer-card-title">{{ event.engineer.title }}</p>
+        <p class="engineer-card-exp">
+          <i class="fas fa-star"></i>
+          {{ event.engineer.experience }}
+          {{ event.engineer.experience > 1 ? 'years' : 'year' }} experience
+        </p>
+      </div>
+      <span class="engineer-card-badge">Assigned</span>
+    </div>
+
+  </div><!-- /modal-body-scroll -->
+
+  <!-- ── FOOTER ── -->
+  <div class="modal-footer-custom">
+    <span class="footer-id">
+      <i class="fas fa-shield-alt"></i>
+      CASE NUMBER: <code>{{ vehicleEvent?.caseNumber || event.caseNumber }}</code>
+    </span>
+    <button class="btn-close-footer" (click)="activeModal.close('modal closed')">
+      Close
+    </button>
+  </div>
+
+</div>

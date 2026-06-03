@@ -1,0 +1,142 @@
+<header class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
+  <h4 class="mb-0 fw-bold text-primary">My Mission Statistics</h4>
+  <div class="d-flex align-items-center gap-4 flex-wrap">
+    <div class="filter-group">
+      <label class="small fw-medium text-muted mb-1 d-block">Year</label>
+      <select class="form-select modern-select" [(ngModel)]="currentYear" (change)="loadMyStats()">
+        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label class="small fw-medium text-muted mb-1 d-block">Month</label>
+      <select class="form-select modern-select" [(ngModel)]="currentMonth" (change)="loadMyStats()">
+        <option value="">All Months</option>
+        <option *ngFor="let m of months" [value]="m.value">{{ m.name }}</option>
+      </select>
+    </div>
+    <small class="text-muted fst-italic align-self-end ms-3" *ngIf="stats">
+      Last updated: {{ currentTime | date:'short' }}
+    </small>
+  </div>
+</header>
+
+<!-- KPI Cards -->
+<div class="kpi-container mb-5">
+  <div class="kpi-flex">
+    
+    <!-- Total Missions -->
+    <div class="kpi-card">
+      <div class="kpi-icon bg-primary-subtle text-primary">
+        <i class="fas fa-rocket"></i>
+      </div>
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Total Missions</div>
+          <span tabindex="0" class="info-icon ms-1"
+                ngbPopover="Total number of missions assigned to you in the selected period."
+                placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value">{{ totalMyMissions }}</div>
+      </div>
+    </div>
+
+    <!-- Avg Duration -->
+    <div class="kpi-card">
+      <div class="kpi-icon bg-success-subtle text-success">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Avg Duration</div>
+          <span tabindex="0" class="info-icon ms-1"
+                ngbPopover="Average duration of your missions in hours."
+                placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value">{{ avgDuration.toFixed(1) }} <small>h</small></div>
+      </div>
+    </div>
+
+    <!-- Total Km Driven -->
+    <div class="kpi-card">
+      <div class="kpi-icon bg-info-subtle text-info">
+        <i class="fas fa-route"></i>
+      </div>
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Total Km Driven</div>
+          <span tabindex="0" class="info-icon ms-1"
+                ngbPopover="Total kilometers you drove in the selected period."
+                placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value">{{ totalKmThisYear | number:'1.0-0' }} <small>km</small></div>
+      </div>
+    </div>
+
+    <!-- Longest Mission -->
+    <div class="kpi-card" *ngIf="stats?.longestMission">
+      <div class="kpi-icon bg-warning-subtle text-warning">
+        <i class="fas fa-hourglass-end"></i>
+      </div>
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Longest Mission</div>
+          <span tabindex="0" class="info-icon ms-1"
+                ngbPopover="Your longest mission in the selected period."
+                placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value">{{ stats.longestMission.durationHours?.toFixed(1) || '—' }} <small>h</small></div>
+        <small class="text-muted d-block mt-1">
+          {{ stats.longestMission.job || 'Unnamed Mission' }}
+        </small>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Charts -->
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="chart-card">
+      <h6 class="chart-title mb-3 d-flex align-items-center gap-2">
+        <i class="fas fa-chart-line text-success"></i>
+        My Missions per Month
+      </h6>
+      <div class="chart-container">
+        <canvas baseChart [data]="missionsTrendData" [options]="missionsTrendOptions" type="line"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="chart-card">
+      <h6 class="chart-title mb-3 d-flex align-items-center gap-2">
+        <i class="fas fa-road text-info"></i>
+        Kilometers I Drove per Month
+      </h6>
+      <div class="chart-container">
+        <canvas baseChart [data]="kmTrendData" [options]="kmTrendOptions" type="line"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="chart-card">
+      <h6 class="chart-title mb-3 d-flex align-items-center gap-2">
+        <i class="fas fa-chart-bar text-primary"></i>
+        My Missions by Day of Week
+      </h6>
+      <div class="chart-container" style="height: 420px;">
+        <canvas baseChart [data]="dayOfWeekData" [options]="dayOfWeekOptions" type="bar"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

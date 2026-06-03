@@ -1,0 +1,141 @@
+<header class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
+  <h4 class="mb-0 fw-bold text-primary">Virtualization Environment Statistics</h4>
+  <div class="d-flex align-items-center gap-4 flex-wrap">
+    <div class="d-flex align-items-center gap-3">
+      <label class="small fw-medium text-muted mb-0">Year:</label>
+      <select class="form-select w-auto" [(ngModel)]="currentYear" (change)="loadStats()">
+        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+      </select>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <label class="small fw-medium text-muted mb-0">Month:</label>
+      <select class="form-select w-auto" [(ngModel)]="currentMonth" (change)="loadStats()">
+        <option value="">All months</option>
+        <option *ngFor="let m of months" [value]="m.value">{{ m.name }}</option>
+      </select>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <label class="small fw-medium text-muted mb-0">Department:</label>
+      <select class="form-select w-auto" [(ngModel)]="currentDepartment" (change)="loadStats()">
+        <option value="">All departments</option>
+        <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+      </select>
+    </div>
+    <small class="text-muted fst-italic" *ngIf="stats">
+      Updated: {{ currentTime | date:'short' }}
+    </small>
+  </div>
+</header>
+
+<!-- KPI Cards -->
+<div class="kpi-container mb-5">
+  <div class="kpi-flex">
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Total Requests</div>
+          <span tabindex="0" class="info-icon ms-1" ngbPopover="Total virtualization environment requests submitted" placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value">{{ totalRequests }}</div>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Active</div>
+          <span tabindex="0" class="info-icon ms-1" ngbPopover="Currently active virtualization environments" placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value text-success">{{ active }}</div>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Pending</div>
+          <span tabindex="0" class="info-icon ms-1" ngbPopover="Requests waiting for approval" placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value text-warning">{{ pending }}</div>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Declined</div>
+          <span tabindex="0" class="info-icon ms-1" ngbPopover="Requests that were declined" placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value text-danger">{{ declined }}</div>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-content">
+        <div class="d-flex align-items-center gap-2">
+          <div class="kpi-label">Expired</div>
+          <span tabindex="0" class="info-icon ms-1" ngbPopover="Requests that have expired" placement="top" triggers="hover focus" container="body">
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </div>
+        <div class="kpi-value text-secondary">{{ expired }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="chart-card">
+      <h6 class="chart-title mb-3 d-flex align-items-center gap-2">
+        <i class="fas fa-chart-pie text-info"></i>
+        Status Breakdown
+        <span tabindex="0" class="info-icon ms-1" ngbPopover="Distribution of requests by current status" placement="top" triggers="hover focus" container="body">
+          <i class="fas fa-info-circle"></i>
+        </span>
+      </h6>
+      <div class="chart-container">
+        <canvas baseChart [data]="statusChartData" [options]="statusChartOptions" type="pie"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="chart-card">
+      <h6 class="chart-title mb-3 d-flex align-items-center gap-2">
+        <i class="fas fa-chart-pie text-purple"></i>
+        Requests by Type
+        <span tabindex="0" class="info-icon ms-1" ngbPopover="Distribution of virtualization types (Hyper-V, VMware, etc.)" placement="top" triggers="hover focus" container="body">
+          <i class="fas fa-info-circle"></i>
+        </span>
+      </h6>
+      <div class="chart-container">
+        <canvas baseChart [data]="typeChartData" [options]="typeChartOptions" type="pie"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="chart-card">
+      <h6 class="chart-title mb-3 d-flex align-items-center gap-2">
+        <i class="fas fa-chart-line text-success"></i>
+        Monthly Trend
+        <span tabindex="0" class="info-icon ms-1" ngbPopover="Number of requests submitted per month" placement="top" triggers="hover focus" container="body">
+          <i class="fas fa-info-circle"></i>
+        </span>
+      </h6>
+      <div class="chart-container">
+        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" type="line"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,102 @@
+<div class="modal-header room-info-modal-header">
+    <div class="modal-header-left">
+        <div class="modal-header-icon">
+            <i class="far fa-calendar-alt"></i>
+        </div>
+        <div>
+            <h5 class="modal-title">Room Event</h5>
+            <p class="modal-subtitle" *ngIf="event">{{event.room?.label}} · {{event.room?.location}}</p>
+        </div>
+    </div>
+    <button type="button" class="modal-close-btn" aria-label="Close"
+        (click)="activeModal.close('modal closed')">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<div class="modal-body room-info-modal-body" *ngIf="event">
+
+    <!-- Room Banner -->
+    <div class="room-banner">
+        <div class="room-banner-bg"></div>
+        <div class="room-banner-content">
+            <div class="room-banner-icon">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="room-banner-text">
+                <h4 class="room-banner-title">{{event.title}}</h4>
+                <div class="room-banner-badges">
+                    <span class="banner-badge light">
+                        <i class="fas fa-door-open"></i> {{event.room?.label}}
+                    </span>
+                    <span class="banner-badge dark">
+                        <i class="fas fa-map-marker-alt"></i> {{event.room?.location}}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Owner actions -->
+        <div class="room-banner-actions" *ngIf="event.applicant._id == currentUserId">
+            <button class="banner-action-btn btn-edit"
+                (click)="editEvent(event._id)"
+                ngbTooltip="Edit event" placement="bottom">
+                <i class="far fa-edit"></i>
+            </button>
+            <button class="banner-action-btn btn-delete"
+                (click)="deleteEvent(event._id)"
+                ngbTooltip="Delete event" placement="bottom">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Event Details Card -->
+    <div class="event-details-card">
+        <div class="detail-card-header">
+            <div class="header-icon">
+                <i class="fas fa-info-circle"></i>
+            </div>
+            <h6 class="header-title">Event Details</h6>
+        </div>
+        <div class="detail-card-body">
+
+            <div class="detail-row">
+                <div class="detail-row-icon"><i class="fas fa-user"></i></div>
+                <span class="detail-row-label">Applicant</span>
+                <span class="detail-row-value">
+                    {{event.applicant.firstName + " " + event.applicant.lastName}}
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-row-icon"><i class="fas fa-calendar-check"></i></div>
+                <span class="detail-row-label">Start Date</span>
+                <span class="detail-row-value">{{event.start | date:'yyyy/MM/dd HH:mm'}}</span>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-row-icon"><i class="fas fa-calendar-times"></i></div>
+                <span class="detail-row-label">End Date</span>
+                <span class="detail-row-value">{{event.end | date:'yyyy/MM/dd HH:mm'}}</span>
+            </div>
+
+            <div class="detail-row last">
+                <div class="detail-row-icon"><i class="fas fa-users"></i></div>
+                <span class="detail-row-label">Room Capacity</span>
+                <span class="detail-row-value">{{event.room?.capacity}} Attendees</span>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Loading state -->
+<div class="modal-body room-info-modal-body" *ngIf="!event">
+    <div class="event-loading">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading…</span>
+        </div>
+    </div>
+</div>

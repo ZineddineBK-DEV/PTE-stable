@@ -1,0 +1,345 @@
+// =============================================
+// Edit Offer Modal — Redesign
+// Consistent with the purple/blue design system
+// =============================================
+
+$primary-start: #667eea;
+$primary-end:   #764ba2;
+$accent-blue:   #4facfe;
+$accent-cyan:   #00f2fe;
+$accent-green:  #43e97b;
+$accent-teal:   #38f9d7;
+$accent-pink:   #f093fb;
+$accent-red:    #f5576c;
+$accent-amber:  #f7971e;
+$text-dark:     #2c3e50;
+$text-muted:    #7f8c8d;
+$border-light:  #f0f2f5;
+$bg-soft:       #f8f9fc;
+$shadow-sm:     0 2px 8px rgba(0,0,0,0.07);
+$radius-sm:     8px;
+$radius-md:     12px;
+$radius-lg:     16px;
+
+// =============================================
+// MODAL WRAPPER
+// =============================================
+.edit-offer-modal {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+//   border-radius: $radius-lg;
+  overflow: hidden;
+}
+
+// =============================================
+// MODAL HEADER
+// =============================================
+.modal-header-custom {
+  background: linear-gradient(135deg, $primary-start 0%, $primary-end 100%);
+  padding: 1.35rem 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  .modal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .modal-header-icon {
+    width: 46px;
+    height: 46px;
+    background: rgba(255,255,255,0.2);
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .modal-title-text {
+    color: white;
+    font-weight: 800;
+    font-size: 1.05rem;
+    margin: 0 0 0.15rem;
+    letter-spacing: -0.3px;
+  }
+
+  .modal-subtitle {
+    color: rgba(255,255,255,0.72);
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .modal-close-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: $radius-sm;
+    background: rgba(255,255,255,0.18);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+    flex-shrink: 0;
+
+    &:hover { background: rgba(255,255,255,0.3); }
+  }
+}
+
+// =============================================
+// MODAL BODY
+// =============================================
+.modal-body-custom {
+  padding: 1.75rem;
+  background: $bg-soft;
+  overflow-y: auto;
+  max-height: 68vh;
+}
+
+// =============================================
+// FORM SECTIONS
+// =============================================
+.form-section {
+  background: white;
+  border-radius: $radius-md;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: $shadow-sm;
+  padding: 1.4rem 1.5rem;
+  margin-bottom: 1.25rem;
+  animation: fadeInUp 0.4s ease-out both;
+
+  &:nth-child(1) { animation-delay: 0.05s; }
+  &:nth-child(2) { animation-delay: 0.1s;  }
+  &:last-child   { margin-bottom: 0; }
+}
+
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1.5px solid $border-light;
+
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: white;
+    flex-shrink: 0;
+
+    &.bg-blue   { background: linear-gradient(135deg, $accent-blue, $accent-cyan); }
+    &.bg-purple { background: linear-gradient(135deg, $primary-start, $primary-end); }
+  }
+
+  span {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: $text-dark;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+}
+
+// =============================================
+// FORM FIELDS
+// =============================================
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: $text-dark;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 0;
+}
+
+.required-star {
+  color: $accent-red;
+  margin-left: 2px;
+}
+
+.field-error {
+  font-size: 0.775rem;
+  color: $accent-red;
+  font-weight: 600;
+}
+
+.input-wrapper {
+  position: relative;
+
+  .input-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $primary-start;
+    font-size: 0.8rem;
+    opacity: 0.65;
+    pointer-events: none;
+    z-index: 1;
+
+    &.textarea-icon {
+      top: 1rem;
+      transform: none;
+    }
+  }
+}
+
+.modern-input {
+  border-radius: $radius-sm !important;
+  border: 1.5px solid #e2e8f0 !important;
+  padding: 0.6rem 1rem 0.6rem 2.4rem !important;
+  font-size: 0.9rem !important;
+  color: $text-dark !important;
+  background: white !important;
+  transition: all 0.2s !important;
+  box-shadow: none !important;
+
+  &::placeholder { color: #b2bec3; }
+
+  &:focus {
+    border-color: $primary-start !important;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.12) !important;
+    outline: none !important;
+  }
+
+  &.ng-invalid.ng-touched {
+    border-color: $accent-red !important;
+    box-shadow: 0 0 0 3px rgba(245,87,108,0.1) !important;
+  }
+}
+
+.modern-textarea {
+  resize: vertical;
+  min-height: 110px;
+  padding-top: 0.75rem !important;
+  line-height: 1.6 !important;
+}
+
+.modern-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.9rem center !important;
+  padding-right: 2.5rem !important;
+  cursor: pointer;
+}
+
+// Hide number arrows
+input[type=number].modern-input {
+  -moz-appearance: textfield;
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+}
+
+// Date picker
+input[type=date].modern-input::-webkit-calendar-picker-indicator {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+// =============================================
+// MODAL FOOTER
+// =============================================
+.modal-footer-custom {
+  padding: 1rem 1.75rem;
+  background: white;
+  border-top: 1.5px solid $border-light;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+
+  .btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.6rem 1.35rem;
+    border-radius: $radius-sm;
+    border: 1.5px solid #e2e8f0;
+    background: $bg-soft;
+    color: $text-muted;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: $accent-red;
+      color: $accent-red;
+      background: rgba(245,87,108,0.05);
+    }
+  }
+
+  .btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.6rem;
+    border-radius: $radius-sm;
+    border: none;
+    background: linear-gradient(135deg, $primary-start, $primary-end);
+    color: white;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+    transition: all 0.25s;
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 6px 18px rgba(102,126,234,0.55);
+      transform: translateY(-2px);
+    }
+
+    &:active:not(:disabled) { transform: translateY(0); }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+// =============================================
+// ANIMATIONS
+// =============================================
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// =============================================
+// RESPONSIVE
+// =============================================
+@media (max-width: 576px) {
+  .modal-body-custom   { padding: 1.1rem; }
+  .modal-header-custom { padding: 1.1rem 1.25rem; }
+  .modal-footer-custom {
+    padding: 0.9rem 1.25rem;
+    flex-direction: column-reverse;
+    .btn-cancel, .btn-save { width: 100%; justify-content: center; }
+  }
+  .form-section { padding: 1.1rem; }
+}

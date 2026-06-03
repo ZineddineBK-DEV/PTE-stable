@@ -1,0 +1,936 @@
+// =====================================================================
+// My Requests — Redesigned SCSS
+// Sidebar-tab shell · Card-based list · Dual-panel intern view
+// =====================================================================
+
+// ── Design tokens ─────────────────────────────────────────────────────
+$primary-start: #667eea;
+$primary-end:   #764ba2;
+$accent-blue:   #4facfe;
+$accent-cyan:   #00f2fe;
+$accent-green:  #43e97b;
+$accent-teal:   #38f9d7;
+$accent-pink:   #f093fb;
+$accent-red:    #f5576c;
+$accent-amber:  #f7971e;
+$accent-gold:   #ffd200;
+$accent-sky:    #45B7D1;
+$teal-dk:       #009e84;
+$amber-dk:      #d4921a;
+
+$text-dark:     #2c3e50;
+$text-muted:    #7f8c8d;
+$border-light:  #e8eaf0;
+$bg-soft:       #f4f5fa;
+$surface:       #ffffff;
+$soft-v:        rgba(102,126,234,0.08);
+
+$shadow-xs: 0 1px 4px rgba(0,0,0,0.06);
+$shadow-sm: 0 4px 16px rgba(0,0,0,0.08);
+$shadow-v:  0 6px 20px rgba(102,126,234,0.32);
+$shadow-t:  0 6px 20px rgba(0,201,167,0.32);
+
+$r-sm:  8px;
+$r-md:  14px;
+$r-lg:  20px;
+$r-xl:  28px;
+
+$font: 'Nunito','Segoe UI',sans-serif;
+
+@mixin flex($a: center, $j: flex-start) {
+  display: flex;
+  align-items: $a;
+  justify-content: $j;
+}
+
+// =====================================================================
+// PAGE
+// =====================================================================
+.requests-page {
+  font-family: $font;
+  min-height: 100vh;
+  background: $bg-soft;
+  padding: 1.5rem 1.75rem 3rem;
+}
+
+// =====================================================================
+// PAGE HEADER
+// =====================================================================
+.page-header {
+  @include flex(center, space-between);
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-header-left {
+  @include flex(center);
+  gap: 1rem;
+}
+
+.page-header-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: $r-md;
+  background: linear-gradient(135deg, $primary-start, $primary-end);
+  @include flex(center, center);
+  font-size: 1.3rem;
+  color: #fff;
+  box-shadow: $shadow-v;
+  flex-shrink: 0;
+}
+
+.page-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: $text-dark;
+  margin: 0 0 0.3rem;
+  letter-spacing: -0.5px;
+}
+
+.breadcrumb-nav {
+  @include flex(center);
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  color: $text-muted;
+  font-weight: 600;
+
+  a {
+    color: $primary-start;
+    text-decoration: none;
+    transition: color 0.2s;
+    &:hover { color: $primary-end; }
+  }
+
+  .bc-sep { font-size: 0.6rem; color: rgba($text-muted, 0.5); }
+  .bc-active { color: $text-dark; font-weight: 700; }
+}
+
+// =====================================================================
+// SHELL
+// =====================================================================
+.shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+// =====================================================================
+// TAB RAIL
+// =====================================================================
+.tab-rail {
+  background: $surface;
+  border-radius: $r-xl;
+  border: 1.5px solid $border-light;
+  box-shadow: $shadow-xs;
+  padding: 0.75rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  @media (max-width: 900px) {
+    flex-direction: row;
+    overflow-x: auto;
+    border-radius: $r-lg;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+.tab-btn {
+  @include flex(center);
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: $r-md;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.22s;
+  text-align: left;
+  width: 100%;
+
+  &:hover { background: $soft-v; }
+
+  &.tab-active {
+    background: linear-gradient(135deg, $primary-start, $primary-end);
+    box-shadow: $shadow-v;
+
+    .tab-btn-icon { background: rgba(255,255,255,0.2); color: #fff; }
+    .tab-btn-title { color: #fff; }
+    .tab-btn-sub   { color: rgba(255,255,255,0.7); }
+  }
+
+  @media (max-width: 900px) {
+    width: auto;
+    flex-shrink: 0;
+    padding: 0.65rem 0.9rem;
+  }
+}
+
+.tab-btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: $r-sm;
+  background: $soft-v;
+  color: $primary-start;
+  @include flex(center, center);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  transition: all 0.22s;
+}
+
+.tab-btn-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+
+  @media (max-width: 900px) { display: none; }
+}
+
+.tab-btn-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: $text-dark;
+  transition: color 0.22s;
+}
+
+.tab-btn-sub {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: $text-muted;
+  transition: color 0.22s;
+}
+
+// =====================================================================
+// CONTENT AREA
+// =====================================================================
+.content-area { min-width: 0; }
+
+// =====================================================================
+// TAB PANEL
+// =====================================================================
+.tab-panel {
+  display: none;
+  background: $surface;
+  border-radius: $r-xl;
+  border: 1.5px solid $border-light;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+  animation: fadeUp 0.3s ease both;
+
+  &.tab-panel-visible { display: block; }
+}
+
+// ── Panel topbar ───────────────────────────────────────────────────────
+.panel-topbar {
+  @include flex(center, space-between);
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1.5px solid $border-light;
+  background: $bg-soft;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.panel-topbar-left {
+  @include flex(center);
+  gap: 0.85rem;
+}
+
+.panel-topbar-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: $r-md;
+  background: linear-gradient(135deg, $primary-start, $primary-end);
+  @include flex(center, center);
+  font-size: 1rem;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: $shadow-v;
+
+  &.teal  { background: linear-gradient(135deg, $accent-teal, $teal-dk); box-shadow: $shadow-t; }
+  &.amber { background: linear-gradient(135deg, $accent-amber, $amber-dk); box-shadow: 0 6px 20px rgba($accent-amber, 0.35); }
+}
+
+.panel-topbar-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: $text-dark;
+  margin: 0 0 0.2rem;
+  letter-spacing: -0.3px;
+}
+
+.panel-topbar-sub {
+  font-size: 0.78rem;
+  color: $text-muted;
+  font-weight: 600;
+  margin: 0;
+}
+
+// ── Search ─────────────────────────────────────────────────────────────
+.search-wrap { position: relative; }
+
+.search-ico {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.78rem;
+  color: $primary-start;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.search-input {
+  border: 1.5px solid $border-light;
+  border-radius: $r-sm;
+  padding: 0.6rem 1rem 0.6rem 2.4rem;
+  font-size: 0.875rem;
+  font-family: $font;
+  color: $text-dark;
+  background: $surface;
+  width: 300px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &::placeholder { color: #b8bdcf; }
+
+  &:focus {
+    border-color: $primary-start;
+    box-shadow: 0 0 0 3px rgba($primary-start, 0.1);
+  }
+
+  @media (max-width: 600px) { width: 100%; }
+}
+
+// =====================================================================
+// CARDS SECTION
+// =====================================================================
+.cards-section {
+  padding: 1.25rem 1.5rem;
+}
+
+// Loading skeleton
+.cards-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.loading-pulse {
+  @include flex(center);
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: $r-md;
+  border: 1.5px solid $border-light;
+  background: $surface;
+}
+
+.pulse-block {
+  background: linear-gradient(90deg, $border-light 25%, #f0f2f8 50%, $border-light 75%);
+  background-size: 200% 100%;
+  animation: pulse 1.5s ease infinite;
+  border-radius: $r-sm;
+
+  &.pulse-avatar   { width: 38px; height: 38px; border-radius: 50%; }
+  &.pulse-line     { height: 14px; }
+  &.pulse-line-lg  { width: 160px; }
+  &.pulse-line-sm  { width: 100px; }
+  &.pulse-badge    { width: 60px; height: 24px; margin-left: auto; }
+}
+
+@keyframes pulse {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// Empty state
+.cards-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+}
+
+.cards-empty-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: $r-md;
+  background: $soft-v;
+  @include flex(center, center);
+  font-size: 1.4rem;
+  color: rgba($primary-start, 0.4);
+  margin-bottom: 0.25rem;
+}
+
+.cards-empty-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: $text-dark;
+  margin: 0;
+}
+
+.cards-empty-desc {
+  font-size: 0.82rem;
+  color: $text-muted;
+  font-weight: 600;
+  margin: 0;
+  max-width: 320px;
+}
+
+// ── Request Card Slim ──────────────────────────────────────────────────
+.req-card-slim {
+  border: 1.5px solid $border-light;
+  border-radius: $r-md;
+  background: $surface;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:last-child { margin-bottom: 0; }
+
+  &:hover {
+    border-color: rgba($primary-start, 0.25);
+    box-shadow: 0 2px 8px rgba($primary-start, 0.06);
+  }
+}
+
+.rcs-top {
+  @include flex(center);
+  gap: 0.6rem;
+  padding: 0.75rem 1rem 0.6rem;
+  border-bottom: 1px solid $border-light;
+}
+
+.rcs-body {
+  @include flex(center);
+  gap: 0.85rem;
+  padding: 0.75rem 1rem;
+}
+
+.rcs-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary-start, $primary-end);
+  color: #fff;
+  @include flex(center, center);
+  font-size: 0.75rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.rcs-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.rcs-name {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: $text-dark;
+}
+
+.rcs-email {
+  font-size: 0.78rem;
+  color: $text-muted;
+  font-weight: 600;
+}
+
+.rcs-dept {
+  font-size: 0.75rem;
+  color: $primary-start;
+  font-weight: 700;
+  @include flex(center);
+  gap: 0.35rem;
+
+  i { font-size: 0.68rem; opacity: 0.65; }
+}
+
+.rcs-expand-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: $r-sm;
+  border: 1.5px solid rgba($primary-start, 0.22);
+  background: rgba($primary-start, 0.06);
+  color: $primary-start;
+  @include flex(center, center);
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  margin-left: auto;
+
+  &:hover {
+    background: $primary-start;
+    color: #fff;
+    border-color: $primary-start;
+  }
+}
+
+.rcs-detail {
+  border-top: 1px dashed rgba($primary-start, 0.15);
+  background: rgba($primary-start, 0.02);
+}
+
+.rcs-detail-inner {
+  padding: 0.85rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.rcs-detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.rcs-dg-title {
+  @include flex(center);
+  gap: 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $primary-start;
+
+  i { font-size: 0.62rem; }
+}
+
+.rcs-dg-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.chip-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  background: $bg-soft;
+  border: 1px solid $border-light;
+  border-radius: $r-sm;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: $text-dark;
+}
+
+.chip-sm-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.rcs-goals-text {
+  font-size: 0.82rem;
+  color: $text-muted;
+  font-weight: 600;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.rcs-actions {
+  @include flex(center);
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid $border-light;
+}
+
+.action-btn {
+  @include flex(center);
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border: none;
+  border-radius: $r-sm;
+  color: #fff;
+  font-family: $font;
+  font-weight: 800;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover { transform: translateY(-1px); }
+
+  &.approve-btn {
+    background: linear-gradient(135deg, $accent-green, $accent-teal);
+    box-shadow: 0 2px 8px rgba($accent-green, 0.35);
+    &:hover { box-shadow: 0 4px 14px rgba($accent-green, 0.5); }
+  }
+
+  &.decline-btn {
+    background: linear-gradient(135deg, $accent-pink, $accent-red);
+    box-shadow: 0 2px 8px rgba($accent-red, 0.3);
+    &:hover { box-shadow: 0 4px 14px rgba($accent-red, 0.45); }
+  }
+}
+
+// =====================================================================
+// PAGINATION
+// =====================================================================
+.cards-pagination {
+  @include flex(center, space-between);
+  padding: 1rem 0 0.25rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 500px) { flex-direction: column; }
+}
+
+.pagination-info {
+  font-size: 0.78rem;
+  color: $text-muted;
+  font-weight: 700;
+}
+
+.pagination-controls {
+  @include flex(center);
+  gap: 0.25rem;
+}
+
+.page-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: $r-sm;
+  border: 1.5px solid $border-light;
+  background: $surface;
+  color: $text-muted;
+  @include flex(center, center);
+  font-family: $font;
+  font-weight: 800;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    border-color: $primary-start;
+    color: $primary-start;
+    background: $soft-v;
+  }
+
+  &:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  &.page-active {
+    background: linear-gradient(135deg, $primary-start, $primary-end);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: $shadow-v;
+  }
+}
+
+// =====================================================================
+// REF PILL
+// =====================================================================
+.ref-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.7rem;
+  border-radius: 50px;
+  background: $soft-v;
+  color: $primary-start;
+  border: 1px solid rgba($primary-start, 0.2);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
+
+// =====================================================================
+// STATUS TAG
+// =====================================================================
+.status-tag {
+  @include flex(center);
+  gap: 0.35rem;
+  display: inline-flex;
+  padding: 0.22rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+
+  .tag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  &.tag-active    { background: rgba($accent-green, 0.12); color: darken($accent-green, 20%); }
+  &.tag-pending   { background: rgba($primary-start, 0.1); color: $primary-start; }
+  &.tag-declined  { background: rgba($accent-red, 0.1);   color: darken($accent-red, 10%); }
+  &.tag-expired   { background: rgba($text-muted, 0.12);  color: $text-muted; }
+  &.tag-completed { background: rgba($accent-sky, 0.1);   color: darken($accent-sky, 15%); }
+}
+
+// =====================================================================
+// DUAL-PANEL LAYOUT
+// =====================================================================
+.dual-panel-layout {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 0;
+  border-top: 1.5px solid $border-light;
+  min-height: 580px;
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.offers-column,
+.requests-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.offers-column {
+  border-right: 1.5px solid $border-light;
+
+  @media (max-width: 768px) { border-right: none; border-bottom: 1.5px solid $border-light; }
+}
+
+.column-header {
+  @include flex(center);
+  gap: 0.6rem;
+  padding: 0.85rem 1.25rem;
+  background: $bg-soft;
+  border-bottom: 1.5px solid $border-light;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: $text-dark;
+
+  i { color: $primary-start; font-size: 0.8rem; }
+}
+
+.column-count {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, $primary-start, $primary-end);
+  color: #fff;
+  border-radius: 50px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0 0.4rem;
+}
+
+.column-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  flex: 1;
+
+  p { font-size: 0.82rem; font-weight: 700; color: $text-muted; margin: 0; }
+}
+
+.empty-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: $r-md;
+  background: $soft-v;
+  @include flex(center, center);
+  font-size: 1.3rem;
+  color: rgba($primary-start, 0.4);
+}
+
+// ── Offer cards ────────────────────────────────────────────────────────
+.offer-card {
+  @include flex(center);
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid $border-light;
+  cursor: pointer;
+  transition: background 0.18s;
+
+  &:last-child { border-bottom: none; }
+
+  &:hover {
+    background: $soft-v;
+    .offer-card-title { color: $primary-start; }
+  }
+}
+
+.offer-card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: $r-sm;
+  background: $soft-v;
+  @include flex(center, center);
+  color: $primary-start;
+  font-size: 0.78rem;
+  flex-shrink: 0;
+}
+
+.offer-card-body { flex: 1; min-width: 0; }
+
+.offer-card-title {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: $text-dark;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.18s;
+}
+
+.offer-count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, $primary-start, $primary-end);
+  color: #fff;
+  border-radius: 50px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0 0.4rem;
+  flex-shrink: 0;
+}
+
+// ── Request cards (intern labs) ────────────────────────────────────────
+.req-card {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid $border-light;
+  cursor: pointer;
+  transition: background 0.18s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: rgba($primary-start, 0.025); }
+}
+
+.req-card-header {
+  @include flex(center);
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.req-badges {
+  @include flex(center);
+  gap: 0.35rem;
+}
+
+.approval-chip {
+  @include flex(center);
+  gap: 0.3rem;
+  padding: 0.18rem 0.6rem;
+  border-radius: 50px;
+  font-size: 0.68rem;
+  font-weight: 800;
+
+  i { font-size: 0.62rem; }
+
+  &.mentor {
+    background: rgba($accent-sky, 0.12);
+    color: darken($accent-sky, 15%);
+    border: 1px solid rgba($accent-sky, 0.25);
+  }
+
+  &.manager {
+    background: rgba($accent-teal, 0.12);
+    color: $teal-dk;
+    border: 1px solid rgba($accent-teal, 0.25);
+  }
+}
+
+.expire-tag {
+  @include flex(center);
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: $text-muted;
+  font-weight: 600;
+  margin-left: auto;
+
+  i { font-size: 0.65rem; opacity: 0.6; }
+}
+
+.req-card-applicant {
+  @include flex(center);
+  gap: 0.75rem;
+}
+
+.req-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba($primary-start, 0.2);
+  flex-shrink: 0;
+}
+
+.req-applicant-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.req-applicant-name {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: $text-dark;
+}
+
+.req-applicant-meta {
+  font-size: 0.72rem;
+  color: $text-muted;
+  font-weight: 600;
+}
+
+.req-goals { display: flex; flex-direction: column; gap: 0.3rem; }
+
+.req-goals-label {
+  @include flex(center);
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: $primary-start;
+
+  i { font-size: 0.65rem; }
+}
+
+.req-goals-text {
+  font-size: 0.82rem;
+  color: $text-muted;
+  font-weight: 600;
+  line-height: 1.6;
+  margin: 0;
+}
+
+// =====================================================================
+// ANIMATIONS
+// =====================================================================
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// =====================================================================
+// RESPONSIVE
+// =====================================================================
+@media (max-width: 768px) {
+  .requests-page { padding: 1rem 1rem 2rem; }
+  .panel-topbar  { flex-direction: column; align-items: flex-start; }
+  .search-input  { width: 100%; }
+  .cards-section { padding: 1rem; }
+}

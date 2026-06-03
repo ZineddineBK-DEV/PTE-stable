@@ -1,0 +1,310 @@
+// =============================================
+// Add Vehicle Modal — Purple/Blue Design System
+// =============================================
+
+$primary-start: #667eea;
+$primary-end: #764ba2;
+$accent-blue: #4facfe;
+$accent-cyan: #00f2fe;
+$accent-green: #43e97b;
+$accent-teal: #38f9d7;
+$accent-red: #f5576c;
+$text-dark: #2c3e50;
+$text-muted: #7f8c8d;
+$border-light: #f0f2f5;
+$bg-soft: #f8f9fc;
+$radius-sm: 8px;
+$radius-md: 12px;
+
+// =============================================
+// MODAL HEADER
+// =============================================
+.vehicle-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, $primary-start 0%, $primary-end 100%);
+    border-bottom: none;
+
+    .modal-header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+    }
+
+    .modal-header-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: $radius-sm;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .modal-title {
+        color: white;
+        font-weight: 800;
+        font-size: 1rem;
+        margin: 0 0 0.15rem;
+        line-height: 1;
+        font-family: 'Nunito', 'Segoe UI', sans-serif;
+    }
+
+    .modal-subtitle {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin: 0;
+        font-family: 'Nunito', 'Segoe UI', sans-serif;
+    }
+
+    .modal-close-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: $radius-sm;
+        border: none;
+        background: rgba(255, 255, 255, 0.18);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+
+        &:hover { background: rgba(255, 255, 255, 0.32); }
+    }
+}
+
+// =============================================
+// MODAL BODY
+// =============================================
+.vehicle-modal-body {
+    padding: 1.5rem;
+    background: white;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+// =============================================
+// FORM FIELDS
+// =============================================
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.field-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: $text-dark;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin: 0;
+}
+
+.required-star {
+    color: $accent-red;
+    margin-left: 2px;
+}
+
+.field-error {
+    font-size: 0.76rem;
+    color: $accent-red;
+    font-weight: 600;
+
+    i { font-size: 0.7rem; margin-right: 0.2rem; }
+}
+
+.input-wrapper {
+    position: relative;
+
+    .input-icon {
+        position: absolute;
+        left: 0.9rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $primary-start;
+        font-size: 0.78rem;
+        opacity: 0.65;
+        pointer-events: none;
+        z-index: 1;
+    }
+}
+
+.modern-input {
+    border-radius: $radius-sm !important;
+    border: 1.5px solid #e2e8f0 !important;
+    padding: 0.6rem 1rem 0.6rem 2.4rem !important;
+    font-size: 0.9rem !important;
+    color: $text-dark !important;
+    background: white !important;
+    transition: all 0.2s !important;
+    box-shadow: none !important;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+
+    &::placeholder { color: #b2bec3; }
+
+    &:focus {
+        border-color: $primary-start !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12) !important;
+        outline: none !important;
+    }
+}
+
+// =============================================
+// GAS CARD TOGGLE
+// =============================================
+.gas-card-toggle {
+    background: $bg-soft;
+    border-radius: $radius-md;
+    padding: 1rem 1.25rem;
+    border: 1.5px solid $border-light;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+
+    .gas-card-toggle-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.88rem;
+        font-weight: 800;
+        color: $text-dark;
+
+        i {
+            color: $primary-start;
+            font-size: 0.85rem;
+        }
+    }
+
+    .gas-card-toggle-options {
+        display: flex;
+        gap: 0.5rem;
+    }
+}
+
+.toggle-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.38rem 1rem;
+    border-radius: $radius-sm;
+    border: 1.5px solid #e2e8f0;
+    background: white;
+    color: $text-muted;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+
+    i { font-size: 0.75rem; }
+
+    &:hover {
+        border-color: rgba(102, 126, 234, 0.35);
+        color: $primary-start;
+    }
+
+    &.selected {
+        background: linear-gradient(135deg, $primary-start, $primary-end);
+        border-color: transparent;
+        color: white;
+        box-shadow: 0 3px 8px rgba(102, 126, 234, 0.35);
+    }
+}
+
+// =============================================
+// GAS CARD FIELDS
+// =============================================
+.gas-card-fields {
+    background: rgba(102, 126, 234, 0.04);
+    border-radius: $radius-md;
+    padding: 1.1rem 1.25rem;
+    border: 1.5px solid rgba(102, 126, 234, 0.18);
+    margin-bottom: 0.5rem;
+
+    .gas-card-fields-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 800;
+        color: $primary-start;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        margin-bottom: 1rem;
+
+        i { font-size: 0.75rem; }
+    }
+}
+
+// =============================================
+// FOOTER
+// =============================================
+.form-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 1.25rem;
+    border-top: 1.5px solid $border-light;
+    margin-top: 0.5rem;
+}
+
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.6rem 1.25rem;
+    background: $bg-soft;
+    color: $text-muted;
+    border: 1.5px solid #e2e8f0;
+    border-radius: $radius-sm;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+
+    &:hover {
+        background: #eef0f4;
+        border-color: #d0d5de;
+        color: $text-dark;
+    }
+}
+
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.5rem;
+    background: linear-gradient(135deg, $primary-start, $primary-end);
+    color: white;
+    border: none;
+    border-radius: $radius-sm;
+    font-weight: 800;
+    font-size: 0.875rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.38);
+    transition: all 0.25s;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+
+    &:hover:not(:disabled) {
+        box-shadow: 0 6px 18px rgba(102, 126, 234, 0.5);
+        transform: translateY(-2px);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+}

@@ -1,0 +1,210 @@
+<section class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-header-icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <div>
+                <h2 class="page-title">Offer Tasks</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb-modern">
+                        <li><a routerLink="/dashboard/main"><i class="fas fa-home"></i></a></li>
+                        <li><i class="fas fa-chevron-right"></i></li>
+                        <li><span>Offer</span></li>
+                        <li><i class="fas fa-chevron-right"></i></li>
+                        <li class="active">Tasks</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="page-header-right" *ngIf="offerPicked">
+            <a class="btn-back" routerLink="/dashboard/offerDetails/{{ offerID }}">
+                <i class="fas fa-arrow-left"></i> Back to Offer
+            </a>
+            <button class="btn-add-task" (click)="addTask({}, 'add')"
+                *ngIf="currentUserId === offerPicked.encadrant && !offerPicked.archived">
+                <i class="fas fa-plus"></i> Add Task
+            </button>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state-card" *ngIf="tasks.length === 0">
+        <div class="empty-illustration">
+            <img src="assets/images/empty.png" alt="No tasks" />
+        </div>
+        <h5 class="empty-title">No Tasks Yet</h5>
+        <p class="empty-sub">Add your first task to get started.</p>
+        <button class="btn-add-task" (click)="addTask({}, 'add')"
+            *ngIf="offerPicked && currentUserId === offerPicked.encadrant && !offerPicked.archived">
+            <i class="fas fa-plus"></i> Add Task
+        </button>
+    </div>
+
+    <!-- Task Board -->
+    <div class="task-board" *ngIf="tasks.length > 0">
+
+        <!-- ── LEFT: Task List ── -->
+        <div class="task-list-panel">
+            <div class="panel-header">
+                <div class="panel-header-icon bg-purple">
+                    <i class="fas fa-list-ul"></i>
+                </div>
+                <h5 class="panel-title">Tasks List</h5>
+                <span class="task-count-pill">{{ tasks.length }}</span>
+            </div>
+
+            <div class="task-list">
+                <div class="task-item" *ngFor="let task of tasks"
+                    [class.active]="selectedTask && selectedTask._id === task._id" (click)="selectTask(task)">
+                    <div class="task-item-icon">
+                        <i class="fas fa-circle-dot"></i>
+                    </div>
+                    <span class="task-item-title">{{ task.title }}</span>
+                    <i class="fas fa-chevron-right task-item-arrow"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── RIGHT: Task Details ── -->
+        <div class="task-details-panel">
+
+            <!-- Prompt when nothing selected -->
+            <div class="no-selection" *ngIf="!selectedTask">
+                <div class="no-selection-inner">
+                    <i class="fas fa-hand-pointer"></i>
+                    <p>Select a task to see its details</p>
+                </div>
+            </div>
+
+            <!-- Task Detail Card -->
+            <ng-container *ngIf="selectedTask && showTaskDetails">
+
+                <div class="detail-card">
+
+                    <!-- Detail Header -->
+                    <div class="detail-header">
+                        <div class="detail-header-left">
+                            <div class="detail-header-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <h5 class="detail-title">{{ selectedTask.title }}</h5>
+                        </div>
+                        <div class="detail-header-actions"
+                            *ngIf="selectedTask.status !== 'COMPLETED' && currentUserId === selectedTask.internshipOffer.encadrant && !offerPicked.archived">
+                            <button class="action-btn btn-edit" (click)="addTask(selectedTask, 'edit')"
+                                ngbPopover="Edit task" triggers="mouseenter:mouseleave" placement="bottom">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button class="action-btn btn-delete" (click)="deleteTask(selectedTask._id)"
+                                ngbPopover="Delete task" triggers="mouseenter:mouseleave" placement="bottom">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="detail-body">
+
+                        <!-- Status + Priority badges -->
+                        <div class="badge-row">
+                            <div class="info-badge badge-status">
+                                <i class="fas fa-circle-dot"></i>
+                                <span>{{ selectedTask.status }}</span>
+                            </div>
+                            <div class="info-badge badge-priority">
+                                <i class="fas fa-flag"></i>
+                                <span>{{ selectedTask.priority }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="detail-section">
+                            <div class="section-label">
+                                <i class="fas fa-align-left"></i> Description
+                            </div>
+                            <p class="detail-description">{{ selectedTask.description }}</p>
+                        </div>
+
+                        <!-- Dates -->
+                        <div class="dates-row">
+                            <div class="date-item">
+                                <div class="date-icon bg-blue">
+                                    <i class="fas fa-calendar-plus"></i>
+                                </div>
+                                <div class="date-info">
+                                    <span class="date-label">Start Date</span>
+                                    <span class="date-value">{{ selectedTask.startDate | date }}</span>
+                                </div>
+                            </div>
+
+                            <div class="date-item">
+                                <div class="date-icon bg-amber">
+                                    <i class="fas fa-calendar-times"></i>
+                                </div>
+                                <div class="date-info">
+                                    <span class="date-label">Deadline</span>
+                                    <span class="date-value">{{ selectedTask.endDate | date }}</span>
+                                </div>
+                            </div>
+
+                            <div class="date-item" *ngIf="selectedTask.closedAt">
+                                <div class="date-icon bg-green">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="date-info">
+                                    <span class="date-label">Closed At</span>
+                                    <span class="date-value">{{ selectedTask.closedAt | date }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Assignee -->
+                        <div class="detail-section">
+                            <div class="section-label">
+                                <i class="fas fa-user-check"></i> Assigned To
+                            </div>
+
+                            <div class="assignee-card" *ngIf="selectedTask.assignedTo">
+                                <img class="assignee-avatar" src="{{ picsUrl + selectedTask.assignedTo.image }}"
+                                    alt="{{ selectedTask.assignedTo.firstName }}" />
+                                <div class="assignee-info">
+                                    <span class="assignee-name">
+                                        {{ selectedTask.assignedTo.firstName }} {{ selectedTask.assignedTo.lastName }}
+                                    </span>
+                                    <span class="assignee-sub">Intern</span>
+                                </div>
+                            </div>
+
+                            <div class="unassigned-badge" *ngIf="!selectedTask.assignedTo">
+                                <i class="fas fa-user-slash"></i>
+                                <span>Not Assigned Yet</span>
+                            </div>
+                        </div>
+
+                        <!-- Progress -->
+                        <div class="detail-section">
+                            <div class="section-label d-flex justify-content-between">
+                                <span><i class="fas fa-chart-line"></i> Progress</span>
+                                <span class="progress-pct">{{ selectedTask.progress }}%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" [style.width.%]="selectedTask.progress" [ngClass]="{
+                    'fill-low':    selectedTask.progress < 34,
+                    'fill-medium': selectedTask.progress >= 34 && selectedTask.progress < 70,
+                    'fill-high':   selectedTask.progress >= 70
+                  }"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </ng-container>
+        </div>
+
+    </div>
+
+</section>

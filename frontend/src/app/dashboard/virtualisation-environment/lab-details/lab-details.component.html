@@ -1,0 +1,85 @@
+<div class="lab-details">
+  <header class="lab-details__header">
+    <div class="lab-details__header-icon">
+      <i class="fas fa-server"></i>
+    </div>
+    <div>
+      <span class="lab-details__eyebrow">Request Overview</span>
+      <h2 class="lab-details__title">Virtual Lab Approval</h2>
+      <p class="lab-details__subtitle">
+        Review the lab specification, booking window, and justification
+        before completing the approval workflow.
+      </p>
+    </div>
+    <span class="lab-details__status" [ngClass]="statusClass">
+      <i class="fas" [ngClass]="statusIcon"></i> {{ statusLabel }}
+    </span>
+  </header>
+
+  <section class="lab-details__body">
+    <div class="lab-details__column">
+      <h3 class="lab-details__section-title">
+        <i class="fas fa-microchip"></i> Virtual Machine Info
+      </h3>
+      <div class="lab-details__grid">
+        <div class="lab-details__chip">
+          <span>Type</span>
+          <strong>{{ payload_lab.type }}</strong>
+        </div>
+        <div class="lab-details__chip">
+          <span>Backup</span>
+          <strong>{{ payload_lab.backup }}</strong>
+        </div>
+        <div class="lab-details__chip">
+          <span>RAM</span>
+          <strong>{{ payload_lab.ram }} GB</strong>
+        </div>
+        <div class="lab-details__chip">
+          <span>Storage</span>
+          <strong>{{ payload_lab.disk }} GB</strong>
+        </div>
+        <div class="lab-details__chip">
+          <span>Processor</span>
+          <strong>{{ payload_lab.processor }} Core</strong>
+        </div>
+        <div class="lab-details__chip">
+          <span>DHCP</span>
+          <strong>{{ payload_lab.dhcp ? 'Yes' : 'No' }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-details__column">
+      <h3 class="lab-details__section-title">
+        <i class="fas fa-calendar-alt"></i> Lab Booking Date
+      </h3>
+      <div class="lab-details__date-row">
+        <div class="lab-details__date-card lab-details__date-card--start">
+          <span>Start</span>
+          <strong>{{ payload_lab.start | date: 'MMM d, y' }}</strong>
+        </div>
+        <i class="fas fa-arrows-alt-h lab-details__date-arrow"></i>
+        <div class="lab-details__date-card lab-details__date-card--end">
+          <span>End</span>
+          <strong>{{ payload_lab.end | date: 'MMM d, y' }}</strong>
+        </div>
+      </div>
+
+      <h3 class="lab-details__section-title">
+        <i class="fas fa-bullseye"></i> Lab Purpose
+      </h3>
+      <p class="lab-details__purpose">{{ payload_lab.goals }}</p>
+    </div>
+  </section>
+
+  <footer class="lab-details__actions" *ngIf="showActions">
+    <button class="lab-btn lab-btn--ghost lab-btn--danger" (click)="declineLab(payload_lab._id)">
+      <i class="far fa-times-circle"></i> Decline
+    </button>
+    <button class="lab-btn lab-btn--primary" (click)="acceptLab(payload_lab._id, payload_lab)">
+      <i class="far fa-check-circle"></i> Approve
+    </button>
+  </footer>
+
+  <ng-template #requestApprovalTpl></ng-template>
+</div>
