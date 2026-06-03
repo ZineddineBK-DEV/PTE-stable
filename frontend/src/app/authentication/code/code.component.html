@@ -1,30 +1,24 @@
-<main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
-    <div class="container">
-      <div class="row">
-        <div class="auth-card">
-          <div class="col-12">
-            <div class="card card-primary">
-              <div class="card-header">
-                <h4>Code validation</h4>
-              </div>
-              <div class="card-body">
-                <p class="text-muted">Enter yuor code to reset your password</p>
-                <form (ngSubmit)="onSubmit()" [formGroup]="codeSendForm">
-                  <div class="form-group">
-                    <label for="code">Confirmation Code</label>
-                    <input  type="text" class="form-control"  formControlName="code" required autofocus>
-                  </div>
-                  <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-lg btn-block">
-                      Submit code
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- PTE Code Validation — Redesigned -->
+<!-- Controller: codeSendForm, onSubmit() -->
+<div class="pte-auth">
+  <div class="pte-auth__brand">
+    <div class="pte-auth__brand-content">
+      <h1 class="pte-auth__brand-title">PTE</h1>
+      <p class="pte-auth__brand-subtitle">Code Verification</p>
     </div>
-  </main>
-  
+  </div>
+  <div class="pte-auth__form">
+    <div class="pte-auth__form-inner">
+      <h2 class="pte-auth__form-title">Code Validation</h2>
+      <p class="pte-auth__form-subtitle">Enter your code to reset your password.</p>
+      <form (ngSubmit)="onSubmit()" [formGroup]="codeSendForm">
+        <div class="pte-form-field">
+          <label class="pte-form-field__label" for="code">Confirmation Code</label>
+          <input type="text" class="pte-form-field__input" formControlName="code" required autofocus>
+        </div>
+        <button type="submit" class="pte-btn pte-btn--primary" style="width:100%;margin-top:8px;">Submit Code</button>
+      </form>
+      <p class="pte-auth__form-footer"><small><a routerLink="/authentication/signin" class="pte-auth__link">Back to Sign In</a></small></p>
+    </div>
+  </div>
+</div>

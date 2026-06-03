@@ -1,127 +1,112 @@
-<section class="main-content">
-  <ul class="breadcrumb breadcrumb-style ">
-    <li class="breadcrumb-item">
-      <h5 class="page-title m-b-0">News</h5>
-    </li>
-    <li class="breadcrumb-item bcrumb-1">
-      <a routerLink="/dashboard/main">
-        <i class="fas fa-home font-17"></i></a>
-    </li>
-    <li class="breadcrumb-item">News</li>
-    <li class="breadcrumb-item">All news</li>
-  </ul>
-  <div class="row">
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
-      <input type="text" class="form-control search" placeholder="Search posts...">
-    </div>
-    <div class="col-md-3 newPostContainer">
-      <button class="btn btn-outline-danger newPost" (click)="openNewPostModal()">New post <i
-          class="fas fa-plus"></i></button>
+<!-- PTE Newspaper — Redesigned -->
+<!-- Controller: posts, reversedPosts, allPosts, myApprovedPosts, myDeclinedPosts,
+     myPendingPosts, mySavedPosts, postRequests, userRole, userID, isLiked, isSaved,
+     picsUrl, openNewPostModal(), getAllPosts(), getApproved(), getDeclined(),
+     getPending(), getSaved(), getPostRequest(), acceptPost(), declinePost(),
+     addLik(), showSection(), savePost(), openEditPostModal(), deletePost(),
+     alignCommentSection -->
+<section class="pte-page">
+  <!-- Header -->
+  <div class="pte-page__header">
+    <h1 class="pte-page__title">News</h1>
+    <div class="pte-page__breadcrumb">
+      <a routerLink="/dashboard/main">Dashboard</a>
+      <span class="separator">/</span>
+      <span>All News</span>
     </div>
   </div>
-  <hr>
-  <div class="menuButtonsContainer">
-    <!-- <div class="col-lg-6 col-sm-6 col-sm-6"> -->
-      <button class="menuButtons" (click)="getAllPosts()" >All feeds <span class="buttonBadge">{{allPosts}}</span></button>
-      <button *ngIf="userRole!='ADMIN'" class="menuButtons" (click)="getApproved()" >My approved posts <span class="buttonBadge">{{myApprovedPosts}}</span></button>
-      <button *ngIf="userRole!='ADMIN'" class="menuButtons" (click)="getDeclined()" >My declined posts <span class="buttonBadge">{{myDeclinedPosts}}</span></button>
-      <button *ngIf="userRole!='ADMIN'" class="menuButtons"(click)="getPending()" >My pending posts <span class="buttonBadge">{{myPendingPosts}}</span></button>
-      <button class="menuButtons"(click)="getSaved()" >My saved posts <span class="buttonBadge">{{mySavedPosts}}</span></button>
-      <button *ngIf="userRole=='ADMIN'" class="menuButtons"(click)="getPostRequest()" >Post requests <span class="buttonBadge">{{postRequests}}</span></button>
-    <!-- </div> -->
-  </div>
-  <hr>
-  <div class="section-body" *ngIf="posts.length==0">
-    <div class="row">
-      <div class="col-7">
-        <h3>No posts yet.</h3>
-      </div>
+
+  <!-- Toolbar -->
+  <div class="pte-page__toolbar">
+    <div style="flex:1;max-width:400px;">
+      <input type="text" class="pte-form-field__input" placeholder="Search posts..." style="width:100%;">
     </div>
+    <button class="pte-btn pte-btn--primary" (click)="openNewPostModal()">New post <i class="fas fa-plus" style="margin-left:4px;"></i></button>
   </div>
+
+  <!-- Filter Buttons -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+    <button class="pte-btn pte-btn--ghost pte-btn--sm" (click)="getAllPosts()">All feeds <span class="pte-badge pte-badge--neutral" style="margin-left:4px;">{{allPosts}}</span></button>
+    <button *ngIf="userRole!='ADMIN'" class="pte-btn pte-btn--ghost pte-btn--sm" (click)="getApproved()">My approved <span class="pte-badge pte-badge--success" style="margin-left:4px;">{{myApprovedPosts}}</span></button>
+    <button *ngIf="userRole!='ADMIN'" class="pte-btn pte-btn--ghost pte-btn--sm" (click)="getDeclined()">My declined <span class="pte-badge pte-badge--danger" style="margin-left:4px;">{{myDeclinedPosts}}</span></button>
+    <button *ngIf="userRole!='ADMIN'" class="pte-btn pte-btn--ghost pte-btn--sm" (click)="getPending()">My pending <span class="pte-badge pte-badge--warning" style="margin-left:4px;">{{myPendingPosts}}</span></button>
+    <button class="pte-btn pte-btn--ghost pte-btn--sm" (click)="getSaved()">My saved <span class="pte-badge pte-badge--info" style="margin-left:4px;">{{mySavedPosts}}</span></button>
+    <button *ngIf="userRole=='ADMIN'" class="pte-btn pte-btn--ghost pte-btn--sm" (click)="getPostRequest()">Post requests <span class="pte-badge pte-badge--warning" style="margin-left:4px;">{{postRequests}}</span></button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="posts.length==0" class="pte-card" style="padding:48px;text-align:center;">
+    <p style="color:var(--pte-text-secondary);font-size:16px;">No posts yet.</p>
+  </div>
+
+  <!-- Posts Feed -->
   <div *ngFor="let p of reversedPosts">
-    <div class="section-body" *ngIf="posts">
-      <div class="row">
-        <div class="col-7">
-          <div class="card">
-            <div class="card-header">
-              <div class="col-sm-2">
-                <img class="proPic" src="{{picsUrl+p.user.image}}" alt="user image">
-              </div>
-              <div class="col-md-9">
-                <div class="name">
-                  <strong>{{p.user.firstName+" "+p.user.lastName}}</strong>
-                  <i *ngIf="p.status === 'Approved'" class="fas fa-check-circle statusBadgeApprove"></i>
-                  <i *ngIf="p.status === 'Declined'" class="fas fa-window-close statusBadgeDecline"></i>
-                  <i *ngIf="p.status === 'Pending'"  class="fas fa-clock statusBadgePending"></i>
-                </div>
-                <div class="date">{{p.createdAt| date:'MMM d, y, h:mm a'}}</div>
-              </div>
-              <div class="col-md-1 menu" *ngIf="p.status=='Approved' && p.isAccepted==true">
-                <i class="fas fa-ellipsis-v" *ngIf="p.user._id===userID" [matMenuTriggerFor]="appMenu"
-                  style="cursor:pointer;"></i>
-                <mat-menu #appMenu="matMenu">
-                  <button mat-menu-item (click)="openEditPostModal(p)">Edit</button>
-                  <button mat-menu-item (click)="deletePost(p._id)">Delete</button>
-                </mat-menu>
-              </div>
+    <div *ngIf="posts" class="pte-card" style="margin-bottom:16px;overflow:hidden;">
+      <!-- Post Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--pte-border-color);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <img [src]="picsUrl+p.user.image" alt="user" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+          <div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <strong>{{p.user.firstName+" "+p.user.lastName}}</strong>
+              <i *ngIf="p.status === 'Approved'" class="fas fa-check-circle" style="color:var(--pte-success-500);font-size:14px;"></i>
+              <i *ngIf="p.status === 'Declined'" class="fas fa-window-close" style="color:var(--pte-danger-500);font-size:14px;"></i>
+              <i *ngIf="p.status === 'Pending'" class="fas fa-clock" style="color:var(--pte-warning-500);font-size:14px;"></i>
             </div>
-            <div class="card-body">
-              <div class="decription" >{{p.description}}</div>
-              <ngb-carousel [interval]="0" *ngIf="p.images.length!=0">
-                <ng-template ngbSlide *ngFor="let image of p.images">
-                  <div class="picsum-img-wrapper">
-                    <img [src]="image" alt="" class="carousel-img-size">
-                  </div>
-                </ng-template>
-              </ngb-carousel>
-              <div class="row">
-                <div class="col-6 likeIndicator">
-                  <span class="likeIndicator" *ngIf="p.likes.length>=2"> {{p.likes.length}} likes</span>
-                  <span class="likeIndicator" *ngIf="p.likes.length<=1"> {{p.likes.length}} like</span>
-                </div>
-                <div class="col-6 commentIndicator">
-                  <span class="commentIndicator" *ngIf="p.comments.length>=2" >{{p.comments.length}} comments</span>
-                  <span class="commentIndicator" *ngIf="p.comments.length<=1" >{{p.comments.length}} comment</span>
-                </div>
-              </div>
-              <div class="row" *ngIf="userRole=='ADMIN' && p.status=='Pending'">
-                <div class="col-6 acceptRequestAction" (click)="acceptPost(p._id)">
-                  <span class="requestAction" > Accept post <i class="fas fa-check"></i></span>
-                </div>
-                <div class="col-6 declineRequestAction" (click)="declinePost(p._id)">
-                  <span class="requestAction" > Decline post <i class="far fa-trash-alt"></i></span>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer" *ngIf="p.status=='Approved' && p.isAccepted==true">
-              <div class="row actions">
-                <div class="col-4" style="text-align: center;">
-                  <i  class="fas fa-heart action" *ngIf="!isLiked" (click)="addLik(p._id)"></i>
-                  <i  class="fas fa-heart action" style="color:#cf4361;" *ngIf="isLiked" (click)="addLik(p._id)"></i>
-                </div>
-                <div class="col-4" style="text-align: center;">
-                  <i class="far fa-comment-dots action" (click)="showSection(posts.indexOf(p))"></i>
-                </div>
-                <div class="col-4" (click)="savePost(p._id,userID)" style="text-align: center;">
-                  <i class="fas fa-bookmark action" *ngIf="isSaved" style="color: #2e6bed;"  ></i>
-                  <i class="fas fa-bookmark action" *ngIf="!isSaved"  ></i>
-                </div>
-              </div>
-            </div>
+            <div style="font-size:12px;color:var(--pte-text-tertiary);">{{p.createdAt| date:'MMM d, y, h:mm a'}}</div>
           </div>
         </div>
-        <div class="col-5">
+        <div *ngIf="p.status=='Approved' && p.isAccepted==true">
+          <i class="fas fa-ellipsis-v" *ngIf="p.user._id===userID" [matMenuTriggerFor]="appMenu" style="cursor:pointer;padding:8px;"></i>
+          <mat-menu #appMenu="matMenu">
+            <button mat-menu-item (click)="openEditPostModal(p)">Edit</button>
+            <button mat-menu-item (click)="deletePost(p._id)">Delete</button>
+          </mat-menu>
         </div>
       </div>
-      <!-- Comment section -->
-    </div>
-    <div class="row" style="margin-top: -25px;">
-     
-      <div class="col-7 col-7 col-7" *ngIf="alignCommentSection[posts.indexOf(p)]">
-        <app-all-comments [post]="p"></app-all-comments>
+
+      <!-- Post Body -->
+      <div style="padding:16px 20px;">
+        <p style="margin:0 0 12px;">{{p.description}}</p>
+        <ngb-carousel [interval]="0" *ngIf="p.images.length!=0">
+          <ng-template ngbSlide *ngFor="let image of p.images">
+            <div style="text-align:center;">
+              <img [src]="image" alt="" style="max-width:100%;max-height:400px;border-radius:var(--pte-radius-md);">
+            </div>
+          </ng-template>
+        </ngb-carousel>
+        <div style="display:flex;gap:16px;margin-top:12px;font-size:13px;color:var(--pte-text-secondary);">
+          <span *ngIf="p.likes.length>=2">{{p.likes.length}} likes</span>
+          <span *ngIf="p.likes.length<=1">{{p.likes.length}} like</span>
+          <span *ngIf="p.comments.length>=2">{{p.comments.length}} comments</span>
+          <span *ngIf="p.comments.length<=1">{{p.comments.length}} comment</span>
+        </div>
+        <!-- Admin Actions -->
+        <div *ngIf="userRole=='ADMIN' && p.status=='Pending'" style="display:flex;gap:12px;margin-top:12px;">
+          <button class="pte-btn pte-btn--success pte-btn--sm" (click)="acceptPost(p._id)">✓ Accept post</button>
+          <button class="pte-btn pte-btn--danger pte-btn--sm" (click)="declinePost(p._id)">✕ Decline post</button>
+        </div>
       </div>
-      
+
+      <!-- Post Footer Actions -->
+      <div *ngIf="p.status=='Approved' && p.isAccepted==true" style="display:flex;border-top:1px solid var(--pte-border-color);">
+        <div style="flex:1;text-align:center;padding:12px;cursor:pointer;" (click)="addLik(p._id)">
+          <i class="fas fa-heart" *ngIf="!isLiked" style="font-size:18px;"></i>
+          <i class="fas fa-heart" *ngIf="isLiked" style="font-size:18px;color:#cf4361;"></i>
+        </div>
+        <div style="flex:1;text-align:center;padding:12px;cursor:pointer;" (click)="showSection(posts.indexOf(p))">
+          <i class="far fa-comment-dots" style="font-size:18px;"></i>
+        </div>
+        <div style="flex:1;text-align:center;padding:12px;cursor:pointer;" (click)="savePost(p._id,userID)">
+          <i class="fas fa-bookmark" *ngIf="isSaved" style="font-size:18px;color:#2e6bed;"></i>
+          <i class="fas fa-bookmark" *ngIf="!isSaved" style="font-size:18px;"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comment Section -->
+    <div *ngIf="alignCommentSection[posts.indexOf(p)]" style="margin:-8px 0 16px;">
+      <app-all-comments [post]="p"></app-all-comments>
     </div>
   </div>
 </section>

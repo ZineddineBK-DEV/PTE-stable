@@ -1,37 +1,28 @@
-<main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
-  <div class="container">
-    <div class="auth-card">
-      <div class="row">
-        <div class="col-12">
-          <div class="card card-primary">
-            <div class="card-header">
-              <h4>Reset Password</h4>
-            </div>
-            <div class="card-body">
-              <p class="text-muted">Enter Your New Password</p>
-              <form [formGroup]="ChangePasswordForm" (ngSubmit)="onSubmit()"> 
-                <div class="form-group">
-                  <label for="password">New Password</label>
-                  <input id="password" type="password"  class="form-control pwstrength" formControlName="password" required>
-                  <div id="pwindicator" class="pwindicator">
-                    <div class="bar"></div>
-                    <div class="label"></div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="password-confirm">Confirm Password</label>
-                  <input id="password-confirm" type="password" class="form-control" formControlName="Cpassword" required>
-                </div>
-                <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
-                    Reset Password
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- PTE Reset Password — Redesigned -->
+<!-- Controller: ChangePasswordForm, onSubmit() -->
+<div class="pte-auth">
+  <div class="pte-auth__brand">
+    <div class="pte-auth__brand-content">
+      <h1 class="pte-auth__brand-title">PTE</h1>
+      <p class="pte-auth__brand-subtitle">New Password</p>
     </div>
   </div>
-</main>
+  <div class="pte-auth__form">
+    <div class="pte-auth__form-inner">
+      <h2 class="pte-auth__form-title">Reset Password</h2>
+      <p class="pte-auth__form-subtitle">Enter your new password.</p>
+      <form [formGroup]="ChangePasswordForm" (ngSubmit)="onSubmit()">
+        <div class="pte-form-field">
+          <label class="pte-form-field__label" for="password">New Password</label>
+          <input id="password" type="password" class="pte-form-field__input" formControlName="password" required>
+        </div>
+        <div class="pte-form-field">
+          <label class="pte-form-field__label" for="password-confirm">Confirm Password</label>
+          <input id="password-confirm" type="password" class="pte-form-field__input" formControlName="Cpassword" required>
+        </div>
+        <button type="submit" class="pte-btn pte-btn--primary" style="width:100%;margin-top:8px;" tabindex="4">Reset Password</button>
+      </form>
+      <p class="pte-auth__form-footer"><small><a routerLink="/authentication/signin" class="pte-auth__link">Back to Sign In</a></small></p>
+    </div>
+  </div>
+</div>

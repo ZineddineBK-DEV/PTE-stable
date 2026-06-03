@@ -1,227 +1,147 @@
-<main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
-  <div class="container register-container">
-    <div class="card register-card">
-      <div class="row no-gutters">
-        <div class="col-sm-6">
-          <img src="assets/images/register.jpg" style="max-width:600px;height: 100%;" alt="register">
-        </div>
-        <div class="col-md-6">
-          <div class="register-body">
-            <div class="text-center">
-              <div class="brand-wrapper">
-                <span class="logo-name">Sign Up</span>
-              </div>
-            </div>
-            <form class="login-form mt-4" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group position-relative">
-                    <label>First name <span class="text-danger">*</span></label>
-                    <i-feather name="user" class="login-icons"></i-feather>
-                    <input type="text" class="form-control psl-5" formControlName="fname" placeholder="First Name">
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('fname')?.valid && registerForm.get('fname')?.touched"> First name is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group position-relative">
-                    <label>Last name <span class="text-danger">*</span></label>
-                    <i-feather name="user-check" class="login-icons"></i-feather>
-                    <input type="text" class="form-control psl-5" formControlName="lname" placeholder="Last Name">
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('lname')?.valid && registerForm.get('lname')?.touched"> Last name is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <div class="form-group position-relative">
-                    <label>Your Email <span class="text-danger">*</span></label>
-                    <i-feather name="mail" class="login-icons"></i-feather>
-                    <input type="email" class="form-control psl-5" formControlName="email" placeholder="Email">
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('email')?.valid && registerForm.get('email')?.touched"> Email is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group position-relative">
-                    <label>Password <span class="text-danger">*</span></label>
-                    <i-feather name="key" class="login-icons"></i-feather>
-                    <input type="password" class="form-control psl-5" formControlName="password" placeholder="Password">
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('password')?.valid && registerForm.get('password')?.touched"> Password is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group position-relative">
-                    <label>Confirm password <span class="text-danger">*</span></label>
-                    <i-feather name="key" class="login-icons"></i-feather>
-                    <input type="password" class="form-control psl-5" formControlName="Cpassword"
-                      placeholder="Confirm password">
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('Cpassword')?.valid && registerForm.get('Cpassword')?.touched"> Password
-                      Confirmation is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <div class="form-group position-relative">
-                    <label>Nationality <span class="text-danger">*</span></label>
-                    <select formControlName="nationality" class="form-select">
-                      <option selected disabled>Choose...</option>
-                      <option *ngFor="let n of nationalities" [ngValue]="n">{{n}}</option>
-                    </select>
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('nationality')?.valid && registerForm.get('nationality')?.touched">
-                      Nationality is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group position-relative">
-                    <label>Hiring date <span class="text-danger">*</span></label>
-                    <input type="date" class="form-control" formControlName="hiringdate">
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('hiringdate')?.valid && registerForm.get('hiringdate')?.touched"> Hiring
-                      date is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group position-relative">
-                    <label>Birthdate <span class="text-danger">*</span></label>
-                    <input type="date" class="form-control" formControlName="birthdate">
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('birthdate')?.valid && registerForm.get('birthdate')?.touched"> Birthdate
-                      is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <div class="form-group position-relative">
-                    <label>Address <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" formControlName="address" placeholder="Address">
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('address')?.valid && registerForm.get('address')?.touched"> Address is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group position-relative">
-                    <label>Gender <span class="text-danger">*</span></label>
-                    <select formControlName="gender" class="form-select">
-                      <option selected disabled>Choose...</option>
-                      <option *ngFor="let g of genders" [ngValue]="g">{{g}}</option>
-                    </select>
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('gender')?.valid && registerForm.get('gender')?.touched"> Gender is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group position-relative">
-                    <label>Family situation <span class="text-danger">*</span></label>
-                    <select formControlName="fs" class="form-select">
-                      <option selected disabled>Choose...</option>
-                      <option *ngFor="let s of fs" [ngValue]="s">{{s}}</option>
-                    </select>
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('fs')?.valid && registerForm.get('fs')?.touched"> Family situation is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <div class="form-group position-relative">
-                    <label>Experience <span class="text-danger">*</span></label>
-                    <input type="number" name="experience" formControlName="experience"
-                      placeholder="Years of experience" min="0" class="form-control ">
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('experience')?.valid && registerForm.get('experience')?.touched">
-                      Experience is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-group position-relative">
-                    <label>Departement <span class="text-danger">*</span></label>
-                    <select formControlName="departement" class="form-select">
-                      <option selected disabled>Choose...</option>
-                      <option *ngFor="let d of departement" [ngValue]="d">{{d}}</option>
-                    </select>
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('departement')?.valid && registerForm.get('departement')?.touched">
-                      Departement is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group position-relative">
-                    <label>Driving license <span class="text-danger">*</span></label>
-                    <select formControlName="drivingLisence" class="form-select">
-                      <option selected disabled>Choose...</option>
-                      <option value="true">Yes</option>
-                      <option value="false">No</option>
-                    </select>
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('drivingLisence')?.valid && registerForm.get('drivingLisence')?.touched">
-                      Driving license is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-
-                <div class="col-md-12">
-                  <div class="form-group position-relative">
-                    <label>Phone <span class="text-danger">*</span></label>
-                    <div class="input-group flex-nowrap">
-                      <span class="input-group-text">+216</span>
-                      <input type="text" class="form-control" formControlName="phone" placeholder="Phone">
-                    </div>
-                    <small class="form-text text-danger"
-                      *ngIf="!registerForm.get('phone')?.valid && registerForm.get('phone')?.touched"> Phone is
-                      invalid
-                    </small>
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <div style="padding-bottom: 15px;">
-                    <label class="custom-switch mt-2">
-                      <input type="checkbox" formControlName="teamLeader" class="custom-switch-input">
-                      <span class="custom-switch-indicator"></span>
-                      <span class="custom-switch-description">Are you a team leader?</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div *ngIf="error" class="alert alert-danger mb-3 msl-3">{{error}}</div>
-              <div class="col-md-12">
-                <button class="btn btn-primary auth-form-btn">Register</button>
-              </div>
-              <div class="mx-auto">
-                <p class="mb-0 mt-3"><small class="text msr-2">Already have an account ?</small> <a
-                    routerLink="/authentication/signin" class="text fw-bold">Sign in</a></p>
-              </div>
-            </form>
-          </div>
-          
-        </div>
-      </div>
+<!-- PTE Sign Up — Redesigned -->
+<!-- Controller: registerForm, error, onSubmit(), nationalities, genders, fs, departement -->
+<div class="pte-auth">
+  <div class="pte-auth__brand">
+    <div class="pte-auth__brand-content">
+      <h1 class="pte-auth__brand-title">PTE</h1>
+      <p class="pte-auth__brand-subtitle">Join the team</p>
     </div>
   </div>
-</main>
+  <div class="pte-auth__form">
+    <div class="pte-auth__form-inner" style="max-width:560px;">
+      <h2 class="pte-auth__form-title">Sign Up</h2>
+      <p class="pte-auth__form-subtitle">Create your account to get started.</p>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">First name <span class="text-danger">*</span></label>
+            <input type="text" class="pte-form-field__input" formControlName="fname" placeholder="First Name">
+            <small class="pte-form-field__error" *ngIf="!registerForm.get('fname')?.valid && registerForm.get('fname')?.touched">First name is invalid</small>
+          </div>
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Last name <span class="text-danger">*</span></label>
+            <input type="text" class="pte-form-field__input" formControlName="lname" placeholder="Last Name">
+            <small class="pte-form-field__error" *ngIf="!registerForm.get('lname')?.valid && registerForm.get('lname')?.touched">Last name is invalid</small>
+          </div>
+        </div>
+
+        <div class="pte-form-field">
+          <label class="pte-form-field__label">Your Email <span class="text-danger">*</span></label>
+          <input type="email" class="pte-form-field__input" formControlName="email" placeholder="Email">
+          <small class="pte-form-field__error" *ngIf="!registerForm.get('email')?.valid && registerForm.get('email')?.touched">Email is invalid</small>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Password <span class="text-danger">*</span></label>
+            <input type="password" class="pte-form-field__input" formControlName="password" placeholder="Password">
+            <small class="pte-form-field__error" *ngIf="!registerForm.get('password')?.valid && registerForm.get('password')?.touched">Password is invalid</small>
+          </div>
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Confirm password <span class="text-danger">*</span></label>
+            <input type="password" class="pte-form-field__input" formControlName="Cpassword" placeholder="Confirm password">
+            <small class="pte-form-field__error" *ngIf="!registerForm.get('Cpassword')?.valid && registerForm.get('Cpassword')?.touched">Password Confirmation is invalid</small>
+          </div>
+        </div>
+
+        <div class="pte-form-field">
+          <label class="pte-form-field__label">Nationality <span class="text-danger">*</span></label>
+          <select formControlName="nationality" class="pte-form-field__select">
+            <option selected disabled>Choose...</option>
+            <option *ngFor="let n of nationalities" [ngValue]="n">{{n}}</option>
+          </select>
+          <small class="pte-form-field__error" *ngIf="!registerForm.get('nationality')?.valid && registerForm.get('nationality')?.touched">Nationality is invalid</small>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Hiring date <span class="text-danger">*</span></label>
+            <input type="date" class="pte-form-field__input" formControlName="hiringdate">
+            <small class="pte-form-field__error" *ngIf="!registerForm.get('hiringdate')?.valid && registerForm.get('hiringdate')?.touched">Hiring date is invalid</small>
+          </div>
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Birthdate <span class="text-danger">*</span></label>
+            <input type="date" class="pte-form-field__input" formControlName="birthdate">
+            <small class="pte-form-field__error" *ngIf="!registerForm.get('birthdate')?.valid && registerForm.get('birthdate')?.touched">Birthdate is invalid</small>
+          </div>
+        </div>
+
+        <div class="pte-form-field">
+          <label class="pte-form-field__label">Address <span class="text-danger">*</span></label>
+          <input type="text" class="pte-form-field__input" formControlName="address" placeholder="Address">
+          <small class="pte-form-field__error" *ngIf="!registerForm.get('address')?.valid && registerForm.get('address')?.touched">Address is invalid</small>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Gender <span class="text-danger">*</span></label>
+            <select formControlName="gender" class="pte-form-field__select">
+              <option selected disabled>Choose...</option>
+              <option *ngFor="let g of genders" [ngValue]="g">{{g}}</option>
+            </select>
+            <small class="pte-form-field__error" *ngIf="!registerForm.get('gender')?.valid && registerForm.get('gender')?.touched">Gender is invalid</small>
+          </div>
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Family situation <span class="text-danger">*</span></label>
+            <select formControlName="fs" class="pte-form-field__select">
+              <option selected disabled>Choose...</option>
+              <option *ngFor="let s of fs" [ngValue]="s">{{s}}</option>
+            </select>
+            <small class="pte-form-field__error" *ngIf="!registerForm.get('fs')?.valid && registerForm.get('fs')?.touched">Family situation is invalid</small>
+          </div>
+        </div>
+
+        <div class="pte-form-field">
+          <label class="pte-form-field__label">Experience <span class="text-danger">*</span></label>
+          <input type="number" class="pte-form-field__input" formControlName="experience" placeholder="Years of experience" min="0">
+          <small class="pte-form-field__error" *ngIf="!registerForm.get('experience')?.valid && registerForm.get('experience')?.touched">Experience is invalid</small>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Department <span class="text-danger">*</span></label>
+            <select formControlName="departement" class="pte-form-field__select">
+              <option selected disabled>Choose...</option>
+              <option *ngFor="let d of departement" [ngValue]="d">{{d}}</option>
+            </select>
+            <small class="pte-form-field__error" *ngIf="!registerForm.get('departement')?.valid && registerForm.get('departement')?.touched">Departement is invalid</small>
+          </div>
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Driving license <span class="text-danger">*</span></label>
+            <select formControlName="drivingLisence" class="pte-form-field__select">
+              <option selected disabled>Choose...</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+            <small class="pte-form-field__error" *ngIf="!registerForm.get('drivingLisence')?.valid && registerForm.get('drivingLisence')?.touched">Driving license is invalid</small>
+          </div>
+        </div>
+
+        <div class="pte-form-field">
+          <label class="pte-form-field__label">Phone <span class="text-danger">*</span></label>
+          <div style="display:flex;gap:0;">
+            <span style="padding:8px 12px;background:var(--pte-gray-100);border:1px solid var(--pte-gray-300);border-radius:var(--pte-radius-md) 0 0 var(--pte-radius-md);font-size:14px;color:var(--pte-gray-600);">+216</span>
+            <input type="text" class="pte-form-field__input" formControlName="phone" placeholder="Phone" style="border-radius:0 var(--pte-radius-md) var(--pte-radius-md) 0;">
+          </div>
+          <small class="pte-form-field__error" *ngIf="!registerForm.get('phone')?.valid && registerForm.get('phone')?.touched">Phone is invalid</small>
+        </div>
+
+        <div style="padding:8px 0 16px;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;">
+            <input type="checkbox" formControlName="teamLeader">
+            Are you a team leader?
+          </label>
+        </div>
+
+        <div *ngIf="error" class="pte-form-field__error" style="margin-bottom:12px;text-align:center;">{{error}}</div>
+
+        <button type="submit" class="pte-btn pte-btn--primary" style="width:100%;">Register</button>
+      </form>
+
+      <p class="pte-auth__form-footer">
+        <small>Already have an account? <a routerLink="/authentication/signin" class="pte-auth__link">Sign in</a></small>
+      </p>
+    </div>
+  </div>
+</div>

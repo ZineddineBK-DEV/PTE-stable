@@ -1,29 +1,24 @@
-<main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
-  <div class="container">
-    <div class="row">
-      <div class="auth-card">
-        <div class="col-12">
-          <div class="card card-primary">
-            <div class="card-header">
-              <h4>Forgot Password</h4>
-            </div>
-            <div class="card-body">
-              <p class="text-muted">We will send a code to reset your password</p>
-              <form (ngSubmit)="onSubmit()" [formGroup]="emailSendForm">
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input id="email" type="email" class="form-control"  formControlName="email" tabindex="1" required autofocus>
-                </div>
-                <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
-                    Send Code
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- PTE Forgot Password — Redesigned -->
+<!-- Controller: emailSendForm, onSubmit() -->
+<div class="pte-auth">
+  <div class="pte-auth__brand">
+    <div class="pte-auth__brand-content">
+      <h1 class="pte-auth__brand-title">PTE</h1>
+      <p class="pte-auth__brand-subtitle">Password Recovery</p>
     </div>
   </div>
-</main>
+  <div class="pte-auth__form">
+    <div class="pte-auth__form-inner">
+      <h2 class="pte-auth__form-title">Forgot Password</h2>
+      <p class="pte-auth__form-subtitle">We will send a code to reset your password.</p>
+      <form (ngSubmit)="onSubmit()" [formGroup]="emailSendForm">
+        <div class="pte-form-field">
+          <label class="pte-form-field__label" for="email">Email</label>
+          <input id="email" type="email" class="pte-form-field__input" formControlName="email" tabindex="1" required autofocus>
+        </div>
+        <button type="submit" class="pte-btn pte-btn--primary" style="width:100%;margin-top:8px;" tabindex="4">Send Code</button>
+      </form>
+      <p class="pte-auth__form-footer"><small><a routerLink="/authentication/signin" class="pte-auth__link">Back to Sign In</a></small></p>
+    </div>
+  </div>
+</div>
