@@ -1,80 +1,89 @@
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- PTE Auth — Sign In (Redesigned)                                         -->
-<!-- Uses: pte-auth design system classes                                     -->
-<!-- Controller bindings: loginForm, error, onSubmit(), f (form controls)     -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="pte-auth">
-  <!-- Left Branding Panel -->
-  <div class="pte-auth__brand">
-    <div class="pte-auth__brand-logo">P</div>
-    <h1 class="pte-auth__brand-title">PTE Platform</h1>
-    <p class="pte-auth__brand-subtitle">Resource management, scheduling & collaboration — all in one place.</p>
-  </div>
-
-  <!-- Right Form Panel -->
-  <div class="pte-auth__form">
-    <div class="pte-auth__card">
-      <!-- Mobile Logo -->
-      <div style="text-align:center; margin-bottom: 32px;" class="hide-mobile">
-        <!-- Hidden on desktop, visible on mobile -->
-      </div>
-      <div style="display:none;" class="show-mobile-only">
-        <div style="text-align:center; margin-bottom:24px;">
-          <div style="width:48px;height:48px;border-radius:12px;background:var(--pte-primary-600);display:inline-flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:24px;">P</div>
+<main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
+  <div class="container">
+    <div class="card login-card mb-0">
+      <div class="row no-gutters">
+        <div class="col-md-5">
+          <img src="assets/images/register.jpg" alt="login" class="login-card-img">
         </div>
-      </div>
+        <div class="col-md-7">
+          <div class="login-body">
+            <div class="text-center">
+              <div class="brand-wrapper">
+                <span class="logo-name">Sign In</span>
+              </div>
+            </div>
+            <form class="validate-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="form-group position-relative">
+                    <label>Your Email <span class="text-danger">*</span></label>
+                    <i-feather name="user" class="login-icons"></i-feather>
+                    <input type="email" class="form-control psl-5" formControlName="email" placeholder="Email"  autofocus>
+                    <small class="form-text text-danger"
+                      *ngIf="!loginForm.get('email')?.valid && loginForm.get('email')?.touched"> Email is invalid
+                    </small>
+                  </div>
+                </div>
 
-      <h2 class="pte-auth__title">Welcome back</h2>
-      <p class="pte-auth__subtitle">Enter your credentials to access the platform</p>
 
-      <!-- Error -->
-      <div class="pte-auth__error" *ngIf="error">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-        {{ error }}
-      </div>
+                <div class="col-lg-12">
+                  <div class="form-group position-relative">
+                    <label>Password <span class="text-danger">*</span></label>
+                    <i-feather name="key" class="login-icons"></i-feather>
+                    <input type="password" class="form-control psl-5" formControlName="password" placeholder="Password" >
+                    <small class="form-text text-danger"
+                      *ngIf="!loginForm.get('password')?.valid && loginForm.get('password')?.touched"> Password is
+                      invalid
+                    </small>
+                  </div>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <!-- Email -->
-        <div class="pte-auth__field">
-          <label>Email address</label>
-          <div class="input-wrapper">
-            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <input type="email" formControlName="email" placeholder="name@company.com" autofocus>
+                </div>
+
+                <div class="col-lg-12">
+                  <div class="d-flex justify-content-between">
+                    <!-- <div class="form-group">
+                         <div class="form-check">
+                           <input class="form-check-input" type="checkbox" id="customCheck1" formControlName="remember">
+                           <label class="form-check-label" for="customCheck1">
+                             Remember me
+                           </label>
+                         </div>
+                       </div> -->
+                    <p class="forgot-pass mb-0"><a routerLink="/authentication/forgot" class="text fw-bold">Forgot
+                        password ?</a></p>
+                  </div>
+                </div>
+                <div *ngIf="error" class="alert alert-danger mb-3 msl-3">{{error}}</div>
+                <div class="col-lg-12 mb-0">
+                  <button type="submit" class="btn btn-primary auth-form-btn">Sign in</button>
+                </div>
+                <!-- <div class="col-lg-12 mt-4 text-center">
+                     <h6>Or Login With</h6>
+                     <ul class="list-unstyled social-icon mb-0 mt-3">
+                       <li class="list-inline-item"><a href="javascript:void(0)" class="rounded">
+                           <i-feather name="facebook" class="fea-social sm-icon"></i-feather>
+                         </a></li>
+                       <li class="list-inline-item"><a href="javascript:void(0)" class="rounded">
+                           <i-feather name="github" class="fea-social sm-icon"></i-feather>
+                         </a></li>
+                       <li class="list-inline-item"><a href="javascript:void(0)" class="rounded">
+                           <i-feather name="twitter" class="fea-social sm-icon"></i-feather>
+                         </a></li>
+                       <li class="list-inline-item"><a href="javascript:void(0)" class="rounded">
+                           <i-feather name="gitlab" class="fea-social sm-icon"></i-feather>
+                         </a></li>
+                     </ul>
+                   </div> -->
+                <div class="col-12 text-center">
+                  <p class="mb-0 mt-3"><small class="text msr-2">Don't have an account ?</small>
+                    <a routerLink="/authentication/signup" class="text fw-bold">Sign Up</a>
+                  </p>
+                </div>
+              </div>
+            </form>
           </div>
-          <small *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" style="color:var(--pte-danger-600);font-size:12px;margin-top:4px;display:block;">
-            Please enter a valid email
-          </small>
         </div>
-
-        <!-- Password -->
-        <div class="pte-auth__field">
-          <label>Password</label>
-          <div class="input-wrapper">
-            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            <input type="password" formControlName="password" placeholder="Enter your password">
-          </div>
-          <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" style="color:var(--pte-danger-600);font-size:12px;margin-top:4px;display:block;">
-            Password is required
-          </small>
-        </div>
-
-        <!-- Forgot Password -->
-        <div class="pte-auth__options">
-          <span></span>
-          <a routerLink="/authentication/forgot">Forgot password?</a>
-        </div>
-
-        <!-- Submit -->
-        <button type="submit" class="pte-btn pte-btn--primary pte-auth__submit">
-          Sign In
-        </button>
-      </form>
-
-      <!-- Sign Up Link -->
-      <p class="pte-auth__footer">
-        Don't have an account? <a routerLink="/authentication/signup">Create one</a>
-      </p>
+      </div>
     </div>
   </div>
-</div>
+</main>

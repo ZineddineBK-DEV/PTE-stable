@@ -1,53 +1,352 @@
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- PTE — Interns Request (Redesigned)                                     -->
-<!-- Controller: rows, loading, picsUrl                                       -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="main-content">
 
-<div class="pte-page">
-  <div class="pte-page__header">
-    <div class="pte-page__header-left">
-      <div class="pte-page__breadcrumb">
-        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
-        <span>Internships</span><span class="separator">/</span><span class="current">Intern Requests</span>
-      </div>
-      <h1 class="pte-page__header-title">Intern Requests</h1>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-header-icon">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div>
+                <h2 class="page-title">Interns</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb-modern">
+                        <li><a routerLink="/dashboard/main"><i class="fas fa-home"></i></a></li>
+                        <li><i class="fas fa-chevron-right"></i></li>
+                        <li><span>Users</span></li>
+                        <li><i class="fas fa-chevron-right"></i></li>
+                        <li class="active">Interns Request</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="page-header-right" *ngIf="userRole === 'ASSISTANT'">
+            <button class="btn-add-intern" (click)="addInternModal({}, 'add')">
+                <i class="fas fa-user-plus"></i>
+                <span>Add Pre-selected Intern</span>
+            </button>
+        </div>
     </div>
-  </div>
 
-  <div class="pte-card">
-    <div class="pte-card__header">
-      <h3 class="pte-card__header-title">Pending Intern Requests</h3>
+    <!-- Stats Row -->
+    <div class="stats-row">
+        <div class="stats-card">
+            <div class="stats-icon bg-primary">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stats-info">
+                <h3>{{ totalInterns }}</h3>
+                <p>Total Interns</p>
+                <!-- <p><span class="text-danger">Current year: {{approvedCount}}</span></p>
+                <p><span class="text-info">Archived: {{archivedCount}}</span></p> -->
+            </div>
+        </div>
+        <div class="stats-card">
+            <div class="stats-icon bg-success">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stats-info">
+                <h3>{{ approvedCount }}</h3>
+                <p>Approved</p>
+            </div>
+        </div>
+        <div class="stats-card">
+            <div class="stats-icon bg-warning">
+                <i class="fas fa-user-clock"></i>
+            </div>
+            <div class="stats-info">
+                <h3>{{ requestsCount }}</h3>
+                <p>Pending Requests</p>
+            </div>
+        </div>
+        <div class="stats-card">
+            <div class="stats-icon bg-info">
+                <i class="fas fa-archive"></i>
+            </div>
+            <div class="stats-info">
+                <h3>{{ archivedCount }}</h3>
+                <p>Archived</p>
+            </div>
+        </div>
     </div>
-    <div class="pte-card__body">
-      <div class="pte-table-wrapper">
-        <table class="pte-table">
-          <thead><tr><th>Intern</th><th>Email</th><th>School</th><th>Period</th><th style="text-align:right;">Actions</th></tr></thead>
-          <tbody>
-            <tr *ngFor="let intern of rows">
-              <td>
-                <div class="flex gap-3 items-center">
-                  <div style="width:36px;height:36px;border-radius:50%;background:var(--pte-primary-100);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:var(--pte-primary-600);">{{ (intern.firstName?.[0] || '') + (intern.lastName?.[0] || '') }}</div>
-                  <div style="font-weight:500;">{{ intern.firstName }} {{ intern.lastName }}</div>
+
+    <!-- Main Card -->
+    <div class="modern-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span class="card-title">
+                <i class="fas fa-list-ul me-2"></i>
+                {{ currentViewLabel }}
+            </span>
+            <div class="view-toggle">
+                <button class="btn" [class.active]="viewMode === 'table'" (click)="viewMode = 'table'">
+                    <i class="fas fa-table"></i> Table
+                </button>
+                <button class="btn" [class.active]="viewMode === 'card'" (click)="viewMode = 'card'">
+                    <i class="fas fa-th-large"></i> Cards
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Filters -->
+            <div class="filters-section mb-4">
+                <div class="row align-items-end g-3">
+                    <div class="col-md-3">
+                        <div class="filter-group">
+                            <label><i class="fas fa-search"></i> Search</label>
+                            <input type="text" class="form-control" placeholder="Name, email, phone..."
+                                (keyup)="updateFilter($event)" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="filter-group">
+                            <label><i class="fas fa-filter"></i> Type</label>
+                            <select class="form-control" (change)="userFilter($event)">
+                                <option value="">Select view</option>
+                                <option value="approved_interns">Approved Interns</option>
+                                <option value="interns_requests">Intern Requests</option>
+                                <option value="archived_interns">Archived Interns</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="filter-group">
+                            <label><i class="fas fa-building"></i> Department</label>
+                            <select class="form-control" (change)="filterByDept($event)">
+                                <option value="">All Departments</option>
+                                <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end gap-2">
+                        <button class="btn-reset-filters flex-grow-1" (click)="resetFilters()">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                    </div>
                 </div>
-              </td>
-              <td style="font-size:13px;color:var(--pte-text-secondary);">{{ intern.email }}</td>
-              <td>{{ intern.school || '—' }}</td>
-              <td style="font-size:13px;">{{ intern.startDate | date:'shortDate' }} — {{ intern.endDate | date:'shortDate' }}</td>
-              <td>
-                <div class="table-actions" style="justify-content:flex-end;">
-                  <button class="pte-btn pte-btn--sm pte-btn--success">Approve</button>
-                  <button class="pte-btn pte-btn--sm pte-btn--ghost" style="color:var(--pte-danger-600);">Decline</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
 
-      <div *ngIf="!rows || rows.length === 0" class="pte-empty-state">
-        <div class="pte-empty-state__icon">🎓</div>
-        <div class="pte-empty-state__title">No intern requests</div>
-      </div>
+                <div class="active-filters" *ngIf="activeFilters.length > 0">
+                    <span class="filter-label">Active filters:</span>
+                    <span class="filter-badge" *ngFor="let f of activeFilters">
+                        {{ f.label }}
+                        <i class="fas fa-times" (click)="removeFilter(f.key)"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Results Count -->
+            <div class="results-count mb-3">
+                Showing <strong>{{ rows.length }}</strong> intern(s)
+            </div>
+
+            <!-- Loading -->
+            <div class="loading-state" *ngIf="loadingIndicator">
+                <div class="spinner-wrapper">
+                    <div class="spinner-ring"></div>
+                    <span>Loading interns...</span>
+                </div>
+            </div>
+
+            <!-- ======================== TABLE VIEW ======================== -->
+            <div class="modern-table" *ngIf="!loadingIndicator && viewMode === 'table'">
+                <ngx-datatable #table class="material" [rows]="rows" [sortType]="SortType.multi"
+                    [loadingIndicator]="loadingIndicator" columnMode="force" [headerHeight]="52" [footerHeight]="50"
+                    rowHeight="auto" [limit]="8" [scrollbarH]="scrollBarHorizontal" [reorderable]="reorderable">
+
+                    <!-- Name -->
+                    <ngx-datatable-column [width]="240" name="Intern">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="table-user-cell">
+                                <img src="{{ intern_image_url + row.image }}" class="table-user-img"
+                                    alt="{{ row.firstName }}" />
+                                <div class="table-user-info">
+                                    <div class="user-name-text">{{ row.firstName + ' ' + row.lastName }}</div>
+                                    <div class="user-email-text">{{ row.role }}</div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- Email -->
+                    <ngx-datatable-column [width]="210" name="Email">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span class="email-text">
+                                <i class="fas fa-envelope me-1"></i>{{ row.email }}
+                            </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- Department -->
+                    <ngx-datatable-column [width]="155" name="Department">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span class="dept-badge">{{ row.departement }}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- Phone -->
+                    <ngx-datatable-column [width]="140" name="Phone">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span class="phone-text"><i class="fas fa-phone me-1"></i>{{ row.phone }}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- Status -->
+                    <ngx-datatable-column [width]="130" name="Status">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span class="status-badge" [ngClass]="row.isEnabled ? 'badge-active' : 'badge-inactive'">
+                                <i class="fas fa-circle"></i>
+                                {{ row.isEnabled ? 'Active' : 'Inactive' }}
+                            </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- Documents -->
+                    <ngx-datatable-column [width]="130" name="Documents"
+                        *ngIf="userRole === 'ASSISTANT' || userRole === 'ADMIN'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <button class="btn-docs" (click)="openDocsModal(row._id)">
+                                <i class="far fa-file-archive"></i> Show files
+                            </button>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- Actions -->
+                    <ngx-datatable-column name="Actions" [sortable]="false" [width]="130">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="table-actions">
+                                <!-- Pending: approve + decline -->
+                                <ng-container *ngIf="!row.isEnabled && !row.archived">
+                                    <button class="btn-table-action btn-approve" (click)="confirmRequest(row._id)"
+                                        ngbPopover="Approve intern" triggers="mouseenter:mouseleave" placement="left">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn-table-action btn-decline" (click)="declineRequest(row._id)"
+                                        ngbPopover="Decline intern" triggers="mouseenter:mouseleave" placement="left">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </ng-container>
+
+                                <!-- Admin: archive -->
+                                <button *ngIf="userRole === 'ADMIN' && !row.archived"
+                                    class="btn-table-action btn-archive" (click)="switchToArchive(row._id)"
+                                    ngbPopover="Switch to archive" triggers="mouseenter:mouseleave" placement="left">
+                                    <i class="fas fa-archive"></i>
+                                </button>
+
+                                <!-- Assistant: edit -->
+                                <button *ngIf="userRole === 'ASSISTANT' && row.isEnabled"
+                                    class="btn-table-action btn-edit" (click)="addInternModal(row._id, 'edit')"
+                                    ngbPopover="Edit intern" triggers="mouseenter:mouseleave" placement="left">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                </ngx-datatable>
+            </div>
+
+            <!-- ======================== CARD VIEW ======================== -->
+            <div class="row g-4" *ngIf="!loadingIndicator && viewMode === 'card'">
+
+                <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let row of pagedRows">
+                    <div class="intern-card" [ngClass]="{'archived-card': row.archived}">
+                        <div class="intern-card-header">
+                            <img src="{{ intern_image_url + row.image }}" class="intern-avatar"
+                                alt="{{ row.firstName }}" />
+                            <span class="intern-status-dot"
+                                [ngClass]="row.isEnabled ? 'dot-active' : 'dot-inactive'"></span>
+                            <span class="intern-archived-ribbon" *ngIf="row.archived">
+                                <i class="fas fa-archive"></i> Archived
+                            </span>
+                        </div>
+
+                        <div class="intern-card-body">
+                            <h5 class="intern-name">{{ row.firstName + ' ' + row.lastName }}</h5>
+                            <span class="intern-role-badge">{{ row.role || 'Intern' }}</span>
+
+                            <div class="intern-info">
+                                <div class="info-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span title="{{ row.email }}">{{ row.email }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-building"></i>
+                                    <span>{{ row.departement || '—' }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>{{ row.phone || '—' }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-circle status-dot-inline"
+                                        [ngClass]="row.isEnabled ? 'text-success' : 'text-danger'"></i>
+                                    <span>{{ row.isEnabled ? 'Active' : 'Inactive' }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="intern-card-footer">
+                            <!-- Pending -->
+                            <ng-container *ngIf="!row.isEnabled && !row.archived">
+                                <button class="btn-icon btn-approve" (click)="confirmRequest(row._id)" title="Approve">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn-icon btn-decline" (click)="declineRequest(row._id)" title="Decline">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                            </ng-container>
+
+                            <!-- Docs -->
+                            <button *ngIf="(userRole === 'ASSISTANT' || userRole === 'ADMIN') && row.isEnabled"
+                                class="btn-icon btn-docs-icon" (click)="openDocsModal(row._id)" title="Show Documents">
+                                <i class="far fa-file-archive"></i>
+                            </button>
+
+                            <!-- Admin archive -->
+                            <button *ngIf="userRole === 'ADMIN' && !row.archived" class="btn-icon btn-archive"
+                                (click)="switchToArchive(row._id)" title="Archive">
+                                <i class="fas fa-archive"></i>
+                            </button>
+
+                            <!-- Assistant edit -->
+                            <button *ngIf="userRole === 'ASSISTANT' && row.isEnabled" class="btn-icon btn-edit"
+                                (click)="addInternModal(row._id, 'edit')" title="Edit">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Pagination -->
+                <div class="col-12" *ngIf="rows.length > cardPageSize">
+                    <div class="card-pagination">
+                        <button class="page-btn" [disabled]="cardPage === 0" (click)="cardPage = cardPage - 1">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span>Page {{ cardPage + 1 }} of {{ totalCardPages }}</span>
+                        <button class="page-btn" [disabled]="cardPage >= totalCardPages - 1"
+                            (click)="cardPage = cardPage + 1">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- No Results -->
+                <div class="col-12" *ngIf="rows.length === 0">
+                    <div class="no-results">
+                        <i class="fas fa-user-graduate"></i>
+                        <h5>No Interns Found</h5>
+                        <p>Try adjusting your filters or add a new pre-selected intern.</p>
+                        <!-- <button class="btn-add-intern" (click)="addInternModal({}, 'add')">
+              <i class="fas fa-user-plus"></i> Add Intern
+            </button> -->
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
     </div>
-  </div>
-</div>
+
+</section>

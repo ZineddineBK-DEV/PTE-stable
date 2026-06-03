@@ -1,61 +1,283 @@
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- PTE — External Users (Redesigned)                                      -->
-<!-- Controller: rows, loading, picsUrl                                       -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="main-content">
 
-<div class="pte-page">
-  <div class="pte-page__header">
-    <div class="pte-page__header-left">
-      <div class="pte-page__breadcrumb">
-        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
-        <span>Users</span><span class="separator">/</span><span class="current">External</span>
-      </div>
-      <h1 class="pte-page__header-title">External Users</h1>
-      <p class="pte-page__header-subtitle">Manage external collaborators and contractors</p>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-header-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div>
+                <h2 class="page-title">External Users</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb-modern">
+                        <li><a routerLink="/dashboard/main"><i class="fas fa-home"></i></a></li>
+                        <li><i class="fas fa-chevron-right"></i></li>
+                        <li class="active">External User List</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="page-header-right" *ngIf="userRole === 'ASSISTANT'">
+            <button class="btn-add-external" (click)="addExternalModal()">
+                <i class="fas fa-user-plus"></i>
+                <span>Add External</span>
+            </button>
+        </div>
     </div>
-    <div class="pte-page__header-actions">
-      <button class="pte-btn pte-btn--primary">+ Add External User</button>
-    </div>
-  </div>
 
-  <div class="pte-card">
-    <div class="pte-card__header">
-      <h3 class="pte-card__header-title">External Directory</h3>
+    <!-- Stats Row -->
+    <div class="stats-row">
+        <div class="stats-card">
+            <div class="stats-icon bg-primary">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stats-info">
+                <h3>{{ employeesCount || 0 }}</h3>
+                <p>Total Externals</p>
+            </div>
+        </div>
+        <div class="stats-card">
+            <div class="stats-icon bg-success">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stats-info">
+                <h3>{{ getWithoutDocsCount() }}</h3>
+                <p>Without Documents</p>
+            </div>
+        </div>
+        <div class="stats-card">
+            <div class="stats-icon bg-warning">
+                <i class="fas fa-file-pdf"></i>
+            </div>
+            <div class="stats-info">
+                <h3>{{ getWithDocsCount() }}</h3>
+                <p>With Documents</p>
+            </div>
+        </div>
+        <div class="stats-card">
+            <div class="stats-icon bg-info">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="stats-info">
+                <h3>{{ getDepartmentCount() }}</h3>
+                <p>Departments</p>
+            </div>
+        </div>
     </div>
-    <div class="pte-card__body">
-      <div class="pte-table-wrapper">
-        <table class="pte-table">
-          <thead><tr><th>User</th><th>Department</th><th>Documents</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead>
-          <tbody>
-            <tr *ngFor="let user of rows">
-              <td>
-                <div class="flex gap-3 items-center">
-                  <img [src]="picsUrl + user.image" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" onerror="this.src='assets/images/user.png'">
-                  <div>
-                    <div style="font-weight:600;font-size:14px;">{{ user.firstName }} {{ user.lastName }}</div>
-                    <div style="font-size:12px;color:var(--pte-text-tertiary);">{{ user.email }}</div>
-                  </div>
+
+    <!-- Main Card -->
+    <div class="modern-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span class="card-title">
+                <i class="fas fa-list-ul me-2"></i> External User List
+            </span>
+            <div class="view-toggle">
+                <button class="btn" [class.active]="viewMode === 'table'" (click)="viewMode = 'table'">
+                    <i class="fas fa-table"></i> Table
+                </button>
+                <button class="btn" [class.active]="viewMode === 'card'" (click)="viewMode = 'card'">
+                    <i class="fas fa-th-large"></i> Cards
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Filters Section -->
+            <div class="filters-section mb-4">
+                <div class="row align-items-end g-3">
+                    <div class="col-md-4">
+                        <div class="filter-group">
+                            <label><i class="fas fa-search"></i> Search</label>
+                            <input type="text" class="form-control" placeholder="Name, email, department..."
+                                (keyup)="updateFilter($event)" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="filter-group">
+                            <label><i class="fas fa-building"></i> Department</label>
+                            <select class="form-control" (change)="filterByDept($event)">
+                                <option value="">All Departments</option>
+                                <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="filter-group">
+                            <label><i class="fas fa-file-pdf"></i> Documents</label> <select class="form-control"
+                                (change)="filterByDocs($event)">
+                                <option value="">All</option>
+                                <option value="with">With Documents</option>
+                                <option value="without">Without Documents</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn-reset-filters w-100" (click)="resetFilters()">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                    </div>
                 </div>
-              </td>
-              <td><span class="pte-badge pte-badge--neutral">{{ user.departement || '—' }}</span></td>
-              <td style="font-size:13px;">{{ user.external_docs?.length || 0 }} docs</td>
-              <td><span class="pte-status pte-status--inactive"><span class="pte-status__dot"></span>{{ user.isEnabled }}</span></td>
-              <td>
-                <div class="table-actions" style="justify-content:flex-end;">
-                  <button class="pte-btn pte-btn--sm pte-btn--ghost">View Docs</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
 
-      <div *ngIf="!rows || rows.length === 0" class="pte-empty-state">
-        <div class="pte-empty-state__icon">🔗</div>
-        <div class="pte-empty-state__title">No external users</div>
-        <div class="pte-empty-state__description">Add external collaborators and contractors here</div>
-        <button class="pte-btn pte-btn--primary">+ Add External User</button>
-      </div>
+                <div class="active-filters" *ngIf="activeFilters.length > 0">
+                    <span class="filter-label">Active filters:</span>
+                    <span class="filter-badge" *ngFor="let f of activeFilters">
+                        {{ f.label }}
+                        <i class="fas fa-times" (click)="removeFilter(f.key)"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Results Count -->
+            <div class="results-count mb-3">
+                Showing <strong>{{ rows.length }}</strong> of <strong>{{ employeesCount }}</strong> external users
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-state" *ngIf="loadingIndicator">
+                <div class="spinner-wrapper">
+                    <div class="spinner-ring"></div>
+                    <span>Loading users...</span>
+                </div>
+            </div>
+
+            <!-- ======================== TABLE VIEW ======================== -->
+            <div class="modern-table" *ngIf="!loadingIndicator && viewMode === 'table'">
+                <ngx-datatable #table class="material" [rows]="rows" [sortType]="SortType.multi"
+                    [loadingIndicator]="loadingIndicator" columnMode="force" [headerHeight]="52" [footerHeight]="50"
+                    rowHeight="auto" [limit]="8" [scrollbarH]="scrollBarHorizontal" [reorderable]="reorderable">
+                    <!-- Name Column -->
+                    <ngx-datatable-column [width]="260" name="User">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="table-user-cell">
+                                <img src="{{ picsUrl + row.image }}" class="table-user-img" alt="{{ row.firstName }}" />
+                                <div class="table-user-info">
+                                    <div class="user-name-text">{{ row.firstName + ' ' + row.lastName }}</div>
+                                    <div class="user-email-text">{{ row.email }}</div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- Status Column -->
+                    <ngx-datatable-column [width]="130" name="Status">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span class="status-badge"
+                                [ngClass]="row.isEnabled === 'Active' ? 'badge-active' : 'badge-inactive'">
+                                <i class="fas fa-circle"></i>
+                                {{ row.isEnabled }}
+                            </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- Department Column -->
+                    <ngx-datatable-column name="Department">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span class="dept-text">
+                                <i class="fas fa-building me-1"></i>{{ row.departement }}
+                            </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- Docs Column -->
+                    <ngx-datatable-column [width]="120" name="Docs" [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span class="docs-badge" [ngClass]="row.external_docs?.length > 0 ? 'has-docs' : 'no-docs'">
+                                <i class="far fa-file-pdf"></i>
+                                {{ row.external_docs?.length || 0 }} doc(s)
+                            </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- Actions Column -->
+                    <ngx-datatable-column name="Actions" [sortable]="false" [width]="120">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="table-actions">
+                                <button *ngIf="row.external_docs?.length > 0" type="button"
+                                    class="btn-table-action btn-info" (click)="downloadCV(row)"
+                                    ngbPopover="Preview Documents" triggers="mouseenter:mouseleave" placement="left">
+                                    <i class="far fa-file-pdf"></i>
+                                </button>
+                                <button type="button" class="btn-table-action btn-primary"
+                                    [routerLink]="['/dashboard/user-profile', row._id]" ngbPopover="View Profile"
+                                    triggers="mouseenter:mouseleave" placement="left">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+
+            <!-- ======================== CARD VIEW ======================== -->
+            <div class="row g-4" *ngIf="!loadingIndicator && viewMode === 'card'">
+                <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let row of pagedRows">
+                    <div class="user-card">
+                        <div class="user-card-header">
+                            <img src="{{ picsUrl + row.image }}" class="user-avatar" alt="{{ row.firstName }}" />
+                            <span class="user-status"
+                                [ngClass]="row.isEnabled === 'Active' ? 'status-active' : 'status-inactive'"></span>
+                        </div>
+                        <div class="user-card-body">
+                            <h5 class="user-name">{{ row.firstName + ' ' + row.lastName }}</h5>
+                            <span class="user-role-badge badge-default">External</span>
+
+                            <div class="user-info">
+                                <div class="info-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span title="{{ row.email }}">{{ row.email }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-building"></i>
+                                    <span>{{ row.departement || '—' }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="far fa-file-pdf"></i>
+                                    <span>{{ row.external_docs?.length || 0 }} document(s)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-card-footer">
+                            <button *ngIf="row.external_docs?.length > 0" class="btn-icon btn-info"
+                                (click)="downloadCV(row)" title="Preview Documents">
+                                <i class="far fa-file-pdf"></i>
+                            </button>
+                            <button class="btn-icon btn-primary" [routerLink]="['/dashboard/user-profile', row._id]"
+                                title="View Profile">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Pagination -->
+                <div class="col-12" *ngIf="rows.length > cardPageSize">
+                    <div class="card-pagination">
+                        <button class="page-btn" [disabled]="cardPage === 0" (click)="cardPage = cardPage - 1">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span>Page {{ cardPage + 1 }} of {{ totalCardPages }}</span>
+                        <button class="page-btn" [disabled]="cardPage >= totalCardPages - 1"
+                            (click)="cardPage = cardPage + 1">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- No Results -->
+                <div class="col-12" *ngIf="rows.length === 0">
+                    <div class="no-results">
+                        <i class="fas fa-user-slash"></i>
+                        <h5>No External Users Found</h5>
+                        <p>Try adjusting your search filters or add a new external user.</p>
+                        <button class="btn-add-external" (click)="addExternalModal()" *ngIf="userRole === 'ASSISTANT'">
+                            <i class="fas fa-user-plus"></i> Add External
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
-  </div>
-</div>
+
+</section>
