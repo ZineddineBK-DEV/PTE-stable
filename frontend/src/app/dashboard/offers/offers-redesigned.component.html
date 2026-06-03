@@ -1,0 +1,73 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — Internship Offers (Redesigned)                                   -->
+<!-- Controller: offers, loading, search                                     -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Internships</span><span class="separator">/</span><span class="current">Offers</span>
+      </div>
+      <h1 class="pte-page__header-title">Internship Offers</h1>
+      <p class="pte-page__header-subtitle">Manage and track internship opportunities</p>
+    </div>
+    <div class="pte-page__header-actions">
+      <button class="pte-btn pte-btn--primary" routerLink="/dashboard/offerDetails/new">+ Create Offer</button>
+    </div>
+  </div>
+
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">All Offers</h3>
+    </div>
+    <div class="pte-card__body">
+      <div class="pte-page__toolbar">
+        <div class="pte-page__toolbar-left">
+          <div class="pte-page__toolbar-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search offers...">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="loading" class="flex-center" style="padding:48px;">
+        <div class="pte-skeleton pte-skeleton--circle" style="width:48px;height:48px;"></div>
+      </div>
+
+      <!-- Offer Cards Grid -->
+      <div *ngIf="!loading" class="pte-grid pte-grid--auto">
+        <div class="pte-card pte-card--hoverable" *ngFor="let offer of offers" style="cursor:pointer;" [routerLink]="'/dashboard/offerDetails/' + offer._id">
+          <div class="pte-card__body">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+              <div>
+                <h4 style="margin:0 0 4px;font-size:16px;font-weight:600;">{{ offer.title || offer.subject }}</h4>
+                <span style="font-size:13px;color:var(--pte-text-secondary);">{{ offer.department || '' }}</span>
+              </div>
+              <span class="pte-badge" [ngClass]="{
+                'pte-badge--success': offer.status === 'Open',
+                'pte-badge--warning': offer.status === 'Pending',
+                'pte-badge--neutral': offer.status === 'Closed'
+              }">{{ offer.status || 'Draft' }}</span>
+            </div>
+            <p style="font-size:13px;color:var(--pte-text-secondary);margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+              {{ offer.description || offer.description }}
+            </p>
+            <div style="display:flex;gap:12px;font-size:12px;color:var(--pte-text-tertiary);">
+              <span *ngIf="offer.startDate">📅 {{ offer.startDate | date:'shortDate' }}</span>
+              <span *ngIf="offer.applications">👥 {{ offer.applications?.length || 0 }} applicants</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && (!offers || offers.length === 0)" class="pte-empty-state">
+        <div class="pte-empty-state__icon">💼</div>
+        <div class="pte-empty-state__title">No offers yet</div>
+        <div class="pte-empty-state__description">Create your first internship offer</div>
+        <button class="pte-btn pte-btn--primary" routerLink="/dashboard/offerDetails/new">Create Offer</button>
+      </div>
+    </div>
+  </div>
+</div>

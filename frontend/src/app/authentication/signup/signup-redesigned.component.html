@@ -1,0 +1,155 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE Auth — Sign Up (Redesigned)                                         -->
+<!-- Controller bindings: registerForm, error, onSubmit(), nationalities,    -->
+<!-- genders, fs, departement                                                -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-auth">
+  <!-- Left Branding -->
+  <div class="pte-auth__brand">
+    <div class="pte-auth__brand-logo">P</div>
+    <h1 class="pte-auth__brand-title">Join PTE</h1>
+    <p class="pte-auth__brand-subtitle">Create your account to access the resource management platform.</p>
+  </div>
+
+  <!-- Right Form -->
+  <div class="pte-auth__form" style="max-width:560px; overflow-y:auto; max-height:100vh;">
+    <div class="pte-auth__card">
+      <h2 class="pte-auth__title">Create Account</h2>
+      <p class="pte-auth__subtitle">Fill in your details to request access</p>
+
+      <div class="pte-auth__error" *ngIf="error">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        {{ error }}
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Name Row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="pte-auth__field">
+            <label>First Name <span style="color:var(--pte-danger-500)">*</span></label>
+            <input type="text" formControlName="fname" placeholder="First name">
+          </div>
+          <div class="pte-auth__field">
+            <label>Last Name <span style="color:var(--pte-danger-500)">*</span></label>
+            <input type="text" formControlName="lname" placeholder="Last name">
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="pte-auth__field">
+          <label>Email <span style="color:var(--pte-danger-500)">*</span></label>
+          <input type="email" formControlName="email" placeholder="name@company.com">
+        </div>
+
+        <!-- Password Row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="pte-auth__field">
+            <label>Password <span style="color:var(--pte-danger-500)">*</span></label>
+            <input type="password" formControlName="password" placeholder="Min 8 characters">
+          </div>
+          <div class="pte-auth__field">
+            <label>Confirm <span style="color:var(--pte-danger-500)">*</span></label>
+            <input type="password" formControlName="Cpassword" placeholder="Confirm password">
+          </div>
+        </div>
+
+        <!-- Nationality -->
+        <div class="pte-auth__field">
+          <label>Nationality <span style="color:var(--pte-danger-500)">*</span></label>
+          <select formControlName="nationality">
+            <option disabled selected>Select nationality...</option>
+            <option *ngFor="let n of nationalities" [ngValue]="n">{{ n }}</option>
+          </select>
+        </div>
+
+        <!-- Dates Row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="pte-auth__field">
+            <label>Hiring Date <span style="color:var(--pte-danger-500)">*</span></label>
+            <input type="date" formControlName="hiringdate">
+          </div>
+          <div class="pte-auth__field">
+            <label>Birthdate <span style="color:var(--pte-danger-500)">*</span></label>
+            <input type="date" formControlName="birthdate">
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="pte-auth__field">
+          <label>Address <span style="color:var(--pte-danger-500)">*</span></label>
+          <input type="text" formControlName="address" placeholder="Your address">
+        </div>
+
+        <!-- Gender & Family Row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="pte-auth__field">
+            <label>Gender <span style="color:var(--pte-danger-500)">*</span></label>
+            <select formControlName="gender">
+              <option disabled selected>Select...</option>
+              <option *ngFor="let g of genders" [ngValue]="g">{{ g }}</option>
+            </select>
+          </div>
+          <div class="pte-auth__field">
+            <label>Family Situation <span style="color:var(--pte-danger-500)">*</span></label>
+            <select formControlName="fs">
+              <option disabled selected>Select...</option>
+              <option *ngFor="let s of fs" [ngValue]="s">{{ s }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dept & Driving Row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="pte-auth__field">
+            <label>Department <span style="color:var(--pte-danger-500)">*</span></label>
+            <select formControlName="departement">
+              <option disabled selected>Select...</option>
+              <option *ngFor="let d of departement" [ngValue]="d">{{ d }}</option>
+            </select>
+          </div>
+          <div class="pte-auth__field">
+            <label>Driving License</label>
+            <select formControlName="drivingLisence">
+              <option disabled selected>Select...</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Experience & Phone Row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="pte-auth__field">
+            <label>Experience (years)</label>
+            <input type="number" formControlName="experience" placeholder="0" min="0">
+          </div>
+          <div class="pte-auth__field">
+            <label>Phone <span style="color:var(--pte-danger-500)">*</span></label>
+            <div style="display:flex;gap:0;">
+              <span style="padding:8px 12px;background:var(--pte-gray-100);border:1px solid var(--pte-border-color);border-radius:8px 0 0 8px;font-size:14px;color:var(--pte-text-secondary);">+216</span>
+              <input type="text" formControlName="phone" placeholder="Phone number" style="border-radius:0 8px 8px 0;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Leader -->
+        <div style="margin-bottom:20px;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;">
+            <input type="checkbox" formControlName="teamLeader" style="width:18px;height:18px;accent-color:var(--pte-primary-600);">
+            I am a team leader
+          </label>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="pte-btn pte-btn--primary pte-auth__submit">
+          Create Account
+        </button>
+      </form>
+
+      <p class="pte-auth__footer">
+        Already have an account? <a routerLink="/authentication/signin">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>

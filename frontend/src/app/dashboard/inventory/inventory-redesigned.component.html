@@ -1,0 +1,82 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — Inventory (Redesigned)                                           -->
+<!-- Controller: rows, loading, userItems, search, filter                    -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Equipment</span><span class="separator">/</span><span class="current">Inventory</span>
+      </div>
+      <h1 class="pte-page__header-title">Inventory</h1>
+      <p class="pte-page__header-subtitle">Manage equipment and accessories</p>
+    </div>
+  </div>
+
+  <div class="pte-page__kpi-row" style="grid-template-columns:repeat(3,1fr);">
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ totalEquipment || 0 }}</div><div class="pte-kpi__label">Total Equipment</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--primary">💻</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ totalAccessories || 0 }}</div><div class="pte-kpi__label">Accessories</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--success">🎧</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ assignedItems || 0 }}</div><div class="pte-kpi__label">Assigned</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--warning">👤</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">Equipment List</h3>
+    </div>
+    <div class="pte-card__body">
+      <div class="pte-page__toolbar">
+        <div class="pte-page__toolbar-left">
+          <div class="pte-page__toolbar-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search equipment...">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="loading" class="flex-center" style="padding:48px;">
+        <div class="pte-skeleton pte-skeleton--circle" style="width:48px;height:48px;"></div>
+      </div>
+
+      <div *ngIf="!loading" class="pte-table-wrapper">
+        <table class="pte-table">
+          <thead><tr><th>Type</th><th>Brand / Model</th><th>Serial Number</th><th>Assigned To</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let item of rows">
+              <td><span class="pte-badge pte-badge--neutral">{{ item.type || 'Equipment' }}</span></td>
+              <td style="font-weight:500;">{{ item.brand || item.name || '—' }}</td>
+              <td style="font-size:13px;color:var(--pte-text-secondary);">{{ item.serialNumber || '—' }}</td>
+              <td>{{ item.user?.firstName || 'Unassigned' }}</td>
+              <td><span class="pte-badge" [ngClass]="item.user ? 'pte-badge--success' : 'pte-badge--neutral'">{{ item.user ? 'Assigned' : 'Available' }}</span></td>
+              <td><div class="table-actions" style="justify-content:flex-end;">
+                <button class="pte-btn pte-btn--sm pte-btn--ghost">Edit</button>
+                <button class="pte-btn pte-btn--sm pte-btn--ghost">Forward</button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!loading && (!rows || rows.length === 0)" class="pte-empty-state">
+        <div class="pte-empty-state__icon">📦</div>
+        <div class="pte-empty-state__title">No equipment found</div>
+      </div>
+    </div>
+  </div>
+</div>

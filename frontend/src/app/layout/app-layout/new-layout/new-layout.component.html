@@ -1,0 +1,307 @@
+<div class="pte-app" [attr.data-theme]="isDark ? 'dark' : 'light'">
+  <!-- Sidebar -->
+  <aside
+    class="pte-sidebar"
+    [class.is-collapsed]="sidebarCollapsed"
+    [class.is-open]="sidebarMobileOpen"
+  >
+    <!-- Brand -->
+    <div class="pte-sidebar__brand">
+      <div class="pte-sidebar__brand-logo">P</div>
+      <span class="pte-sidebar__brand-name">PTE</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="pte-sidebar__nav">
+      <!-- Home -->
+      <div class="pte-sidebar__nav-group">Home</div>
+      <a
+        class="pte-sidebar__nav-item"
+        routerLink="/dashboard/main"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+      </a>
+
+      <!-- User Management -->
+      <ng-container *ngIf="hasRole('ADMIN') || hasRole('ASSISTANT')">
+        <div class="pte-sidebar__nav-group">Users</div>
+        <a
+          *ngIf="hasRole('ADMIN')"
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/userRequest"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">👤</span>
+          <span>Users Request</span>
+        </a>
+        <a
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/userList"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">👥</span>
+          <span>Users List</span>
+        </a>
+        <a
+          *ngIf="hasRole('ADMIN') || hasRole('ASSISTANT')"
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/external"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">🔗</span>
+          <span>External Users</span>
+        </a>
+        <a
+          *ngIf="hasRole('ADMIN') || hasRole('ASSISTANT')"
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/interns"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">🎓</span>
+          <span>Interns</span>
+        </a>
+      </ng-container>
+
+      <!-- Internships -->
+      <ng-container *ngIf="hasRole('ADMIN') || hasRole('ASSISTANT') || hasRole('LAB-MANAGER') || hasRole('ENGINEER')">
+        <div class="pte-sidebar__nav-group">Internships</div>
+        <a
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/offer"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">💼</span>
+          <span>Internship Offers</span>
+        </a>
+        <a
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/selected-intern"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">✅</span>
+          <span>Selected Interns</span>
+        </a>
+        <a
+          *ngIf="hasRole('ENGINEER') || hasRole('LAB-MANAGER')"
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/interns-meeting-requests"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">📅</span>
+          <span>Meeting Requests</span>
+        </a>
+      </ng-container>
+
+      <!-- Equipment -->
+      <ng-container *ngIf="hasRole('ADMIN') || hasRole('ASSISTANT')">
+        <div class="pte-sidebar__nav-group">Equipment</div>
+        <a
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/inventory"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">📦</span>
+          <span>Inventory</span>
+        </a>
+      </ng-container>
+
+      <!-- Resources -->
+      <ng-container *ngIf="hasRole('ASSISTANT') || hasRole('ENGINEER') || hasRole('LAB-MANAGER')">
+        <div class="pte-sidebar__nav-group">Resources</div>
+        <a
+          *ngIf="hasRole('ASSISTANT')"
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/vehicle"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">🚗</span>
+          <span>Vehicles</span>
+        </a>
+        <a
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/room"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">🏠</span>
+          <span>Rooms</span>
+        </a>
+        <a
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/technician"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">🔧</span>
+          <span>Missions</span>
+        </a>
+      </ng-container>
+
+      <!-- Lab Environment -->
+      <ng-container *ngIf="hasRole('LAB-MANAGER') || hasRole('ENGINEER')">
+        <div class="pte-sidebar__nav-group">Lab Environment</div>
+        <a
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/virt-env"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">☁️</span>
+          <span>Book a Lab</span>
+        </a>
+        <a
+          class="pte-sidebar__nav-item"
+          routerLink="/dashboard/myRequest"
+          routerLinkActive="is-active"
+        >
+          <span class="nav-icon">📋</span>
+          <span>Booking List</span>
+        </a>
+      </ng-container>
+
+      <!-- Leave -->
+      <div class="pte-sidebar__nav-group">Leave</div>
+      <a
+        class="pte-sidebar__nav-item"
+        routerLink="/dashboard/leave"
+        routerLinkActive="is-active"
+      >
+        <span class="nav-icon">📝</span>
+        <span>Leave Request</span>
+      </a>
+      <a
+        class="pte-sidebar__nav-item"
+        routerLink="/dashboard/myLeave"
+        routerLinkActive="is-active"
+      >
+        <span class="nav-icon">🏖️</span>
+        <span>My Leaves</span>
+      </a>
+
+      <!-- Newspaper -->
+      <div class="pte-sidebar__nav-group">Community</div>
+      <a
+        class="pte-sidebar__nav-item"
+        routerLink="/allnews"
+        routerLinkActive="is-active"
+      >
+        <span class="nav-icon">📰</span>
+        <span>Newspaper</span>
+      </a>
+    </nav>
+
+    <!-- User Section -->
+    <div class="pte-sidebar__user" *ngIf="user">
+      <img
+        class="pte-sidebar__user-avatar"
+        [src]="getUserImage()"
+        [alt]="user.firstName"
+        onerror="this.src='assets/images/user.png'"
+      />
+      <div class="pte-sidebar__user-info">
+        <div class="pte-sidebar__user-name">{{ user.firstName }} {{ user.lastName }}</div>
+        <div class="pte-sidebar__user-role">{{ getRoleLabel() }}</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sidebar Overlay (mobile) -->
+  <div
+    class="pte-sidebar-overlay"
+    *ngIf="sidebarMobileOpen"
+    (click)="closeMobileSidebar()"
+  ></div>
+
+  <!-- Main Content -->
+  <main class="pte-main" [class.is-expanded]="!sidebarCollapsed">
+    <!-- Header -->
+    <header class="pte-header">
+      <div class="pte-header__left">
+        <button class="pte-header__toggle" (click)="toggleSidebar()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <!-- Search bar -->
+        <div class="pte-header__search">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Search..." />
+        </div>
+      </div>
+
+      <div class="pte-header__right">
+        <!-- Network Requests (Cyber Security dept) -->
+        <a
+          *ngIf="user?.departement === 'Cyber Security'"
+          class="pte-btn pte-btn--sm pte-btn--outline"
+          routerLink="/dashboard/networkRequests"
+        >
+          Network Access
+        </a>
+
+        <!-- Theme toggle -->
+        <button class="pte-header__theme-toggle" (click)="toggleTheme()" title="Toggle theme">
+          <svg *ngIf="!isDark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg *ngIf="isDark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
+        <!-- User dropdown -->
+        <div class="pte-header__user" *ngIf="user" ngbDropdown>
+          <img
+            class="pte-header__user-avatar"
+            [src]="getUserImage()"
+            [alt]="user.firstName"
+            onerror="this.src='assets/images/user.png'"
+            ngbDropdownToggle
+          />
+          <span class="pte-header__user-name">{{ user.firstName }}</span>
+          <span class="pte-header__user-chevron">▼</span>
+
+          <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end" style="min-width: 200px;">
+            <div style="padding: 12px 16px; border-bottom: 1px solid var(--pte-border-color);">
+              <div style="font-weight: 600; font-size: 14px;">{{ user.firstName }} {{ user.lastName }}</div>
+              <div style="font-size: 12px; color: var(--pte-text-secondary);">{{ user.email }}</div>
+            </div>
+            <a class="dropdown-item" routerLink="/dashboard/profile" style="padding: 8px 16px;">
+              👤 Profile
+            </a>
+            <a class="dropdown-item" routerLink="/allnews" style="padding: 8px 16px;">
+              📰 Newspaper
+            </a>
+            <div class="dropdown-divider"></div>
+            <a
+              class="dropdown-item"
+              style="padding: 8px 16px; color: var(--pte-danger-600);"
+              (click)="logout()"
+            >
+              🚪 Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="pte-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

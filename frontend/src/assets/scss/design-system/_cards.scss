@@ -1,0 +1,161 @@
+// =============================================================================
+// PTE Design System — Cards
+// =============================================================================
+
+.pte-card {
+  @include card;
+  overflow: hidden;
+  @include transition(box-shadow, transform);
+
+  // Hover lift
+  &--hoverable:hover {
+    box-shadow: var(--pte-shadow-md);
+    transform: translateY(-1px);
+  }
+
+  // Clickable
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: var(--pte-shadow-md);
+      border-color: var(--pte-border-color-hover);
+    }
+  }
+
+  // ─── Card Header ────────────────────────────────────────────────────────
+  &__header {
+    @include flex-between;
+    padding: var(--pte-space-4) var(--pte-space-6);
+    border-bottom: 1px solid var(--pte-border-color);
+
+    &-title {
+      font-size: var(--pte-font-size-lg);
+      font-weight: var(--pte-font-weight-semibold);
+      color: var(--pte-text-primary);
+      margin: 0;
+    }
+
+    &-subtitle {
+      font-size: var(--pte-font-size-sm);
+      color: var(--pte-text-secondary);
+      margin-top: var(--pte-space-1);
+    }
+
+    &-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--pte-space-2);
+    }
+  }
+
+  // ─── Card Body ──────────────────────────────────────────────────────────
+  &__body {
+    padding: var(--pte-space-6);
+
+    &--no-padding {
+      padding: 0;
+    }
+
+    &--compact {
+      padding: var(--pte-space-4);
+    }
+  }
+
+  // ─── Card Footer ────────────────────────────────────────────────────────
+  &__footer {
+    @include flex-between;
+    padding: var(--pte-space-4) var(--pte-space-6);
+    border-top: 1px solid var(--pte-border-color);
+    background: var(--pte-bg-tertiary);
+  }
+
+  // ─── Card Image ─────────────────────────────────────────────────────────
+  &__image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  // ─── KPI Card variant ──────────────────────────────────────────────────
+  &--kpi {
+    .pte-card__body {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .pte-kpi {
+      &__value {
+        font-size: var(--pte-font-size-3xl);
+        font-weight: var(--pte-font-weight-bold);
+        color: var(--pte-text-primary);
+        line-height: 1;
+      }
+
+      &__label {
+        font-size: var(--pte-font-size-sm);
+        color: var(--pte-text-secondary);
+        margin-top: var(--pte-space-1);
+      }
+
+      &__change {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--pte-space-1);
+        font-size: var(--pte-font-size-xs);
+        font-weight: var(--pte-font-weight-medium);
+        margin-top: var(--pte-space-2);
+
+        &--up {
+          color: var(--pte-success-600);
+        }
+
+        &--down {
+          color: var(--pte-danger-600);
+        }
+      }
+
+      &__icon {
+        @include flex-center;
+        width: 48px;
+        height: 48px;
+        border-radius: var(--pte-radius-lg);
+        font-size: var(--pte-font-size-xl);
+        flex-shrink: 0;
+
+        &--primary {
+          background: var(--pte-primary-100);
+          color: var(--pte-primary-600);
+        }
+
+        &--success {
+          background: var(--pte-success-100);
+          color: var(--pte-success-600);
+        }
+
+        &--warning {
+          background: var(--pte-warning-100);
+          color: var(--pte-warning-600);
+        }
+
+        &--danger {
+          background: var(--pte-danger-100);
+          color: var(--pte-danger-600);
+        }
+
+        &--info {
+          background: var(--pte-info-100);
+          color: var(--pte-info-600);
+        }
+      }
+    }
+  }
+
+  // ─── Stat card with chart ──────────────────────────────────────────────
+  &--stat {
+    .pte-card__header {
+      padding-bottom: var(--pte-space-3);
+    }
+  }
+}

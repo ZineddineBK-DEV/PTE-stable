@@ -1,0 +1,47 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — Network Requests (Redesigned)                                    -->
+<!-- Controller: requests, loading                                            -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span><span class="current">Network Access</span>
+      </div>
+      <h1 class="pte-page__header-title">Network Access Requests</h1>
+      <p class="pte-page__header-subtitle">Review and manage network access requests</p>
+    </div>
+  </div>
+
+  <div class="pte-card">
+    <div class="pte-card__body">
+      <div class="pte-table-wrapper">
+        <table class="pte-table">
+          <thead><tr><th>Requester</th><th>Department</th><th>Resource</th><th>Justification</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let req of requests">
+              <td style="font-weight:500;">{{ req.firstName }} {{ req.lastName }}</td>
+              <td><span class="pte-badge pte-badge--neutral">{{ req.departement || '—' }}</span></td>
+              <td style="font-size:13px;">{{ req.resource || req.ipAddress || '—' }}</td>
+              <td style="font-size:13px;color:var(--pte-text-secondary);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ req.justification || '—' }}</td>
+              <td style="font-size:13px;">{{ req.createdAt | date:'shortDate' }}</td>
+              <td>
+                <span class="pte-badge" [ngClass]="{
+                  'pte-badge--success': req.status === 'Approved',
+                  'pte-badge--warning': req.status === 'Pending',
+                  'pte-badge--danger': req.status === 'Rejected'
+                }">{{ req.status || 'Pending' }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!requests || requests.length === 0" class="pte-empty-state">
+        <div class="pte-empty-state__icon">🌐</div>
+        <div class="pte-empty-state__title">No network requests</div>
+      </div>
+    </div>
+  </div>
+</div>

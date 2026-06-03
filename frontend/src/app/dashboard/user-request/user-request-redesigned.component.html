@@ -1,0 +1,137 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — User Requests (Redesigned)                                       -->
+<!-- Controller: rows, employeesCount, loadingIndicator, picsUrl,           -->
+<!-- departments, scrollBarHorizontal, SortType, updateFilter,              -->
+<!-- filterByDept, resetFilters, confirmRequest, declineRequest             -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <!-- Header -->
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Users</span>
+        <span class="separator">/</span>
+        <span class="current">Requests</span>
+      </div>
+      <h1 class="pte-page__header-title">Sign-up Requests</h1>
+      <p class="pte-page__header-subtitle">Review and approve pending registration requests</p>
+    </div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="pte-page__kpi-row">
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ employeesCount || 0 }}</div><div class="pte-kpi__label">Total Requests</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--primary">📥</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ getInactiveCount() }}</div><div class="pte-kpi__label">Pending</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--warning">⏳</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ getActiveCount() }}</div><div class="pte-kpi__label">Approved</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--success">✅</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ getDepartmentCount() }}</div><div class="pte-kpi__label">Departments</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--info">🏢</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Card -->
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">
+        Pending Requests
+        <span class="pte-badge pte-badge--primary" style="margin-left:8px;" *ngIf="rows.length > 0">{{ rows.length }}</span>
+      </h3>
+    </div>
+    <div class="pte-card__body">
+      <!-- Toolbar -->
+      <div class="pte-page__toolbar">
+        <div class="pte-page__toolbar-left">
+          <div class="pte-page__toolbar-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search requests..." (keyup)="updateFilter($event)">
+          </div>
+          <select class="pte-page__toolbar-filter" (change)="filterByDept($event)">
+            <option value="">All Departments</option>
+            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+          </select>
+        </div>
+        <div class="pte-page__toolbar-right">
+          <button class="pte-btn pte-btn--ghost pte-btn--sm" (click)="resetFilters()">Reset</button>
+        </div>
+      </div>
+
+      <!-- Count -->
+      <div class="pte-page__count">Showing <strong>{{ rows.length }}</strong> of <strong>{{ employeesCount }}</strong> requests</div>
+
+      <!-- Loading -->
+      <div *ngIf="loadingIndicator" class="flex-center" style="padding:48px;">
+        <div class="pte-skeleton pte-skeleton--circle" style="width:48px;height:48px;"></div>
+        <div style="margin-left:16px;">
+          <div class="pte-skeleton pte-skeleton--title" style="width:200px;"></div>
+          <div class="pte-skeleton pte-skeleton--text" style="width:150px;"></div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div *ngIf="!loadingIndicator && rows.length > 0" class="pte-table-wrapper">
+        <table class="pte-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Hiring Date</th>
+              <th>Phone</th>
+              <th>Department</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of rows">
+              <td>
+                <div class="flex gap-3 items-center">
+                  <img [src]="picsUrl + row.image" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" onerror="this.src='assets/images/user.png'">
+                  <div>
+                    <div style="font-weight:600;font-size:14px;">{{ row.firstName }} {{ row.lastName }}</div>
+                    <div style="font-size:12px;color:var(--pte-text-tertiary);">{{ row.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size:13px;color:var(--pte-text-secondary);">{{ row.hiringDate | date:'mediumDate' }}</td>
+              <td style="font-size:13px;color:var(--pte-text-secondary);">{{ row.phone || '—' }}</td>
+              <td>
+                <span class="pte-badge pte-badge--neutral">{{ row.departement }}</span>
+              </td>
+              <td>
+                <div class="table-actions" style="justify-content:flex-end;">
+                  <button class="pte-btn pte-btn--sm pte-btn--success" (click)="confirmRequest(row._id)">✓ Approve</button>
+                  <button class="pte-btn pte-btn--sm pte-btn--ghost" style="color:var(--pte-danger-600);" (click)="declineRequest(row._id)">✕ Decline</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty -->
+      <div *ngIf="!loadingIndicator && rows.length === 0" class="pte-empty-state">
+        <div class="pte-empty-state__icon">📥</div>
+        <div class="pte-empty-state__title">No Pending Requests</div>
+        <div class="pte-empty-state__description">All sign-up requests have been reviewed.</div>
+      </div>
+    </div>
+  </div>
+</div>

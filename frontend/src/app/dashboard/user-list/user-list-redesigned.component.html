@@ -1,0 +1,421 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE Dashboard — User List (Redesigned)                                  -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<!-- Page Header -->
+<div class="pte-content__header">
+  <div class="flex-between mb-2">
+    <div>
+      <div class="pte-breadcrumb">
+        <span class="pte-breadcrumb__item"><a routerLink="/dashboard/main">Dashboard</a></span>
+        <span class="pte-breadcrumb__separator">/</span>
+        <span class="pte-breadcrumb__item is-active">Users</span>
+      </div>
+      <h1 class="pte-content__header-title">User Management</h1>
+    </div>
+  </div>
+</div>
+
+<!-- ─── KPI Row ────────────────────────────────────────────────────────── -->
+<div class="pte-grid pte-grid--4 mb-6">
+  <div class="pte-card pte-card--kpi">
+    <div class="pte-card__body">
+      <div>
+        <div class="pte-kpi__value">{{ employeesCount }}</div>
+        <div class="pte-kpi__label">Total Users</div>
+      </div>
+      <div class="pte-kpi__icon pte-kpi__icon--primary">👥</div>
+    </div>
+  </div>
+  <div class="pte-card pte-card--kpi">
+    <div class="pte-card__body">
+      <div>
+        <div class="pte-kpi__value">{{ activeUsersCount }}</div>
+        <div class="pte-kpi__label">Active</div>
+      </div>
+      <div class="pte-kpi__icon pte-kpi__icon--success">✅</div>
+    </div>
+  </div>
+  <div class="pte-card pte-card--kpi">
+    <div class="pte-card__body">
+      <div>
+        <div class="pte-kpi__value">{{ inactiveUsersCount }}</div>
+        <div class="pte-kpi__label">Inactive</div>
+      </div>
+      <div class="pte-kpi__icon pte-kpi__icon--warning">⏳</div>
+    </div>
+  </div>
+  <div class="pte-card pte-card--kpi">
+    <div class="pte-card__body">
+      <div>
+        <div class="pte-kpi__value">{{ getUniqueDepartments().length }}</div>
+        <div class="pte-kpi__label">Departments</div>
+      </div>
+      <div class="pte-kpi__icon pte-kpi__icon--info">🏢</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Charts Row ─────────────────────────────────────────────────────── -->
+<div class="pte-grid pte-grid--2 mb-6" *ngIf="!loadingIndicator">
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">User Status</h3>
+    </div>
+    <div class="pte-card__body">
+      <apx-chart
+        [series]="userStatsChartOptions?.series"
+        [chart]="userStatsChartOptions?.chart"
+        [labels]="userStatsChartOptions?.labels"
+        [colors]="userStatsChartOptions?.colors"
+        [legend]="userStatsChartOptions?.legend"
+        [dataLabels]="userStatsChartOptions?.dataLabels"
+        [plotOptions]="userStatsChartOptions?.plotOptions"
+      ></apx-chart>
+    </div>
+  </div>
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">By Department</h3>
+    </div>
+    <div class="pte-card__body">
+      <apx-chart
+        [series]="departmentChartOptions?.series"
+        [chart]="departmentChartOptions?.chart"
+        [plotOptions]="departmentChartOptions?.plotOptions"
+        [dataLabels]="departmentChartOptions?.dataLabels"
+        [colors]="departmentChartOptions?.colors"
+        [xaxis]="departmentChartOptions?.xaxis"
+        [yaxis]="departmentChartOptions?.yaxis"
+        [grid]="departmentChartOptions?.grid"
+      ></apx-chart>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Main Users Card ────────────────────────────────────────────────── -->
+<div class="pte-card">
+  <div class="pte-card__header">
+    <h3 class="pte-card__header-title">
+      Users Directory
+      <span class="pte-badge pte-badge--neutral ml-2" style="font-size: 11px;">
+        {{ filteredRows.length }} of {{ employeesCount }}
+      </span>
+    </h3>
+    <div class="pte-card__header-actions">
+      <!-- View Mode Toggle -->
+      <div style="display: flex; gap: 2px; background: var(--pte-gray-100); border-radius: var(--pte-radius-md); padding: 2px;">
+        <button
+          class="pte-btn pte-btn--sm"
+          [style.background]="viewMode === 'cards' ? 'white' : 'transparent'"
+          [style.box-shadow]="viewMode === 'cards' ? 'var(--pte-shadow-sm)' : 'none'"
+          (click)="toggleViewMode('cards')"
+        >
+          ▦ Cards
+        </button>
+        <button
+          class="pte-btn pte-btn--sm"
+          [style.background]="viewMode === 'table' ? 'white' : 'transparent'"
+          [style.box-shadow]="viewMode === 'table' ? 'var(--pte-shadow-sm)' : 'none'"
+          (click)="toggleViewMode('table')"
+        >
+          ☰ Table
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pte-card__body">
+    <!-- ─── Filters Toolbar ──────────────────────────────────────────── -->
+    <div class="pte-table-toolbar" style="padding-top: 0; margin-bottom: 16px;">
+      <div class="pte-table-toolbar__left">
+        <div class="pte-table-toolbar__search">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            placeholder="Search users..."
+            [(ngModel)]="searchQuery"
+            (keyup)="applyFilters()"
+          />
+        </div>
+        <select
+          [(ngModel)]="selectedRole"
+          (change)="applyFilters()"
+          style="padding: 8px 12px; border: 1px solid var(--pte-border-color); border-radius: var(--pte-radius-md); font-size: 14px; background: var(--pte-bg-secondary); min-width: 130px;"
+        >
+          <option value="all">All Roles</option>
+          <option *ngFor="let role of getUniqueRoles()" [value]="role">{{ role }}</option>
+        </select>
+        <select
+          [(ngModel)]="selectedStatus"
+          (change)="applyFilters()"
+          style="padding: 8px 12px; border: 1px solid var(--pte-border-color); border-radius: var(--pte-radius-md); font-size: 14px; background: var(--pte-bg-secondary); min-width: 120px;"
+        >
+          <option value="all">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        <select
+          [(ngModel)]="selectedDepartment"
+          (change)="applyFilters()"
+          style="padding: 8px 12px; border: 1px solid var(--pte-border-color); border-radius: var(--pte-radius-md); font-size: 14px; background: var(--pte-bg-secondary); min-width: 150px;"
+        >
+          <option value="all">All Departments</option>
+          <option *ngFor="let dept of getUniqueDepartments()" [value]="dept">{{ dept }}</option>
+        </select>
+      </div>
+      <div class="pte-table-toolbar__right">
+        <button
+          *ngIf="selectedRole !== 'all' || selectedStatus !== 'all' || selectedDepartment !== 'all' || searchQuery"
+          class="pte-btn pte-btn--ghost pte-btn--sm"
+          (click)="clearFilters()"
+        >
+          ✕ Clear Filters
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Filter Badges -->
+    <div class="flex gap-2 mb-4" *ngIf="selectedRole !== 'all' || selectedStatus !== 'all' || selectedDepartment !== 'all' || searchQuery">
+      <span class="pte-badge pte-badge--primary" *ngIf="searchQuery">
+        Search: "{{ searchQuery }}" <span style="cursor:pointer; margin-left:4px;" (click)="searchQuery=''; applyFilters()">✕</span>
+      </span>
+      <span class="pte-badge pte-badge--primary" *ngIf="selectedRole !== 'all'">
+        Role: {{ selectedRole }} <span style="cursor:pointer; margin-left:4px;" (click)="selectedRole='all'; applyFilters()">✕</span>
+      </span>
+      <span class="pte-badge pte-badge--primary" *ngIf="selectedStatus !== 'all'">
+        Status: {{ selectedStatus }} <span style="cursor:pointer; margin-left:4px;" (click)="selectedStatus='all'; applyFilters()">✕</span>
+      </span>
+      <span class="pte-badge pte-badge--primary" *ngIf="selectedDepartment !== 'all'">
+        Dept: {{ selectedDepartment }} <span style="cursor:pointer; margin-left:4px;" (click)="selectedDepartment='all'; applyFilters()">✕</span>
+      </span>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loadingIndicator" class="flex-center" style="padding: 48px;">
+      <div class="pte-skeleton pte-skeleton--circle" style="width: 48px; height: 48px;"></div>
+      <div style="margin-left: 16px;">
+        <div class="pte-skeleton pte-skeleton--title" style="width: 200px;"></div>
+        <div class="pte-skeleton pte-skeleton--text" style="width: 150px;"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- CARDS VIEW                                                         -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div *ngIf="!loadingIndicator && viewMode === 'cards'" class="pte-grid pte-grid--auto">
+      <div class="user-card-new" *ngFor="let u of filteredRows">
+        <div class="user-card-new__header">
+          <div class="user-card-new__avatar-wrapper">
+            <img
+              class="user-card-new__avatar"
+              [src]="picsUrl + u.image"
+              [alt]="u.firstName"
+              onerror="this.src='assets/images/user.png'"
+            />
+            <span
+              class="user-card-new__status-dot"
+              [class.is-active]="u.isEnabled === 'Active'"
+              [class.is-inactive]="u.isEnabled === 'Inactive'"
+            ></span>
+          </div>
+          <span class="pte-role" [ngClass]="getRoleBadgeClass(u.roles[0])">
+            {{ u.roles[0] }}
+          </span>
+        </div>
+        <div class="user-card-new__body">
+          <h4 class="user-card-new__name">{{ u.firstName }} {{ u.lastName }}</h4>
+          <div class="user-card-new__detail">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>{{ u.email }}</span>
+          </div>
+          <div class="user-card-new__detail" *ngIf="u.departement">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <span>{{ u.departement }}</span>
+          </div>
+        </div>
+        <div class="user-card-new__actions" *ngIf="u.isEnabled === 'Active'">
+          <button class="pte-btn pte-btn--sm pte-btn--primary" (click)="showUserDetailsModal(u)">
+            👁 View
+          </button>
+          <button class="pte-btn pte-btn--sm pte-btn--ghost" [routerLink]="'/dashboard/user-profile/' + u._id">
+            Profile →
+          </button>
+          <button *ngIf="userRole === 'ADMIN'" class="pte-btn pte-btn--sm pte-btn--ghost" (click)="changeRole(u._id)">
+            🔄 Role
+          </button>
+          <button *ngIf="userRole === 'ADMIN'" class="pte-btn pte-btn--sm pte-btn--ghost" style="color: var(--pte-danger-600);" (click)="switchToExternalUser(u._id)">
+            📦 Archive
+          </button>
+        </div>
+        <div class="user-card-new__actions" *ngIf="u.isEnabled === 'Inactive'" style="justify-content: center;">
+          <span class="pte-badge pte-badge--warning">Awaiting approval</span>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="filteredRows.length === 0" class="pte-empty-state" style="grid-column: 1 / -1;">
+        <div class="pte-empty-state__icon">🔍</div>
+        <div class="pte-empty-state__title">No users found</div>
+        <div class="pte-empty-state__description">Try adjusting your filters or search criteria</div>
+        <button class="pte-btn pte-btn--primary" (click)="clearFilters()">Clear All Filters</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- TABLE VIEW                                                         -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div *ngIf="!loadingIndicator && viewMode === 'table'" class="pte-table-wrapper">
+      <table class="pte-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Department</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of filteredRows">
+            <td>
+              <div class="flex gap-3 items-center">
+                <img
+                  [src]="picsUrl + u.image"
+                  style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;"
+                  onerror="this.src='assets/images/user.png'"
+                  [alt]="u.firstName"
+                />
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;">{{ u.firstName }} {{ u.lastName }}</div>
+                  <div style="font-size: 12px; color: var(--pte-text-tertiary);">{{ u.email }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="pte-role" [ngClass]="getRoleBadgeClass(u.roles[0])">
+                {{ u.roles[0] }}
+              </span>
+            </td>
+            <td>
+              <span class="pte-status" [ngClass]="u.isEnabled === 'Active' ? 'pte-status--active' : 'pte-status--inactive'">
+                <span class="pte-status__dot"></span>
+                {{ u.isEnabled }}
+              </span>
+            </td>
+            <td>{{ u.departement || '—' }}</td>
+            <td>
+              <div class="table-actions" style="justify-content: flex-end;">
+                <button class="pte-btn pte-btn--sm pte-btn--ghost" (click)="showUserDetailsModal(u)">👁</button>
+                <button class="pte-btn pte-btn--sm pte-btn--ghost" [routerLink]="'/dashboard/user-profile/' + u._id">→</button>
+                <button *ngIf="userRole === 'ADMIN'" class="pte-btn pte-btn--sm pte-btn--ghost" (click)="changeRole(u._id)">🔄</button>
+                <button *ngIf="userRole === 'ADMIN'" class="pte-btn pte-btn--sm pte-btn--ghost" style="color: var(--pte-danger-600);" (click)="switchToExternalUser(u._id)">📦</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredRows.length === 0">
+            <td colspan="5" class="text-center" style="padding: 48px; color: var(--pte-text-tertiary);">
+              No users found. <a href="javascript:void(0)" (click)="clearFilters()" style="color: var(--pte-text-link);">Clear filters</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Component-specific Styles ──────────────────────────────────────── -->
+<style>
+  .user-card-new {
+    background: var(--pte-bg-secondary);
+    border: 1px solid var(--pte-border-color);
+    border-radius: var(--pte-radius-lg);
+    padding: 20px;
+    transition: all 0.2s ease;
+  }
+  .user-card-new:hover {
+    box-shadow: var(--pte-shadow-md);
+    border-color: var(--pte-border-color-hover);
+  }
+  .user-card-new__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .user-card-new__avatar-wrapper {
+    position: relative;
+  }
+  .user-card-new__avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--pte-radius-full);
+    object-fit: cover;
+  }
+  .user-card-new__status-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--pte-bg-secondary);
+  }
+  .user-card-new__status-dot.is-active { background: var(--pte-success-500); }
+  .user-card-new__status-dot.is-inactive { background: var(--pte-gray-400); }
+
+  .user-card-new__body {
+    margin-bottom: 16px;
+  }
+  .user-card-new__name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--pte-text-primary);
+    margin: 0 0 8px 0;
+  }
+  .user-card-new__detail {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--pte-text-secondary);
+    margin-bottom: 4px;
+  }
+  .user-card-new__detail svg {
+    flex-shrink: 0;
+    color: var(--pte-text-tertiary);
+  }
+
+  .user-card-new__actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid var(--pte-border-color);
+  }
+
+  /* Role badge helper for cards */
+  .pte-role--ADMIN { background: var(--pte-danger-100); color: var(--pte-danger-700); }
+  .pte-role--ASSISTANT { background: var(--pte-info-100); color: var(--pte-info-700); }
+  .pte-role--LAB-MANAGER { background: var(--pte-warning-100); color: var(--pte-warning-700); }
+  .pte-role--ENGINEER { background: var(--pte-primary-100); color: var(--pte-primary-700); }
+  .pte-role {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: var(--pte-radius-sm);
+    white-space: nowrap;
+  }
+
+  /* Override the old badge class mapping */
+  .badge-admin { background: var(--pte-danger-100); color: var(--pte-danger-700); }
+  .badge-assistant { background: var(--pte-info-100); color: var(--pte-info-700); }
+  .badge-lab-manager { background: var(--pte-warning-100); color: var(--pte-warning-700); }
+  .badge-engineer { background: var(--pte-primary-100); color: var(--pte-primary-700); }
+</style>

@@ -1,0 +1,140 @@
+// =============================================================================
+// PTE Design System — Animations
+// =============================================================================
+
+// ─── Fade ────────────────────────────────────────────────────────────────────
+@keyframes pte-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pte-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes pte-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pte-fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ─── Scale ───────────────────────────────────────────────────────────────────
+@keyframes pte-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// ─── Slide ───────────────────────────────────────────────────────────────────
+@keyframes pte-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pte-slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes pte-slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// ─── Spin ────────────────────────────────────────────────────────────────────
+@keyframes pte-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// ─── Pulse ───────────────────────────────────────────────────────────────────
+@keyframes pte-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+// ─── Skeleton Shimmer ────────────────────────────────────────────────────────
+@keyframes pte-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// ─── Animation Utility Classes ───────────────────────────────────────────────
+.pte-animate-fade-in { animation: pte-fade-in var(--pte-transition-base) ease forwards; }
+.pte-animate-fade-in-up { animation: pte-fade-in-up var(--pte-transition-slow) ease forwards; }
+.pte-animate-scale-in { animation: pte-scale-in var(--pte-transition-base) ease forwards; }
+.pte-animate-slide-in-right { animation: pte-slide-in-right var(--pte-transition-slow) ease forwards; }
+.pte-animate-spin { animation: pte-spin 1s linear infinite; }
+.pte-animate-pulse { animation: pte-pulse 2s ease-in-out infinite; }
+
+// ─── Skeleton Loading ────────────────────────────────────────────────────────
+.pte-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--pte-gray-200) 25%,
+    var(--pte-gray-100) 50%,
+    var(--pte-gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: pte-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--pte-radius-md);
+
+  &--circle {
+    border-radius: var(--pte-radius-full);
+  }
+
+  &--text {
+    height: 1em;
+    margin-bottom: var(--pte-space-2);
+  }
+
+  &--title {
+    height: 1.5em;
+    width: 60%;
+    margin-bottom: var(--pte-space-3);
+  }
+}

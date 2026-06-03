@@ -1,0 +1,53 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — Interns Request (Redesigned)                                     -->
+<!-- Controller: rows, loading, picsUrl                                       -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Internships</span><span class="separator">/</span><span class="current">Intern Requests</span>
+      </div>
+      <h1 class="pte-page__header-title">Intern Requests</h1>
+    </div>
+  </div>
+
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">Pending Intern Requests</h3>
+    </div>
+    <div class="pte-card__body">
+      <div class="pte-table-wrapper">
+        <table class="pte-table">
+          <thead><tr><th>Intern</th><th>Email</th><th>School</th><th>Period</th><th style="text-align:right;">Actions</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let intern of rows">
+              <td>
+                <div class="flex gap-3 items-center">
+                  <div style="width:36px;height:36px;border-radius:50%;background:var(--pte-primary-100);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:var(--pte-primary-600);">{{ (intern.firstName?.[0] || '') + (intern.lastName?.[0] || '') }}</div>
+                  <div style="font-weight:500;">{{ intern.firstName }} {{ intern.lastName }}</div>
+                </div>
+              </td>
+              <td style="font-size:13px;color:var(--pte-text-secondary);">{{ intern.email }}</td>
+              <td>{{ intern.school || '—' }}</td>
+              <td style="font-size:13px;">{{ intern.startDate | date:'shortDate' }} — {{ intern.endDate | date:'shortDate' }}</td>
+              <td>
+                <div class="table-actions" style="justify-content:flex-end;">
+                  <button class="pte-btn pte-btn--sm pte-btn--success">Approve</button>
+                  <button class="pte-btn pte-btn--sm pte-btn--ghost" style="color:var(--pte-danger-600);">Decline</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!rows || rows.length === 0" class="pte-empty-state">
+        <div class="pte-empty-state__icon">🎓</div>
+        <div class="pte-empty-state__title">No intern requests</div>
+      </div>
+    </div>
+  </div>
+</div>

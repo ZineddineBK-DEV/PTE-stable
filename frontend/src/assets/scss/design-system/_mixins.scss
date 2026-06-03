@@ -1,0 +1,153 @@
+// =============================================================================
+// PTE Design System — SCSS Mixins
+// =============================================================================
+
+// ─── Responsive Breakpoints ─────────────────────────────────────────────────
+$breakpoints: (
+  'xs': 0,
+  'sm': 576px,
+  'md': 768px,
+  'lg': 992px,
+  'xl': 1200px,
+  '2xl': 1440px,
+);
+
+@mixin respond-above($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    $bp-value: map-get($breakpoints, $breakpoint);
+    @media (min-width: $bp-value) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint `#{$breakpoint}` not found in $breakpoints";
+  }
+}
+
+@mixin respond-below($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    $bp-value: map-get($breakpoints, $breakpoint);
+    @media (max-width: ($bp-value - 1px)) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint `#{$breakpoint}` not found in $breakpoints";
+  }
+}
+
+// ─── Layout ──────────────────────────────────────────────────────────────────
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-start-center {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-column-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+// ─── Truncation ──────────────────────────────────────────────────────────────
+@mixin truncate($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// ─── Card ────────────────────────────────────────────────────────────────────
+@mixin card {
+  background: var(--pte-bg-secondary);
+  border: 1px solid var(--pte-border-color);
+  border-radius: var(--pte-radius-lg);
+  box-shadow: var(--pte-shadow-sm);
+}
+
+// ─── Scrollbar ───────────────────────────────────────────────────────────────
+@mixin custom-scrollbar($width: 6px, $thumb-color: var(--pte-gray-300), $track-color: transparent) {
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $width;
+  }
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $thumb-color;
+    border-radius: var(--pte-radius-full);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--pte-gray-400);
+  }
+}
+
+// ─── Focus Ring ──────────────────────────────────────────────────────────────
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--pte-primary-500);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px var(--pte-primary-100);
+  }
+}
+
+// ─── Transition ──────────────────────────────────────────────────────────────
+@mixin transition($properties: all) {
+  transition-property: #{$properties};
+  transition-duration: var(--pte-transition-base);
+  transition-timing-function: ease;
+}
+
+// ─── Overlay ─────────────────────────────────────────────────────────────────
+@mixin overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--pte-bg-overlay);
+  z-index: var(--pte-z-modal-backdrop);
+}
+
+// ─── Avatar ──────────────────────────────────────────────────────────────────
+@mixin avatar($size: 40px) {
+  width: $size;
+  height: $size;
+  border-radius: var(--pte-radius-full);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+// ─── Badge ───────────────────────────────────────────────────────────────────
+@mixin badge($bg, $color: white) {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--pte-space-1) var(--pte-space-2);
+  font-size: var(--pte-font-size-xs);
+  font-weight: var(--pte-font-weight-semibold);
+  line-height: 1;
+  border-radius: var(--pte-radius-full);
+  background: $bg;
+  color: $color;
+  white-space: nowrap;
+}

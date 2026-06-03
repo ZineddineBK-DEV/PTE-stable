@@ -1,0 +1,61 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — External Users (Redesigned)                                      -->
+<!-- Controller: rows, loading, picsUrl                                       -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Users</span><span class="separator">/</span><span class="current">External</span>
+      </div>
+      <h1 class="pte-page__header-title">External Users</h1>
+      <p class="pte-page__header-subtitle">Manage external collaborators and contractors</p>
+    </div>
+    <div class="pte-page__header-actions">
+      <button class="pte-btn pte-btn--primary">+ Add External User</button>
+    </div>
+  </div>
+
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">External Directory</h3>
+    </div>
+    <div class="pte-card__body">
+      <div class="pte-table-wrapper">
+        <table class="pte-table">
+          <thead><tr><th>User</th><th>Department</th><th>Documents</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let user of rows">
+              <td>
+                <div class="flex gap-3 items-center">
+                  <img [src]="picsUrl + user.image" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" onerror="this.src='assets/images/user.png'">
+                  <div>
+                    <div style="font-weight:600;font-size:14px;">{{ user.firstName }} {{ user.lastName }}</div>
+                    <div style="font-size:12px;color:var(--pte-text-tertiary);">{{ user.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="pte-badge pte-badge--neutral">{{ user.departement || '—' }}</span></td>
+              <td style="font-size:13px;">{{ user.external_docs?.length || 0 }} docs</td>
+              <td><span class="pte-status pte-status--inactive"><span class="pte-status__dot"></span>{{ user.isEnabled }}</span></td>
+              <td>
+                <div class="table-actions" style="justify-content:flex-end;">
+                  <button class="pte-btn pte-btn--sm pte-btn--ghost">View Docs</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!rows || rows.length === 0" class="pte-empty-state">
+        <div class="pte-empty-state__icon">🔗</div>
+        <div class="pte-empty-state__title">No external users</div>
+        <div class="pte-empty-state__description">Add external collaborators and contractors here</div>
+        <button class="pte-btn pte-btn--primary">+ Add External User</button>
+      </div>
+    </div>
+  </div>
+</div>

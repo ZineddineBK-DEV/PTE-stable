@@ -1,0 +1,79 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — Book a Lab / Virtualization Environment (Redesigned)             -->
+<!-- Controller: labForm, onSubmit(), labs                                    -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Labs</span><span class="separator">/</span><span class="current">Book a Lab</span>
+      </div>
+      <h1 class="pte-page__header-title">Book a Lab</h1>
+      <p class="pte-page__header-subtitle">Request a virtual lab environment for your work</p>
+    </div>
+    <div class="pte-page__header-actions">
+      <a routerLink="/dashboard/myRequest" class="pte-btn pte-btn--secondary">My Bookings</a>
+    </div>
+  </div>
+
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">Lab Booking Form</h3>
+    </div>
+    <div class="pte-card__body">
+      <div class="pte-page__form">
+        <form [formGroup]="labForm" (ngSubmit)="onSubmit()">
+          <div class="pte-page__form-row">
+            <div class="pte-form-field">
+              <label class="pte-form-field__label">Start Date <span style="color:var(--pte-danger-500)">*</span></label>
+              <input type="date" formControlName="start">
+            </div>
+            <div class="pte-form-field">
+              <label class="pte-form-field__label">End Date <span style="color:var(--pte-danger-500)">*</span></label>
+              <input type="date" formControlName="end">
+            </div>
+          </div>
+
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Goals / Objective <span style="color:var(--pte-danger-500)">*</span></label>
+            <textarea formControlName="goals" placeholder="Describe what you need the lab for..." rows="4"></textarea>
+          </div>
+
+          <div class="pte-page__form-row">
+            <div class="pte-form-field">
+              <label class="pte-form-field__label">Processor</label>
+              <input type="number" formControlName="processor" placeholder="e.g. 4 cores" min="1">
+            </div>
+            <div class="pte-form-field">
+              <label class="pte-form-field__label">RAM (GB)</label>
+              <input type="number" formControlName="ram" placeholder="e.g. 8" min="1">
+            </div>
+          </div>
+
+          <div class="pte-page__form-row">
+            <div class="pte-form-field">
+              <label class="pte-form-field__label">Disk Storage (GB)</label>
+              <input type="number" formControlName="disk" placeholder="e.g. 100" min="1">
+            </div>
+            <div class="pte-form-field">
+              <label class="pte-form-field__label">Lab Type</label>
+              <select formControlName="type">
+                <option disabled selected>Select type...</option>
+                <option value="VM">Virtual Machine</option>
+                <option value="Container">Container</option>
+                <option value="Physical">Physical Lab</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pte-page__form-actions">
+            <button type="submit" class="pte-btn pte-btn--primary" [disabled]="labForm?.invalid">Submit Request</button>
+            <button type="button" class="pte-btn pte-btn--secondary" routerLink="/dashboard/main">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

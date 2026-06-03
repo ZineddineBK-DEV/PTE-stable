@@ -1,0 +1,290 @@
+// =============================================================================
+// PTE Design System — Common Page Layout Pattern
+// Applied to all dashboard feature pages for consistency
+// =============================================================================
+
+// ─── Page Shell ──────────────────────────────────────────────────────────────
+.pte-page {
+  animation: pte-fade-in-up var(--pte-transition-slow) ease;
+
+  // ─── Page Header ─────────────────────────────────────────────────────────
+  &__header {
+    margin-bottom: var(--pte-space-6);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: var(--pte-space-4);
+
+    &-left {
+      flex: 1;
+    }
+
+    &-title {
+      font-size: var(--pte-font-size-2xl);
+      font-weight: var(--pte-font-weight-bold);
+      color: var(--pte-text-primary);
+      margin: 0;
+    }
+
+    &-subtitle {
+      font-size: var(--pte-font-size-sm);
+      color: var(--pte-text-secondary);
+      margin-top: var(--pte-space-1);
+    }
+
+    &-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--pte-space-3);
+      flex-shrink: 0;
+    }
+  }
+
+  // ─── Breadcrumb ──────────────────────────────────────────────────────────
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-2);
+    font-size: var(--pte-font-size-sm);
+    color: var(--pte-text-tertiary);
+    margin-bottom: var(--pte-space-2);
+
+    a {
+      color: var(--pte-text-tertiary);
+      &:hover { color: var(--pte-text-link); }
+    }
+
+    .separator {
+      color: var(--pte-text-tertiary);
+      font-size: var(--pte-font-size-xs);
+    }
+
+    .current {
+      color: var(--pte-text-primary);
+      font-weight: var(--pte-font-weight-medium);
+    }
+  }
+
+  // ─── KPI Row ─────────────────────────────────────────────────────────────
+  &__kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--pte-space-4);
+    margin-bottom: var(--pte-space-6);
+
+    @media (max-width: 1200px) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 576px) { grid-template-columns: 1fr; }
+  }
+
+  // ─── Content Section ─────────────────────────────────────────────────────
+  &__section {
+    margin-bottom: var(--pte-space-6);
+
+    &-title {
+      font-size: var(--pte-font-size-lg);
+      font-weight: var(--pte-font-weight-semibold);
+      color: var(--pte-text-primary);
+      margin-bottom: var(--pte-space-4);
+    }
+  }
+
+  // ─── Toolbar ─────────────────────────────────────────────────────────────
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--pte-space-4);
+
+    &-left {
+      display: flex;
+      align-items: center;
+      gap: var(--pte-space-3);
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    &-right {
+      display: flex;
+      align-items: center;
+      gap: var(--pte-space-3);
+    }
+
+    &-search {
+      position: relative;
+      input {
+        padding: 8px 16px 8px 40px;
+        border: 1px solid var(--pte-border-color);
+        border-radius: var(--pte-radius-md);
+        font-size: 14px;
+        background: var(--pte-bg-secondary);
+        color: var(--pte-text-primary);
+        width: 260px;
+        &:focus {
+          outline: none;
+          border-color: var(--pte-border-color-focus);
+          box-shadow: 0 0 0 3px var(--pte-primary-100);
+        }
+      }
+      svg {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--pte-text-tertiary);
+      }
+    }
+
+    &-filter {
+      padding: 8px 12px;
+      border: 1px solid var(--pte-border-color);
+      border-radius: var(--pte-radius-md);
+      font-size: 14px;
+      background: var(--pte-bg-secondary);
+      color: var(--pte-text-primary);
+      min-width: 140px;
+    }
+  }
+
+  // ─── Active Filter Chips ─────────────────────────────────────────────────
+  &__filters {
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-2);
+    flex-wrap: wrap;
+    margin-bottom: var(--pte-space-4);
+
+    &-label {
+      font-size: var(--pte-font-size-xs);
+      color: var(--pte-text-tertiary);
+      font-weight: var(--pte-font-weight-medium);
+    }
+
+    &-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: var(--pte-primary-100);
+      color: var(--pte-primary-700);
+      border-radius: var(--pte-radius-full);
+      font-size: var(--pte-font-size-xs);
+      font-weight: var(--pte-font-weight-medium);
+
+      .remove {
+        cursor: pointer;
+        margin-left: 2px;
+        &:hover { opacity: 0.7; }
+      }
+    }
+  }
+
+  // ─── Results Count ───────────────────────────────────────────────────────
+  &__count {
+    font-size: var(--pte-font-size-sm);
+    color: var(--pte-text-secondary);
+    margin-bottom: var(--pte-space-3);
+
+    strong {
+      color: var(--pte-text-primary);
+      font-weight: var(--pte-font-weight-semibold);
+    }
+  }
+
+  // ─── Calendar Page Layout ────────────────────────────────────────────────
+  &__calendar {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: var(--pte-space-6);
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+    }
+
+    // Sidebar (resource list + controls)
+    &-sidebar {
+      .resource-card {
+        padding: var(--pte-space-3) var(--pte-space-4);
+        border: 1px solid var(--pte-border-color);
+        border-radius: var(--pte-radius-md);
+        margin-bottom: var(--pte-space-2);
+        cursor: pointer;
+        @include transition(all);
+
+        &:hover {
+          border-color: var(--pte-border-color-hover);
+          background: var(--pte-gray-50);
+        }
+
+        &.is-selected {
+          border-color: var(--pte-primary-600);
+          background: var(--pte-primary-50);
+        }
+
+        &__name {
+          font-size: var(--pte-font-size-sm);
+          font-weight: var(--pte-font-weight-medium);
+          color: var(--pte-text-primary);
+        }
+
+        &__detail {
+          font-size: var(--pte-font-size-xs);
+          color: var(--pte-text-secondary);
+        }
+      }
+    }
+
+    // Calendar area
+    &-main {
+      min-height: 500px;
+    }
+  }
+
+  // ─── Form Page Layout ────────────────────────────────────────────────────
+  &__form {
+    max-width: 640px;
+
+    &-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--pte-space-4);
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    &-actions {
+      display: flex;
+      gap: var(--pte-space-3);
+      margin-top: var(--pte-space-6);
+      padding-top: var(--pte-space-6);
+      border-top: 1px solid var(--pte-border-color);
+    }
+  }
+
+  // ─── Stat Row (inline stats) ─────────────────────────────────────────────
+  &__stat-row {
+    display: flex;
+    gap: var(--pte-space-6);
+    flex-wrap: wrap;
+
+    &-item {
+      display: flex;
+      align-items: center;
+      gap: var(--pte-space-2);
+    }
+
+    &-value {
+      font-size: var(--pte-font-size-xl);
+      font-weight: var(--pte-font-weight-bold);
+      color: var(--pte-text-primary);
+    }
+
+    &-label {
+      font-size: var(--pte-font-size-sm);
+      color: var(--pte-text-secondary);
+    }
+  }
+}

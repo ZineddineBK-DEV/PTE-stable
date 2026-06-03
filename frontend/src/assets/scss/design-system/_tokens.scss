@@ -1,0 +1,196 @@
+// =============================================================================
+// PTE Design System — Tokens
+// All design decisions as CSS custom properties for runtime theming support
+// =============================================================================
+
+:root {
+  // ─── Color Palette ────────────────────────────────────────────────────────
+  // Primary (Blue)
+  --pte-primary-50: #eff6ff;
+  --pte-primary-100: #dbeafe;
+  --pte-primary-200: #bfdbfe;
+  --pte-primary-300: #93c5fd;
+  --pte-primary-400: #60a5fa;
+  --pte-primary-500: #3b82f6;
+  --pte-primary-600: #2563eb;
+  --pte-primary-700: #1d4ed8;
+  --pte-primary-800: #1e40af;
+  --pte-primary-900: #1e3a8a;
+
+  // Secondary (Slate)
+  --pte-secondary-50: #f8fafc;
+  --pte-secondary-100: #f1f5f9;
+  --pte-secondary-200: #e2e8f0;
+  --pte-secondary-300: #cbd5e1;
+  --pte-secondary-400: #94a3b8;
+  --pte-secondary-500: #64748b;
+  --pte-secondary-600: #475569;
+  --pte-secondary-700: #334155;
+  --pte-secondary-800: #1e293b;
+  --pte-secondary-900: #0f172a;
+
+  // Semantic
+  --pte-success-50: #f0fdf4;
+  --pte-success-100: #dcfce7;
+  --pte-success-500: #22c55e;
+  --pte-success-600: #16a34a;
+  --pte-success-700: #15803d;
+
+  --pte-warning-50: #fffbeb;
+  --pte-warning-100: #fef3c7;
+  --pte-warning-500: #f59e0b;
+  --pte-warning-600: #d97706;
+  --pte-warning-700: #b45309;
+
+  --pte-danger-50: #fef2f2;
+  --pte-danger-100: #fee2e2;
+  --pte-danger-500: #ef4444;
+  --pte-danger-600: #dc2626;
+  --pte-danger-700: #b91c1c;
+
+  --pte-info-50: #eff6ff;
+  --pte-info-100: #dbeafe;
+  --pte-info-500: #6366f1;
+  --pte-info-600: #4f46e5;
+  --pte-info-700: #4338ca;
+
+  // Neutral / Grays
+  --pte-gray-50: #f9fafb;
+  --pte-gray-100: #f3f4f6;
+  --pte-gray-200: #e5e7eb;
+  --pte-gray-300: #d1d5db;
+  --pte-gray-400: #9ca3af;
+  --pte-gray-500: #6b7280;
+  --pte-gray-600: #4b5563;
+  --pte-gray-700: #374151;
+  --pte-gray-800: #1f2937;
+  --pte-gray-900: #111827;
+
+  // Background & Surface
+  --pte-bg-primary: #f9fafb;
+  --pte-bg-secondary: #ffffff;
+  --pte-bg-tertiary: #f3f4f6;
+  --pte-bg-sidebar: #1e293b;
+  --pte-bg-header: #ffffff;
+  --pte-bg-overlay: rgba(0, 0, 0, 0.5);
+
+  // Text
+  --pte-text-primary: #111827;
+  --pte-text-secondary: #4b5563;
+  --pte-text-tertiary: #9ca3af;
+  --pte-text-inverse: #ffffff;
+  --pte-text-link: #2563eb;
+
+  // Border
+  --pte-border-color: #e5e7eb;
+  --pte-border-color-hover: #d1d5db;
+  --pte-border-color-focus: #3b82f6;
+
+  // ─── Typography ───────────────────────────────────────────────────────────
+  --pte-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --pte-font-family-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --pte-font-size-2xs: 0.625rem;   // 10px
+  --pte-font-size-xs: 0.75rem;     // 12px
+  --pte-font-size-sm: 0.875rem;    // 14px
+  --pte-font-size-base: 1rem;      // 16px
+  --pte-font-size-lg: 1.125rem;    // 18px
+  --pte-font-size-xl: 1.25rem;     // 20px
+  --pte-font-size-2xl: 1.5rem;     // 24px
+  --pte-font-size-3xl: 1.875rem;   // 30px
+  --pte-font-size-4xl: 2.25rem;    // 36px
+
+  --pte-font-weight-normal: 400;
+  --pte-font-weight-medium: 500;
+  --pte-font-weight-semibold: 600;
+  --pte-font-weight-bold: 700;
+
+  --pte-line-height-tight: 1.25;
+  --pte-line-height-normal: 1.5;
+  --pte-line-height-relaxed: 1.75;
+
+  --pte-letter-spacing-tight: -0.025em;
+  --pte-letter-spacing-normal: 0;
+  --pte-letter-spacing-wide: 0.025em;
+
+  // ─── Spacing ──────────────────────────────────────────────────────────────
+  --pte-space-0: 0;
+  --pte-space-1: 0.25rem;    // 4px
+  --pte-space-2: 0.5rem;     // 8px
+  --pte-space-3: 0.75rem;    // 12px
+  --pte-space-4: 1rem;       // 16px
+  --pte-space-5: 1.25rem;    // 20px
+  --pte-space-6: 1.5rem;     // 24px
+  --pte-space-8: 2rem;       // 32px
+  --pte-space-10: 2.5rem;    // 40px
+  --pte-space-12: 3rem;      // 48px
+  --pte-space-16: 4rem;      // 64px
+  --pte-space-20: 5rem;      // 80px
+
+  // ─── Border Radius ────────────────────────────────────────────────────────
+  --pte-radius-none: 0;
+  --pte-radius-sm: 0.25rem;    // 4px
+  --pte-radius-md: 0.5rem;     // 8px
+  --pte-radius-lg: 0.75rem;    // 12px
+  --pte-radius-xl: 1rem;       // 16px
+  --pte-radius-2xl: 1.5rem;    // 24px
+  --pte-radius-full: 9999px;
+
+  // ─── Shadows ──────────────────────────────────────────────────────────────
+  --pte-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --pte-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --pte-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --pte-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --pte-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --pte-shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+
+  // ─── Layout ───────────────────────────────────────────────────────────────
+  --pte-sidebar-width: 260px;
+  --pte-sidebar-collapsed-width: 72px;
+  --pte-header-height: 64px;
+  --pte-content-max-width: 1440px;
+  --pte-content-padding: var(--pte-space-6);
+
+  // ─── Transitions ──────────────────────────────────────────────────────────
+  --pte-transition-fast: 150ms ease;
+  --pte-transition-base: 200ms ease;
+  --pte-transition-slow: 300ms ease;
+  --pte-transition-slower: 500ms ease;
+
+  // ─── Z-index ──────────────────────────────────────────────────────────────
+  --pte-z-dropdown: 1000;
+  --pte-z-sticky: 1020;
+  --pte-z-fixed: 1030;
+  --pte-z-modal-backdrop: 1040;
+  --pte-z-modal: 1050;
+  --pte-z-popover: 1060;
+  --pte-z-tooltip: 1070;
+  --pte-z-toast: 1080;
+}
+
+// =============================================================================
+// Dark Theme Override
+// =============================================================================
+[data-theme="dark"] {
+  --pte-bg-primary: #0f172a;
+  --pte-bg-secondary: #1e293b;
+  --pte-bg-tertiary: #334155;
+  --pte-bg-sidebar: #0f172a;
+  --pte-bg-header: #1e293b;
+  --pte-bg-overlay: rgba(0, 0, 0, 0.7);
+
+  --pte-text-primary: #f1f5f9;
+  --pte-text-secondary: #94a3b8;
+  --pte-text-tertiary: #64748b;
+  --pte-text-link: #60a5fa;
+
+  --pte-border-color: #334155;
+  --pte-border-color-hover: #475569;
+  --pte-border-color-focus: #3b82f6;
+
+  --pte-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --pte-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --pte-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --pte-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4), 0 4px 6px rgba(0, 0, 0, 0.3);
+  --pte-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.5), 0 10px 10px rgba(0, 0, 0, 0.3);
+}

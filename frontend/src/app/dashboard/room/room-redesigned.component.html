@@ -1,0 +1,41 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — Room Calendar (Redesigned)                                       -->
+<!-- Controller: calendarOptions, rooms, events, addRoom, addEvent, etc.    -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Resources</span><span class="separator">/</span><span class="current">Rooms</span>
+      </div>
+      <h1 class="pte-page__header-title">Room Calendar</h1>
+      <p class="pte-page__header-subtitle">Book and manage room reservations</p>
+    </div>
+    <div class="pte-page__header-actions">
+      <button class="pte-btn pte-btn--primary" (click)="addRoom()">+ Add Room</button>
+    </div>
+  </div>
+
+  <div class="pte-card">
+    <div class="pte-card__body" style="padding:0;">
+      <div class="pte-page__calendar">
+        <!-- Room List Sidebar -->
+        <div class="pte-page__calendar-sidebar">
+          <h4 style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--pte-text-secondary);text-transform:uppercase;letter-spacing:0.5px;">Rooms</h4>
+          <div *ngIf="rooms && rooms.length === 0" style="color:var(--pte-text-tertiary);font-size:13px;">No rooms added yet</div>
+          <div *ngFor="let room of rooms" class="resource-card">
+            <div class="resource-card__name">{{ room.name || room.roomName }}</div>
+            <div class="resource-card__detail">{{ room.capacity || '' }} {{ room.location || '' }}</div>
+          </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="pte-page__calendar-main">
+          <full-calendar [options]="calendarOptions"></full-calendar>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

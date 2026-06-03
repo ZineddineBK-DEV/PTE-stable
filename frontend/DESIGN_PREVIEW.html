@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PTE Design System Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #f9fafb; color: #111827; padding: 40px; }
+
+    /* Copy tokens inline for preview */
+    :root {
+      --pte-primary-100: #dbeafe; --pte-primary-600: #2563eb; --pte-primary-700: #1d4ed8;
+      --pte-success-100: #dcfce7; --pte-success-600: #16a34a; --pte-success-700: #15803d;
+      --pte-warning-100: #fef3c7; --pte-warning-500: #f59e0b; --pte-warning-600: #d97706; --pte-warning-700: #b45309;
+      --pte-danger-100: #fee2e2; --pte-danger-500: #ef4444; --pte-danger-600: #dc2626; --pte-danger-700: #b91c1c;
+      --pte-info-100: #dbeafe; --pte-info-500: #6366f1; --pte-info-600: #4f46e5; --pte-info-700: #4338ca;
+      --pte-gray-50: #f9fafb; --pte-gray-100: #f3f4f6; --pte-gray-200: #e5e7eb; --pte-gray-300: #d1d5db;
+      --pte-gray-400: #9ca3af; --pte-gray-500: #6b7280; --pte-gray-600: #4b5563; --pte-gray-700: #374151; --pte-gray-800: #1f2937; --pte-gray-900: #111827;
+      --pte-bg-secondary: #fff; --pte-bg-tertiary: #f3f4f6; --pte-bg-sidebar: #1e293b;
+      --pte-text-primary: #111827; --pte-text-secondary: #4b5563; --pte-text-tertiary: #9ca3af; --pte-text-inverse: #fff;
+      --pte-border-color: #e5e7eb; --pte-border-color-hover: #d1d5db; --pte-border-color-focus: #3b82f6;
+      --pte-radius-sm: 4px; --pte-radius-md: 8px; --pte-radius-lg: 12px; --pte-radius-xl: 16px; --pte-radius-full: 9999px;
+      --pte-shadow-sm: 0 1px 3px rgba(0,0,0,0.1); --pte-shadow-md: 0 4px 6px rgba(0,0,0,0.1); --pte-shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --pte-sidebar-width: 260px; --pte-header-height: 64px;
+    }
+
+    h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 8px; }
+    h2 { font-size: 1.5rem; font-weight: 600; margin: 40px 0 16px; color: var(--pte-gray-900); border-bottom: 2px solid var(--pte-gray-200); padding-bottom: 8px; }
+    h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 12px; }
+    p { color: var(--pte-text-secondary); margin-bottom: 12px; }
+
+    .section { margin-bottom: 48px; }
+    .preview-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+    .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-bottom: 24px; }
+
+    /* Buttons */
+    .pte-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; font-size: 14px; font-weight: 500; border-radius: 8px; border: 1px solid transparent; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .pte-btn--primary { background: var(--pte-primary-600); color: white; border-color: var(--pte-primary-600); }
+    .pte-btn--primary:hover { background: var(--pte-primary-700); }
+    .pte-btn--secondary { background: var(--pte-gray-100); color: var(--pte-gray-900); border-color: var(--pte-border-color); }
+    .pte-btn--secondary:hover { background: var(--pte-gray-200); }
+    .pte-btn--outline { background: transparent; color: var(--pte-primary-600); border-color: var(--pte-primary-600); }
+    .pte-btn--outline:hover { background: var(--pte-primary-100); }
+    .pte-btn--ghost { background: transparent; color: var(--pte-gray-600); }
+    .pte-btn--ghost:hover { background: var(--pte-gray-100); }
+    .pte-btn--danger { background: var(--pte-danger-600); color: white; border-color: var(--pte-danger-600); }
+    .pte-btn--danger:hover { background: var(--pte-danger-700); }
+    .pte-btn--success { background: var(--pte-success-600); color: white; border-color: var(--pte-success-600); }
+    .pte-btn--warning { background: var(--pte-warning-500); color: white; border-color: var(--pte-warning-500); }
+    .pte-btn--sm { padding: 4px 12px; font-size: 12px; }
+    .pte-btn--lg { padding: 12px 24px; font-size: 16px; }
+    .pte-btn--icon { padding: 8px; }
+
+    /* Cards */
+    .pte-card { background: var(--pte-bg-secondary); border: 1px solid var(--pte-border-color); border-radius: var(--pte-radius-lg); box-shadow: var(--pte-shadow-sm); overflow: hidden; }
+    .pte-card__header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--pte-border-color); }
+    .pte-card__header-title { font-size: 18px; font-weight: 600; }
+    .pte-card__body { padding: 24px; }
+    .pte-card__footer { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-top: 1px solid var(--pte-border-color); background: var(--pte-bg-tertiary); }
+    .pte-card--kpi .pte-card__body { display: flex; align-items: flex-start; justify-content: space-between; }
+    .pte-kpi__value { font-size: 30px; font-weight: 700; line-height: 1; }
+    .pte-kpi__label { font-size: 14px; color: var(--pte-text-secondary); margin-top: 4px; }
+    .pte-kpi__icon { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: var(--pte-radius-lg); font-size: 20px; flex-shrink: 0; }
+    .pte-kpi__icon--primary { background: var(--pte-primary-100); }
+    .pte-kpi__icon--success { background: var(--pte-success-100); }
+    .pte-kpi__icon--warning { background: var(--pte-warning-100); }
+    .pte-kpi__icon--danger { background: var(--pte-danger-100); }
+
+    /* Badges */
+    .pte-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; border-radius: 9999px; white-space: nowrap; }
+    .pte-badge--primary { background: var(--pte-primary-100); color: var(--pte-primary-700); }
+    .pte-badge--success { background: var(--pte-success-100); color: var(--pte-success-700); }
+    .pte-badge--warning { background: var(--pte-warning-100); color: var(--pte-warning-700); }
+    .pte-badge--danger { background: var(--pte-danger-100); color: var(--pte-danger-700); }
+    .pte-badge--neutral { background: var(--pte-gray-100); color: var(--pte-gray-700); }
+
+    /* Table */
+    .pte-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .pte-table thead th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: 11px; color: var(--pte-text-secondary); text-transform: uppercase; letter-spacing: 0.5px; background: var(--pte-bg-tertiary); border-bottom: 1px solid var(--pte-border-color); }
+    .pte-table tbody td { padding: 12px 16px; border-bottom: 1px solid var(--pte-border-color); }
+    .pte-table tbody tr:hover { background: var(--pte-gray-50); }
+    .pte-table .table-actions { display: flex; gap: 4px; justify-content: flex-end; }
+
+    /* Form */
+    .pte-form-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+    .pte-form-field__label { font-size: 14px; font-weight: 500; }
+    .pte-form-field input, .pte-form-field select, .pte-form-field textarea { padding: 8px 12px; font-size: 14px; border: 1px solid var(--pte-border-color); border-radius: 8px; font-family: inherit; color: var(--pte-text-primary); background: white; }
+    .pte-form-field input:focus { outline: none; border-color: var(--pte-border-color-focus); box-shadow: 0 0 0 3px var(--pte-primary-100); }
+
+    /* Sidebar mockup */
+    .sidebar-mock { width: 260px; background: var(--pte-bg-sidebar); border-radius: var(--pte-radius-lg); overflow: hidden; color: white; height: 500px; display: flex; flex-direction: column; }
+    .sidebar-mock__brand { display: flex; align-items: center; gap: 12px; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .sidebar-mock__logo { width: 36px; height: 36px; border-radius: 8px; background: var(--pte-primary-600); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; }
+    .sidebar-mock__name { font-size: 18px; font-weight: 700; }
+    .sidebar-mock__nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+    .sidebar-mock__group { padding: 16px 20px 8px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.35); }
+    .sidebar-mock__item { display: flex; align-items: center; gap: 12px; padding: 8px 20px; margin: 1px 12px; border-radius: 8px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; cursor: pointer; }
+    .sidebar-mock__item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .sidebar-mock__item.active { background: var(--pte-primary-600); color: white; }
+    .sidebar-mock__user { padding: 12px 20px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 12px; }
+    .sidebar-mock__avatar { width: 36px; height: 36px; border-radius: 9999px; background: var(--pte-gray-500); }
+    .sidebar-mock__info { flex: 1; }
+    .sidebar-mock__name-text { font-size: 14px; font-weight: 500; }
+    .sidebar-mock__role { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+    /* Color palette */
+    .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+    .color-swatch { border-radius: 8px; overflow: hidden; }
+    .color-swatch__preview { height: 48px; }
+    .color-swatch__label { padding: 4px 8px; font-size: 10px; color: var(--pte-text-secondary); background: white; }
+  </style>
+</head>
+<body>
+
+<div style="max-width: 1200px; margin: 0 auto;">
+  <h1>🎨 PTE Design System</h1>
+  <p>Complete design system for the PTE Resource Management Dashboard</p>
+
+  <!-- Color Palette -->
+  <h2>Color Palette</h2>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch__preview" style="background: #2563eb;"></div><div class="color-swatch__label">Primary</div></div>
+    <div class="color-swatch"><div class="color-swatch__preview" style="background: #16a34a;"></div><div class="color-swatch__label">Success</div></div>
+    <div class="color-swatch"><div class="color-swatch__preview" style="background: #f59e0b;"></div><div class="color-swatch__label">Warning</div></div>
+    <div class="color-swatch"><div class="color-swatch__preview" style="background: #ef4444;"></div><div class="color-swatch__label">Danger</div></div>
+    <div class="color-swatch"><div class="color-swatch__preview" style="background: #6366f1;"></div><div class="color-swatch__label">Info</div></div>
+    <div class="color-swatch"><div class="color-swatch__preview" style="background: #1e293b;"></div><div class="color-swatch__label">Sidebar</div></div>
+    <div class="color-swatch"><div class="color-swatch__preview" style="background: #f9fafb;"></div><div class="color-swatch__label">BG Primary</div></div>
+    <div class="color-swatch"><div class="color-swatch__preview" style="background: #e5e7eb;"></div><div class="color-swatch__label">Border</div></div>
+  </div>
+
+  <!-- Buttons -->
+  <h2>Buttons</h2>
+  <h3>Variants</h3>
+  <div class="preview-row">
+    <button class="pte-btn pte-btn--primary">Primary</button>
+    <button class="pte-btn pte-btn--secondary">Secondary</button>
+    <button class="pte-btn pte-btn--outline">Outline</button>
+    <button class="pte-btn pte-btn--ghost">Ghost</button>
+    <button class="pte-btn pte-btn--danger">Danger</button>
+    <button class="pte-btn pte-btn--success">Success</button>
+    <button class="pte-btn pte-btn--warning">Warning</button>
+  </div>
+  <h3>Sizes</h3>
+  <div class="preview-row">
+    <button class="pte-btn pte-btn--primary pte-btn--sm">Small</button>
+    <button class="pte-btn pte-btn--primary">Default</button>
+    <button class="pte-btn pte-btn--primary pte-btn--lg">Large</button>
+  </div>
+
+  <!-- Badges -->
+  <h2>Badges</h2>
+  <div class="preview-row">
+    <span class="pte-badge pte-badge--primary">Admin</span>
+    <span class="pte-badge pte-badge--success">Active</span>
+    <span class="pte-badge pte-badge--warning">Pending</span>
+    <span class="pte-badge pte-badge--danger">Inactive</span>
+    <span class="pte-badge pte-badge--neutral">Draft</span>
+  </div>
+
+  <!-- Cards -->
+  <h2>Cards</h2>
+  <h3>KPI Cards</h3>
+  <div class="preview-grid">
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div>
+          <div class="pte-kpi__value">248</div>
+          <div class="pte-kpi__label">Total Users</div>
+        </div>
+        <div class="pte-kpi__icon pte-kpi__icon--primary">👥</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div>
+          <div class="pte-kpi__value">12</div>
+          <div class="pte-kpi__label">Pending Requests</div>
+        </div>
+        <div class="pte-kpi__icon pte-kpi__icon--warning">⏳</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div>
+          <div class="pte-kpi__value">5</div>
+          <div class="pte-kpi__label">On Leave Today</div>
+        </div>
+        <div class="pte-kpi__icon pte-kpi__icon--danger">🏖️</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div>
+          <div class="pte-kpi__value">38</div>
+          <div class="pte-kpi__label">Active Missions</div>
+        </div>
+        <div class="pte-kpi__icon pte-kpi__icon--success">🔧</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Content Card</h3>
+  <div style="max-width: 600px;">
+    <div class="pte-card">
+      <div class="pte-card__header">
+        <span class="pte-card__header-title">Recent Users</span>
+        <button class="pte-btn pte-btn--sm pte-btn--primary">Add User</button>
+      </div>
+      <div class="pte-card__body">
+        <p>Card content goes here. This is where you'd display user data, charts, or any other content.</p>
+      </div>
+      <div class="pte-card__footer">
+        <span style="font-size: 13px; color: var(--pte-text-secondary);">Showing 10 of 248 users</span>
+        <button class="pte-btn pte-btn--sm pte-btn--ghost">View All →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <h2>Table</h2>
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <span class="pte-card__header-title">Users List</span>
+      <button class="pte-btn pte-btn--sm pte-btn--primary">+ Add User</button>
+    </div>
+    <div class="pte-card__body" style="padding: 0;">
+      <table class="pte-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Status</th>
+            <th>Role</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight: 500;">Ahmed Ben Ali</td>
+            <td style="color: var(--pte-text-secondary);">ahmed@prologic.com</td>
+            <td>System</td>
+            <td><span class="pte-badge pte-badge--success">Active</span></td>
+            <td><span class="pte-badge pte-badge--primary">Admin</span></td>
+            <td class="table-actions">
+              <button class="pte-btn pte-btn--sm pte-btn--ghost">Edit</button>
+              <button class="pte-btn pte-btn--sm pte-btn--ghost" style="color: var(--pte-danger-600);">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-weight: 500;">Sara Mansouri</td>
+            <td style="color: var(--pte-text-secondary);">sara@prologic.com</td>
+            <td>Cyber Security</td>
+            <td><span class="pte-badge pte-badge--success">Active</span></td>
+            <td><span class="pte-badge pte-badge--warning">Lab Manager</span></td>
+            <td class="table-actions">
+              <button class="pte-btn pte-btn--sm pte-btn--ghost">Edit</button>
+              <button class="pte-btn pte-btn--sm pte-btn--ghost" style="color: var(--pte-danger-600);">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-weight: 500;">Youssef Khairi</td>
+            <td style="color: var(--pte-text-secondary);">youssef@prologic.com</td>
+            <td>Networking</td>
+            <td><span class="pte-badge pte-badge--warning">Pending</span></td>
+            <td><span class="pte-badge pte-badge--primary">Engineer</span></td>
+            <td class="table-actions">
+              <button class="pte-btn pte-btn--sm pte-btn--ghost">Edit</button>
+              <button class="pte-btn pte-btn--sm pte-btn--ghost" style="color: var(--pte-danger-600);">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Forms -->
+  <h2>Form Elements</h2>
+  <div style="max-width: 480px;">
+    <div class="pte-form-field">
+      <label class="pte-form-field__label">Full Name <span style="color: var(--pte-danger-500);">*</span></label>
+      <input type="text" placeholder="Enter full name">
+    </div>
+    <div class="pte-form-field">
+      <label class="pte-form-field__label">Email</label>
+      <input type="email" placeholder="Enter email address">
+    </div>
+    <div class="pte-form-field">
+      <label class="pte-form-field__label">Department</label>
+      <select>
+        <option>Select department...</option>
+        <option>System</option>
+        <option>Networking</option>
+        <option>Cyber Security</option>
+      </select>
+    </div>
+    <div class="preview-row">
+      <button class="pte-btn pte-btn--primary">Submit</button>
+      <button class="pte-btn pte-btn--secondary">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Sidebar Preview -->
+  <h2>Sidebar Layout Preview</h2>
+  <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+    <div>
+      <h3>Expanded</h3>
+      <div class="sidebar-mock">
+        <div class="sidebar-mock__brand">
+          <div class="sidebar-mock__logo">P</div>
+          <span class="sidebar-mock__name">PTE</span>
+        </div>
+        <div class="sidebar-mock__nav">
+          <div class="sidebar-mock__group">HOME</div>
+          <div class="sidebar-mock__item active">📊 Dashboard</div>
+          <div class="sidebar-mock__group">USERS</div>
+          <div class="sidebar-mock__item">👤 Users Request</div>
+          <div class="sidebar-mock__item">👥 Users List</div>
+          <div class="sidebar-mock__item">🔗 External</div>
+          <div class="sidebar-mock__group">RESOURCES</div>
+          <div class="sidebar-mock__item">🚗 Vehicles</div>
+          <div class="sidebar-mock__item">🏠 Rooms</div>
+          <div class="sidebar-mock__item">🔧 Missions</div>
+          <div class="sidebar-mock__group">LEAVE</div>
+          <div class="sidebar-mock__item">📝 Request</div>
+          <div class="sidebar-mock__item">🏖️ My Leaves</div>
+        </div>
+        <div class="sidebar-mock__user">
+          <div class="sidebar-mock__avatar"></div>
+          <div class="sidebar-mock__info">
+            <div class="sidebar-mock__name-text">Ahmed Ben Ali</div>
+            <div class="sidebar-mock__role">Administrator</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,499 @@
+// =============================================================================
+// PTE Design System — Layout (Sidebar + Header + Content)
+// =============================================================================
+
+// ─── App Shell ───────────────────────────────────────────────────────────────
+.pte-app {
+  display: flex;
+  min-height: 100vh;
+  background: var(--pte-bg-primary);
+}
+
+// ─── Sidebar ─────────────────────────────────────────────────────────────────
+.pte-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--pte-sidebar-width);
+  background: var(--pte-bg-sidebar);
+  color: var(--pte-text-inverse);
+  display: flex;
+  flex-direction: column;
+  z-index: var(--pte-z-fixed);
+  @include transition(width, transform);
+  overflow: hidden;
+
+  @include respond-below('lg') {
+    transform: translateX(-100%);
+
+    &.is-open {
+      transform: translateX(0);
+    }
+  }
+
+  // ─── Brand ──────────────────────────────────────────────────────────────
+  &__brand {
+    @include flex-center;
+    height: var(--pte-header-height);
+    padding: var(--pte-space-4) var(--pte-space-5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+    gap: var(--pte-space-3);
+
+    &-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--pte-radius-md);
+      background: var(--pte-primary-600);
+      @include flex-center;
+      font-weight: var(--pte-font-weight-bold);
+      font-size: var(--pte-font-size-lg);
+      flex-shrink: 0;
+    }
+
+    &-name {
+      font-size: var(--pte-font-size-lg);
+      font-weight: var(--pte-font-weight-bold);
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      @include transition(opacity);
+    }
+  }
+
+  // ─── Navigation ─────────────────────────────────────────────────────────
+  &__nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--pte-space-3) 0;
+    @include custom-scrollbar(4px, rgba(255, 255, 255, 0.2), transparent);
+
+    // Section group title
+    &-group {
+      padding: var(--pte-space-4) var(--pte-space-5) var(--pte-space-2);
+      font-size: var(--pte-font-size-2xs);
+      font-weight: var(--pte-font-weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: var(--pte-letter-spacing-wide);
+      color: rgba(255, 255, 255, 0.4);
+      white-space: nowrap;
+    }
+
+    // Nav item
+    &-item {
+      display: flex;
+      align-items: center;
+      gap: var(--pte-space-3);
+      padding: var(--pte-space-2) var(--pte-space-5);
+      margin: 1px var(--pte-space-3);
+      border-radius: var(--pte-radius-md);
+      color: rgba(255, 255, 255, 0.65);
+      font-size: var(--pte-font-size-sm);
+      font-weight: var(--pte-font-weight-medium);
+      cursor: pointer;
+      @include transition(all);
+      white-space: nowrap;
+      text-decoration: none;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        text-decoration: none;
+      }
+
+      &.is-active {
+        background: var(--pte-primary-600);
+        color: white;
+      }
+
+      // Icon
+      .nav-icon {
+        width: 20px;
+        height: 20px;
+        @include flex-center;
+        flex-shrink: 0;
+        font-size: var(--pte-font-size-base);
+      }
+
+      // Badge on nav item
+      .nav-badge {
+        margin-left: auto;
+        @include badge(var(--pte-danger-500), white);
+      }
+    }
+  }
+
+  // ─── User Section (bottom) ──────────────────────────────────────────────
+  &__user {
+    padding: var(--pte-space-3) var(--pte-space-5);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-3);
+    flex-shrink: 0;
+
+    &-avatar {
+      @include avatar(36px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    &-info {
+      overflow: hidden;
+      flex: 1;
+    }
+
+    &-name {
+      font-size: var(--pte-font-size-sm);
+      font-weight: var(--pte-font-weight-medium);
+      color: white;
+      @include truncate;
+    }
+
+    &-role {
+      font-size: var(--pte-font-size-xs);
+      color: rgba(255, 255, 255, 0.5);
+      @include truncate;
+    }
+  }
+
+  // ─── Collapsed state ───────────────────────────────────────────────────
+  &.is-collapsed {
+    width: var(--pte-sidebar-collapsed-width);
+
+    .pte-sidebar__brand-name,
+    .pte-sidebar__nav-group,
+    .pte-sidebar__nav-item span,
+    .pte-sidebar__user-info {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+    }
+
+    .pte-sidebar__nav-item {
+      justify-content: center;
+      padding: var(--pte-space-2);
+      margin: 1px var(--pte-space-2);
+    }
+
+    .pte-sidebar__user {
+      justify-content: center;
+      padding: var(--pte-space-3);
+    }
+  }
+}
+
+// ─── Sidebar Overlay (mobile) ───────────────────────────────────────────────
+.pte-sidebar-overlay {
+  display: none;
+
+  @include respond-below('lg') {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: var(--pte-bg-overlay);
+    z-index: calc(var(--pte-z-fixed) - 1);
+    animation: pte-fade-in var(--pte-transition-fast) ease;
+  }
+}
+
+// ─── Main Content Area ──────────────────────────────────────────────────────
+.pte-main {
+  flex: 1;
+  margin-left: var(--pte-sidebar-width);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  @include transition(margin-left);
+
+  .pte-sidebar.is-collapsed ~ & {
+    margin-left: var(--pte-sidebar-collapsed-width);
+  }
+
+  @include respond-below('lg') {
+    margin-left: 0;
+  }
+}
+
+// ─── Header ─────────────────────────────────────────────────────────────────
+.pte-header {
+  position: sticky;
+  top: 0;
+  height: var(--pte-header-height);
+  background: var(--pte-bg-header);
+  border-bottom: 1px solid var(--pte-border-color);
+  @include flex-between;
+  padding: 0 var(--pte-content-padding);
+  z-index: var(--pte-z-sticky);
+  box-shadow: var(--pte-shadow-xs);
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-3);
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-2);
+  }
+
+  // ─── Toggle button ─────────────────────────────────────────────────────
+  &__toggle {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--pte-radius-md);
+    color: var(--pte-text-secondary);
+    @include transition(all);
+
+    &:hover {
+      background: var(--pte-gray-100);
+      color: var(--pte-text-primary);
+    }
+  }
+
+  // ─── Search bar ────────────────────────────────────────────────────────
+  &__search {
+    position: relative;
+    width: 320px;
+
+    @include respond-below('xl') {
+      width: 220px;
+    }
+
+    @include respond-below('md') {
+      display: none;
+    }
+
+    input {
+      width: 100%;
+      padding: var(--pte-space-2) var(--pte-space-4);
+      padding-left: var(--pte-space-10);
+      background: var(--pte-bg-tertiary);
+      border: 1px solid transparent;
+      border-radius: var(--pte-radius-full);
+      font-size: var(--pte-font-size-sm);
+      color: var(--pte-text-primary);
+      @include transition(all);
+      @include focus-ring;
+
+      &::placeholder {
+        color: var(--pte-text-tertiary);
+      }
+
+      &:focus {
+        background: var(--pte-bg-secondary);
+        border-color: var(--pte-border-color-focus);
+        box-shadow: 0 0 0 3px var(--pte-primary-100);
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      left: var(--pte-space-3);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--pte-text-tertiary);
+    }
+  }
+
+  // ─── Notification bell ─────────────────────────────────────────────────
+  &__notification {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--pte-radius-full);
+    color: var(--pte-text-secondary);
+    position: relative;
+    @include transition(all);
+
+    &:hover {
+      background: var(--pte-gray-100);
+      color: var(--pte-text-primary);
+    }
+
+    .notification-dot {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: var(--pte-radius-full);
+      background: var(--pte-danger-500);
+      border: 2px solid var(--pte-bg-header);
+    }
+  }
+
+  // ─── User dropdown ─────────────────────────────────────────────────────
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-3);
+    padding: var(--pte-space-1) var(--pte-space-2);
+    border-radius: var(--pte-radius-lg);
+    cursor: pointer;
+    @include transition(all);
+
+    &:hover {
+      background: var(--pte-gray-100);
+    }
+
+    &-avatar {
+      @include avatar(32px);
+    }
+
+    &-name {
+      font-size: var(--pte-font-size-sm);
+      font-weight: var(--pte-font-weight-medium);
+      color: var(--pte-text-primary);
+
+      @include respond-below('md') {
+        display: none;
+      }
+    }
+
+    &-chevron {
+      color: var(--pte-text-tertiary);
+      font-size: var(--pte-font-size-xs);
+    }
+  }
+
+  // ─── Theme toggle ──────────────────────────────────────────────────────
+  &__theme-toggle {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--pte-radius-full);
+    color: var(--pte-text-secondary);
+    @include transition(all);
+
+    &:hover {
+      background: var(--pte-gray-100);
+      color: var(--pte-text-primary);
+    }
+  }
+}
+
+// ─── Content Area ───────────────────────────────────────────────────────────
+.pte-content {
+  flex: 1;
+  padding: var(--pte-content-padding);
+  max-width: var(--pte-content-max-width);
+  width: 100%;
+  margin: 0 auto;
+
+  // ─── Page header ───────────────────────────────────────────────────────
+  &__header {
+    margin-bottom: var(--pte-space-6);
+
+    &-title {
+      font-size: var(--pte-font-size-2xl);
+      font-weight: var(--pte-font-weight-bold);
+      color: var(--pte-text-primary);
+      margin: 0;
+    }
+
+    &-subtitle {
+      font-size: var(--pte-font-size-sm);
+      color: var(--pte-text-secondary);
+      margin-top: var(--pte-space-1);
+    }
+
+    &-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--pte-space-3);
+      margin-top: var(--pte-space-4);
+    }
+
+    &--with-breadcrumb {
+      padding-top: var(--pte-space-2);
+    }
+  }
+}
+
+// ─── Breadcrumb ─────────────────────────────────────────────────────────────
+.pte-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--pte-space-2);
+  font-size: var(--pte-font-size-sm);
+  color: var(--pte-text-tertiary);
+  margin-bottom: var(--pte-space-2);
+
+  &__item {
+    color: var(--pte-text-tertiary);
+
+    a {
+      color: var(--pte-text-tertiary);
+      &:hover { color: var(--pte-text-link); }
+    }
+
+    &.is-active {
+      color: var(--pte-text-primary);
+      font-weight: var(--pte-font-weight-medium);
+    }
+  }
+
+  &__separator {
+    color: var(--pte-text-tertiary);
+    font-size: var(--pte-font-size-xs);
+  }
+}
+
+// ─── Page Grid ──────────────────────────────────────────────────────────────
+.pte-grid {
+  display: grid;
+  gap: var(--pte-space-6);
+
+  &--2 { grid-template-columns: repeat(2, 1fr); }
+  &--3 { grid-template-columns: repeat(3, 1fr); }
+  &--4 { grid-template-columns: repeat(4, 1fr); }
+  &--auto { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+  @include respond-below('xl') {
+    &--4 { grid-template-columns: repeat(2, 1fr); }
+    &--3 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @include respond-below('md') {
+    &--4,
+    &--3,
+    &--2 { grid-template-columns: 1fr; }
+  }
+}
+
+// ─── Empty State ─────────────────────────────────────────────────────────────
+.pte-empty-state {
+  @include flex-column-center;
+  padding: var(--pte-space-16) var(--pte-space-8);
+  text-align: center;
+
+  &__icon {
+    @include flex-center;
+    width: 80px;
+    height: 80px;
+    border-radius: var(--pte-radius-full);
+    background: var(--pte-gray-100);
+    color: var(--pte-text-tertiary);
+    font-size: var(--pte-font-size-3xl);
+    margin-bottom: var(--pte-space-6);
+  }
+
+  &__title {
+    font-size: var(--pte-font-size-lg);
+    font-weight: var(--pte-font-weight-semibold);
+    color: var(--pte-text-primary);
+    margin-bottom: var(--pte-space-2);
+  }
+
+  &__description {
+    font-size: var(--pte-font-size-sm);
+    color: var(--pte-text-secondary);
+    max-width: 400px;
+    margin-bottom: var(--pte-space-6);
+  }
+}

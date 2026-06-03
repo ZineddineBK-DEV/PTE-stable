@@ -1,0 +1,87 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — Leave Request (Redesigned)                                       -->
+<!-- Controller: leaveForm, onSubmit(), minDate, balance, user               -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Leave</span><span class="separator">/</span><span class="current">New Request</span>
+      </div>
+      <h1 class="pte-page__header-title">Request Leave</h1>
+      <p class="pte-page__header-subtitle">Submit a new leave request for approval</p>
+    </div>
+    <div class="pte-page__header-actions">
+      <a routerLink="/dashboard/myLeave" class="pte-btn pte-btn--secondary">View My Leaves</a>
+    </div>
+  </div>
+
+  <!-- Balance KPI -->
+  <div class="pte-page__kpi-row" style="grid-template-columns:repeat(3,1fr);">
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ balance || 0 }}</div><div class="pte-kpi__label">Leave Balance</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--success">🏖️</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ usedLeaves || 0 }}</div><div class="pte-kpi__label">Used This Year</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--warning">📊</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ pendingLeaves || 0 }}</div><div class="pte-kpi__label">Pending</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--info">⏳</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">Leave Details</h3>
+    </div>
+    <div class="pte-card__body">
+      <div class="pte-page__form">
+        <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
+          <div class="pte-page__form-row">
+            <div class="pte-form-field">
+              <label class="pte-form-field__label">Start Date <span style="color:var(--pte-danger-500)">*</span></label>
+              <input type="date" formControlName="startDate" [min]="minDate">
+            </div>
+            <div class="pte-form-field">
+              <label class="pte-form-field__label">End Date <span style="color:var(--pte-danger-500)">*</span></label>
+              <input type="date" formControlName="endDate" [min]="minDate">
+            </div>
+          </div>
+
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Leave Type <span style="color:var(--pte-danger-500)">*</span></label>
+            <select formControlName="type">
+              <option disabled selected>Select type...</option>
+              <option value="Annual">Annual Leave</option>
+              <option value="Sick">Sick Leave</option>
+              <option value="Personal">Personal Leave</option>
+              <option value="Maternity">Maternity Leave</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="pte-form-field">
+            <label class="pte-form-field__label">Reason</label>
+            <textarea formControlName="reason" placeholder="Brief description of your leave reason..." rows="4"></textarea>
+          </div>
+
+          <div class="pte-page__form-actions">
+            <button type="submit" class="pte-btn pte-btn--primary" [disabled]="leaveForm?.invalid">Submit Request</button>
+            <button type="button" class="pte-btn pte-btn--secondary" routerLink="/dashboard/main">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

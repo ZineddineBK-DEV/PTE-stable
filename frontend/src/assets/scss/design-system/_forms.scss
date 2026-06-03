@@ -1,0 +1,212 @@
+// =============================================================================
+// PTE Design System — Forms
+// =============================================================================
+
+// ─── Form Field Wrapper ─────────────────────────────────────────────────────
+.pte-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pte-space-1);
+  margin-bottom: var(--pte-space-4);
+
+  &__label {
+    font-size: var(--pte-font-size-sm);
+    font-weight: var(--pte-font-weight-medium);
+    color: var(--pte-text-primary);
+
+    .required {
+      color: var(--pte-danger-500);
+      margin-left: 2px;
+    }
+  }
+
+  &__hint {
+    font-size: var(--pte-font-size-xs);
+    color: var(--pte-text-tertiary);
+  }
+
+  &__error {
+    font-size: var(--pte-font-size-xs);
+    color: var(--pte-danger-600);
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-1);
+  }
+
+  // ─── Input / Select / Textarea ────────────────────────────────────────
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="date"],
+  input[type="time"],
+  input[type="tel"],
+  input[type="url"],
+  select,
+  textarea {
+    width: 100%;
+    padding: var(--pte-space-2) var(--pte-space-3);
+    font-size: var(--pte-font-size-sm);
+    color: var(--pte-text-primary);
+    background: var(--pte-bg-secondary);
+    border: 1px solid var(--pte-border-color);
+    border-radius: var(--pte-radius-md);
+    @include transition(border-color, box-shadow);
+    @include focus-ring;
+
+    &::placeholder {
+      color: var(--pte-text-tertiary);
+    }
+
+    &:hover {
+      border-color: var(--pte-border-color-hover);
+    }
+
+    &:focus {
+      border-color: var(--pte-border-color-focus);
+      box-shadow: 0 0 0 3px var(--pte-primary-100);
+      outline: none;
+    }
+
+    &:disabled {
+      background: var(--pte-gray-100);
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%236b7280'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--pte-space-3) center;
+    padding-right: var(--pte-space-10);
+  }
+
+  // ─── Validation States ────────────────────────────────────────────────
+  &--error {
+    input, select, textarea {
+      border-color: var(--pte-danger-500);
+
+      &:focus {
+        box-shadow: 0 0 0 3px var(--pte-danger-100);
+      }
+    }
+  }
+
+  &--success {
+    input, select, textarea {
+      border-color: var(--pte-success-500);
+
+      &:focus {
+        box-shadow: 0 0 0 3px var(--pte-success-100);
+      }
+    }
+  }
+
+  // ─── Inline variant ──────────────────────────────────────────────────
+  &--inline {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--pte-space-3);
+
+    .pte-form-field__label {
+      min-width: 120px;
+      margin-bottom: 0;
+    }
+  }
+}
+
+// ─── Input sizes ────────────────────────────────────────────────────────────
+.pte-input {
+  &--sm {
+    input, select {
+      padding: var(--pte-space-1) var(--pte-space-2);
+      font-size: var(--pte-font-size-xs);
+    }
+  }
+
+  &--lg {
+    input, select {
+      padding: var(--pte-space-3) var(--pte-space-4);
+      font-size: var(--pte-font-size-base);
+    }
+  }
+}
+
+// ─── Checkbox / Radio ──────────────────────────────────────────────────────
+.pte-checkbox,
+.pte-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pte-space-2);
+  cursor: pointer;
+  font-size: var(--pte-font-size-sm);
+  color: var(--pte-text-primary);
+  user-select: none;
+
+  input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--pte-primary-600);
+    cursor: pointer;
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ─── Toggle Switch ─────────────────────────────────────────────────────────
+.pte-toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  &__slider {
+    position: absolute;
+    inset: 0;
+    background: var(--pte-gray-300);
+    border-radius: var(--pte-radius-full);
+    @include transition(background-color);
+    cursor: pointer;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: var(--pte-radius-full);
+      @include transition(transform);
+    }
+  }
+
+  input:checked + &__slider {
+    background: var(--pte-primary-600);
+
+    &::before {
+      transform: translateX(20px);
+    }
+  }
+
+  input:disabled + &__slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

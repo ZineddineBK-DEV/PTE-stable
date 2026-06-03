@@ -1,0 +1,147 @@
+// =============================================================================
+// PTE Design System — Badges & Status
+// =============================================================================
+
+.pte-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pte-space-1);
+  padding: 2px var(--pte-space-2);
+  font-size: var(--pte-font-size-2xs);
+  font-weight: var(--pte-font-weight-semibold);
+  line-height: 1.5;
+  border-radius: var(--pte-radius-full);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+
+  // ─── Dot indicator ─────────────────────────────────────────────────────
+  &--dot::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: var(--pte-radius-full);
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  // ─── Variants ──────────────────────────────────────────────────────────
+  &--primary {
+    background: var(--pte-primary-100);
+    color: var(--pte-primary-700);
+  }
+
+  &--success {
+    background: var(--pte-success-100);
+    color: var(--pte-success-700);
+  }
+
+  &--warning {
+    background: var(--pte-warning-100);
+    color: var(--pte-warning-700);
+  }
+
+  &--danger {
+    background: var(--pte-danger-100);
+    color: var(--pte-danger-700);
+  }
+
+  &--info {
+    background: var(--pte-info-100);
+    color: var(--pte-info-700);
+  }
+
+  &--neutral {
+    background: var(--pte-gray-100);
+    color: var(--pte-gray-700);
+  }
+
+  // ─── Sizes ─────────────────────────────────────────────────────────────
+  &--sm {
+    padding: 1px var(--pte-space-1);
+    font-size: 10px;
+  }
+
+  &--lg {
+    padding: var(--pte-space-1) var(--pte-space-3);
+    font-size: var(--pte-font-size-xs);
+  }
+
+  // ─── Solid variants (stronger) ─────────────────────────────────────────
+  &--solid-primary {
+    background: var(--pte-primary-600);
+    color: white;
+  }
+
+  &--solid-success {
+    background: var(--pte-success-600);
+    color: white;
+  }
+
+  &--solid-warning {
+    background: var(--pte-warning-500);
+    color: white;
+  }
+
+  &--solid-danger {
+    background: var(--pte-danger-600);
+    color: white;
+  }
+}
+
+// ─── Status Indicator (for user status) ─────────────────────────────────────
+.pte-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pte-space-2);
+  font-size: var(--pte-font-size-xs);
+  font-weight: var(--pte-font-weight-medium);
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--pte-radius-full);
+    flex-shrink: 0;
+  }
+
+  &--active &__dot { background: var(--pte-success-500); }
+  &--inactive &__dot { background: var(--pte-gray-400); }
+  &--pending &__dot { background: var(--pte-warning-500); }
+  &--away &__dot { background: var(--pte-danger-500); }
+
+  &--active { color: var(--pte-success-600); }
+  &--inactive { color: var(--pte-gray-500); }
+  &--pending { color: var(--pte-warning-600); }
+  &--away { color: var(--pte-danger-600); }
+}
+
+// ─── Role Badge ──────────────────────────────────────────────────────────────
+.pte-role {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pte-space-1);
+  padding: 2px var(--pte-space-2);
+  font-size: var(--pte-font-size-2xs);
+  font-weight: var(--pte-font-weight-semibold);
+  border-radius: var(--pte-radius-sm);
+  white-space: nowrap;
+
+  &--admin {
+    background: var(--pte-danger-100);
+    color: var(--pte-danger-700);
+  }
+
+  &--assistant {
+    background: var(--pte-info-100);
+    color: var(--pte-info-700);
+  }
+
+  &--lab-manager {
+    background: var(--pte-warning-100);
+    color: var(--pte-warning-700);
+  }
+
+  &--engineer {
+    background: var(--pte-primary-100);
+    color: var(--pte-primary-700);
+  }
+}

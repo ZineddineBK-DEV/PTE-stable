@@ -1,0 +1,155 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — Profile / CV Builder (Redesigned)                                -->
+<!-- Controller: user, cv, skills, educations, experiences, certifications,  -->
+<!-- projects, languages, forms, picsUrl, environment                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span><span class="current">My Profile</span>
+      </div>
+      <h1 class="pte-page__header-title">My Profile</h1>
+    </div>
+    <div class="pte-page__header-actions">
+      <button class="pte-btn pte-btn--secondary">Download CV</button>
+    </div>
+  </div>
+
+  <!-- Profile Header Card -->
+  <div class="pte-card mb-6" *ngIf="user">
+    <div class="pte-card__body" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+      <img [src]="picsUrl + user.image" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--pte-primary-100);" onerror="this.src='assets/images/user.png'">
+      <div style="flex:1;">
+        <h2 style="margin:0;font-size:24px;font-weight:700;">{{ user.firstName }} {{ user.lastName }}</h2>
+        <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;">
+          <span class="pte-badge pte-badge--neutral">📧 {{ user.email }}</span>
+          <span class="pte-badge pte-badge--neutral" *ngIf="user.phone">📱 {{ user.phone }}</span>
+          <span class="pte-badge pte-badge--neutral" *ngIf="user.departement">🏢 {{ user.departement }}</span>
+          <span class="pte-role" [ngClass]="'pte-role--' + (user.roles?.[0] || 'engineer')">{{ user.roles?.[0] || 'User' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Details Grid -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="mb-6">
+    <!-- Personal Info -->
+    <div class="pte-card">
+      <div class="pte-card__header">
+        <h3 class="pte-card__header-title">Personal Information</h3>
+      </div>
+      <div class="pte-card__body" *ngIf="user">
+        <div class="profile-field"><span class="profile-label">Nationality</span><span class="profile-value">{{ user.nationality || '—' }}</span></div>
+        <div class="profile-field"><span class="profile-label">Birth Date</span><span class="profile-value">{{ user.birthDate | date:'mediumDate' }}</span></div>
+        <div class="profile-field"><span class="profile-label">Gender</span><span class="profile-value">{{ user.gender || '—' }}</span></div>
+        <div class="profile-field"><span class="profile-label">Hiring Date</span><span class="profile-value">{{ user.hiringDate | date:'mediumDate' }}</span></div>
+        <div class="profile-field"><span class="profile-label">Experience</span><span class="profile-value">{{ user.experience || 0 }} years</span></div>
+        <div class="profile-field"><span class="profile-label">Address</span><span class="profile-value">{{ user.address || '—' }}</span></div>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="pte-card">
+      <div class="pte-card__header">
+        <h3 class="pte-card__header-title">Professional Summary</h3>
+        <div class="pte-card__header-actions">
+          <button class="pte-btn pte-btn--ghost pte-btn--sm">Edit</button>
+        </div>
+      </div>
+      <div class="pte-card__body">
+        <p style="color:var(--pte-text-secondary);font-size:14px;line-height:1.7;" *ngIf="user?.bio">{{ user.bio }}</p>
+        <p style="color:var(--pte-text-tertiary);font-size:14px;" *ngIf="!user?.bio">No summary added yet. Click Edit to add your professional summary.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skills -->
+  <div class="pte-card mb-6">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">Skills</h3>
+      <div class="pte-card__header-actions">
+        <button class="pte-btn pte-btn--sm pte-btn--primary">+ Add Skill</button>
+      </div>
+    </div>
+    <div class="pte-card__body">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;" *ngIf="cv?.skills?.length > 0">
+        <span class="pte-badge pte-badge--primary" *ngFor="let skill of cv.skills" style="padding:6px 14px;font-size:13px;">{{ skill.name || skill }}</span>
+      </div>
+      <p *ngIf="!cv?.skills || cv.skills.length === 0" style="color:var(--pte-text-tertiary);font-size:14px;">No skills added yet</p>
+    </div>
+  </div>
+
+  <!-- Education & Experience -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="mb-6">
+    <!-- Education -->
+    <div class="pte-card">
+      <div class="pte-card__header">
+        <h3 class="pte-card__header-title">Education</h3>
+        <button class="pte-btn pte-btn--sm pte-btn--primary">+ Add</button>
+      </div>
+      <div class="pte-card__body">
+        <div *ngFor="let edu of cv?.educations" style="padding:12px 0;border-bottom:1px solid var(--pte-border-color);">
+          <div style="font-weight:600;font-size:14px;">{{ edu.degree || edu.title }}</div>
+          <div style="font-size:13px;color:var(--pte-text-secondary);">{{ edu.school || edu.institution }}</div>
+          <div style="font-size:12px;color:var(--pte-text-tertiary);">{{ edu.startYear || '' }} - {{ edu.endYear || '' }}</div>
+        </div>
+        <p *ngIf="!cv?.educations || cv.educations.length === 0" style="color:var(--pte-text-tertiary);font-size:14px;">No education entries</p>
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div class="pte-card">
+      <div class="pte-card__header">
+        <h3 class="pte-card__header-title">Experience</h3>
+        <button class="pte-btn pte-btn--sm pte-btn--primary">+ Add</button>
+      </div>
+      <div class="pte-card__body">
+        <div *ngFor="let exp of cv?.experiences" style="padding:12px 0;border-bottom:1px solid var(--pte-border-color);">
+          <div style="font-weight:600;font-size:14px;">{{ exp.title || exp.position }}</div>
+          <div style="font-size:13px;color:var(--pte-text-secondary);">{{ exp.company }}</div>
+          <div style="font-size:12px;color:var(--pte-text-tertiary);">{{ exp.startDate | date:'MMM yyyy' }} - {{ exp.endDate | date:'MMM yyyy' || 'Present' }}</div>
+        </div>
+        <p *ngIf="!cv?.experiences || cv.experiences.length === 0" style="color:var(--pte-text-tertiary);font-size:14px;">No experience entries</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projects & Certifications -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="mb-6">
+    <div class="pte-card">
+      <div class="pte-card__header">
+        <h3 class="pte-card__header-title">Projects</h3>
+        <button class="pte-btn pte-btn--sm pte-btn--primary">+ Add</button>
+      </div>
+      <div class="pte-card__body">
+        <div *ngFor="let proj of cv?.projects" style="padding:12px 0;border-bottom:1px solid var(--pte-border-color);">
+          <div style="font-weight:600;font-size:14px;">{{ proj.name || proj.title }}</div>
+          <div style="font-size:13px;color:var(--pte-text-secondary);">{{ proj.description }}</div>
+        </div>
+        <p *ngIf="!cv?.projects || cv.projects.length === 0" style="color:var(--pte-text-tertiary);font-size:14px;">No projects added</p>
+      </div>
+    </div>
+    <div class="pte-card">
+      <div class="pte-card__header">
+        <h3 class="pte-card__header-title">Certifications</h3>
+        <button class="pte-btn pte-btn--sm pte-btn--primary">+ Add</button>
+      </div>
+      <div class="pte-card__body">
+        <div *ngFor="let cert of cv?.certifications" style="padding:12px 0;border-bottom:1px solid var(--pte-border-color);">
+          <div style="font-weight:600;font-size:14px;">{{ cert.name || cert.title }}</div>
+          <div style="font-size:13px;color:var(--pte-text-secondary);">{{ cert.issuer || cert.organization }}</div>
+        </div>
+        <p *ngIf="!cv?.certifications || cv.certifications.length === 0" style="color:var(--pte-text-tertiary);font-size:14px;">No certifications added</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .profile-field { display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--pte-border-color); }
+  .profile-label { font-size:14px;color:var(--pte-text-secondary); }
+  .profile-value { font-size:14px;font-weight:500;color:var(--pte-text-primary); }
+  @media(max-width:768px) { [style*="grid-template-columns: 1fr 1fr"] { grid-template-columns:1fr !important; } }
+</style>

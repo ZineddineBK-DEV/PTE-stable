@@ -1,0 +1,83 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — My Leave Requests (Redesigned)                                   -->
+<!-- Controller: rows, loadingIndicator, statusFilter, user                  -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Leave</span><span class="separator">/</span><span class="current">My Requests</span>
+      </div>
+      <h1 class="pte-page__header-title">My Leave Requests</h1>
+    </div>
+    <div class="pte-page__header-actions">
+      <a routerLink="/dashboard/leave" class="pte-btn pte-btn--primary">+ New Request</a>
+    </div>
+  </div>
+
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">Leave History</h3>
+    </div>
+    <div class="pte-card__body">
+      <!-- Toolbar -->
+      <div class="pte-page__toolbar">
+        <div class="pte-page__toolbar-left">
+          <select class="pte-page__toolbar-filter" [(ngModel)]="statusFilter">
+            <option value="all">All Status</option>
+            <option value="Approved">Approved</option>
+            <option value="Pending">Pending</option>
+            <option value="Declined">Declined</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="loadingIndicator" class="flex-center" style="padding:48px;">
+        <div class="pte-skeleton pte-skeleton--circle" style="width:48px;height:48px;"></div>
+      </div>
+
+      <!-- Table -->
+      <div *ngIf="!loadingIndicator" class="pte-table-wrapper">
+        <table class="pte-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Duration</th>
+              <th>Status</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let leave of filteredLeaves">
+              <td style="font-weight:500;">{{ leave.type || 'Leave' }}</td>
+              <td style="font-size:13px;">{{ leave.startDate | date:'mediumDate' }}</td>
+              <td style="font-size:13px;">{{ leave.endDate | date:'mediumDate' }}</td>
+              <td>{{ leave.duration || '—' }} days</td>
+              <td>
+                <span class="pte-badge" [ngClass]="{
+                  'pte-badge--success': leave.status === 'Approved',
+                  'pte-badge--warning': leave.status?.includes('Pending'),
+                  'pte-badge--danger': leave.status === 'Declined'
+                }">{{ leave.status }}</span>
+              </td>
+              <td style="font-size:13px;color:var(--pte-text-secondary);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ leave.reason || '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty -->
+      <div *ngIf="!loadingIndicator && (!rows || rows.length === 0)" class="pte-empty-state">
+        <div class="pte-empty-state__icon">🏖️</div>
+        <div class="pte-empty-state__title">No leave requests yet</div>
+        <div class="pte-empty-state__description">You haven't submitted any leave requests</div>
+        <a routerLink="/dashboard/leave" class="pte-btn pte-btn--primary">Create Leave Request</a>
+      </div>
+    </div>
+  </div>
+</div>

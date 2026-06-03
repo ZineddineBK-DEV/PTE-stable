@@ -1,0 +1,86 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — My Lab Requests (Redesigned)                                     -->
+<!-- Controller: rows, loadingIndicator, statusFilter                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Labs</span><span class="separator">/</span><span class="current">My Bookings</span>
+      </div>
+      <h1 class="pte-page__header-title">My Lab Bookings</h1>
+    </div>
+    <div class="pte-page__header-actions">
+      <a routerLink="/dashboard/virt-env" class="pte-btn pte-btn--primary">+ Book New Lab</a>
+    </div>
+  </div>
+
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">Booking History</h3>
+    </div>
+    <div class="pte-card__body">
+      <div class="pte-page__toolbar">
+        <div class="pte-page__toolbar-left">
+          <select class="pte-page__toolbar-filter">
+            <option value="all">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Pending">Pending</option>
+            <option value="Declined">Declined</option>
+            <option value="Expired">Expired</option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngIf="loadingIndicator" class="flex-center" style="padding:48px;">
+        <div class="pte-skeleton pte-skeleton--circle" style="width:48px;height:48px;"></div>
+      </div>
+
+      <div *ngIf="!loadingIndicator" class="pte-table-wrapper">
+        <table class="pte-table">
+          <thead>
+            <tr>
+              <th>Lab Ref</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of rows">
+              <td style="font-weight:600;font-size:13px;">{{ row.code || '—' }}</td>
+              <td>{{ row.firstName }} {{ row.lastName }}</td>
+              <td style="font-size:13px;color:var(--pte-text-secondary);">{{ row.email }}</td>
+              <td><span class="pte-badge pte-badge--neutral">{{ row.departement }}</span></td>
+              <td style="font-size:13px;">{{ row.start | date:'dd/MM/yyyy' }}</td>
+              <td style="font-size:13px;">{{ row.end | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span class="pte-badge" [ngClass]="{
+                  'pte-badge--success': row.status === 'Active',
+                  'pte-badge--warning': row.status === 'Pending',
+                  'pte-badge--danger': row.status === 'Declined' || row.status === 'Expired'
+                }">{{ row.status }}</span>
+              </td>
+              <td>
+                <button class="pte-btn pte-btn--sm pte-btn--ghost">View</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!loadingIndicator && (!rows || rows.length === 0)" class="pte-empty-state">
+        <div class="pte-empty-state__icon">🔬</div>
+        <div class="pte-empty-state__title">No lab bookings</div>
+        <div class="pte-empty-state__description">You haven't made any lab booking requests yet</div>
+        <a routerLink="/dashboard/virt-env" class="pte-btn pte-btn--primary">Book a Lab</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -128,8 +128,8 @@ module.exports.login = async function (req, res, next) {
         email: fetchedUser.email,
         id: fetchedUser._id,
       },
-      "secret_this_should_be_longer",
-      { expiresIn: "2h" }
+      process.env.JWT_SECRET || "fallback_dev_secret_change_in_production",
+      { expiresIn: process.env.JWT_EXPIRES_IN || "2h" }
     );
     return res.status(200).json({
       token: token,

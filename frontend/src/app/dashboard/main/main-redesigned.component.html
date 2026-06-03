@@ -1,0 +1,263 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE Dashboard — Home Page (Redesigned)                                  -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<!-- Page Header -->
+<div class="pte-content__header">
+  <h1 class="pte-content__header-title">Dashboard</h1>
+  <p class="pte-content__header-subtitle">
+    Welcome back, {{ user?.firstName || 'User' }} 👋
+  </p>
+</div>
+
+<!-- ─── KPI Cards Row ──────────────────────────────────────────────────── -->
+<div class="pte-grid pte-grid--4 mb-6">
+  <!-- Users KPI -->
+  <div class="pte-card pte-card--kpi">
+    <div class="pte-card__body">
+      <div>
+        <div class="pte-kpi__value">{{ userCount }}</div>
+        <div class="pte-kpi__label">Total Users</div>
+      </div>
+      <div class="pte-kpi__icon pte-kpi__icon--primary">👥</div>
+    </div>
+    <div class="pte-card__footer" style="padding: 8px 24px;">
+      <a routerLink="/dashboard/userList" class="pte-btn pte-btn--ghost pte-btn--sm">
+        View all →
+      </a>
+    </div>
+  </div>
+
+  <!-- Vehicles KPI -->
+  <div class="pte-card pte-card--kpi">
+    <div class="pte-card__body">
+      <div>
+        <div class="pte-kpi__value">{{ vehicleCount }}</div>
+        <div class="pte-kpi__label">Vehicles</div>
+      </div>
+      <div class="pte-kpi__icon pte-kpi__icon--success">🚗</div>
+    </div>
+    <div class="pte-card__footer" style="padding: 8px 24px;">
+      <a
+        *ngIf="userRoles === 'ADMIN' || userRoles === 'ASSISTANT'"
+        routerLink="/dashboard/vehicle"
+        class="pte-btn pte-btn--ghost pte-btn--sm"
+      >
+        View all →
+      </a>
+      <span *ngIf="userRoles !== 'ADMIN' && userRoles !== 'ASSISTANT'" class="text-tertiary text-sm">Managed by assistant</span>
+    </div>
+  </div>
+
+  <!-- Rooms KPI -->
+  <div class="pte-card pte-card--kpi">
+    <div class="pte-card__body">
+      <div>
+        <div class="pte-kpi__value">{{ roomCount }}</div>
+        <div class="pte-kpi__label">Rooms</div>
+      </div>
+      <div class="pte-kpi__icon pte-kpi__icon--info">🏠</div>
+    </div>
+    <div class="pte-card__footer" style="padding: 8px 24px;">
+      <a routerLink="/dashboard/room" class="pte-btn pte-btn--ghost pte-btn--sm">
+        View all →
+      </a>
+    </div>
+  </div>
+
+  <!-- Posts KPI -->
+  <div class="pte-card pte-card--kpi">
+    <div class="pte-card__body">
+      <div>
+        <div class="pte-kpi__value">{{ approvedCount }}</div>
+        <div class="pte-kpi__label">Approved Posts</div>
+      </div>
+      <div class="pte-kpi__icon pte-kpi__icon--warning">📰</div>
+    </div>
+    <div class="pte-card__footer" style="padding: 8px 24px;">
+      <a routerLink="/allnews" class="pte-btn pte-btn--ghost pte-btn--sm">
+        View all →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Extended KPI Row (Admin/Assistant only) ───────────────────────── -->
+<div class="pte-grid pte-grid--3 mb-6" *ngIf="userRoles === 'ADMIN' || userRoles === 'ASSISTANT'">
+  <div class="pte-card pte-card--kpi">
+    <div class="pte-card__body">
+      <div>
+        <div class="pte-kpi__value">{{ allSelectedInterns }}</div>
+        <div class="pte-kpi__label">Selected Interns</div>
+      </div>
+      <div class="pte-kpi__icon pte-kpi__icon--primary">🎓</div>
+    </div>
+  </div>
+  <div class="pte-card pte-card--kpi">
+    <div class="pte-card__body">
+      <div>
+        <div class="pte-kpi__value">{{ allInternshipOffers }}</div>
+        <div class="pte-kpi__label">Internship Offers</div>
+      </div>
+      <div class="pte-kpi__icon pte-kpi__icon--success">💼</div>
+    </div>
+  </div>
+  <div class="pte-card pte-card--kpi">
+    <div class="pte-card__body">
+      <div>
+        <div class="pte-kpi__value">{{ allInternshipLabs }}</div>
+        <div class="pte-kpi__label">Internship Labs</div>
+      </div>
+      <div class="pte-kpi__icon pte-kpi__icon--info">🔬</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Stats Tabs Section ─────────────────────────────────────────────── -->
+<div class="pte-card mb-6">
+  <div class="pte-card__header">
+    <h3 class="pte-card__header-title">Statistics</h3>
+  </div>
+  <div class="pte-card__body">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs" style="border-bottom: 1px solid var(--pte-border-color); margin-bottom: 24px;">
+      <li [ngbNavItem]="1" *ngIf="canAccessTab('labs')">
+        <a ngbNavLink>☁️ Labs</a>
+        <ng-template ngbNavContent>
+          <app-labs-kpis></app-labs-kpis>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2" *ngIf="canAccessTab('missions')">
+        <a ngbNavLink>🔧 Missions</a>
+        <ng-template ngbNavContent>
+          <app-mission-kpi></app-mission-kpi>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="3" *ngIf="canAccessTab('leaves')">
+        <a ngbNavLink>🏖️ Leaves</a>
+        <ng-template ngbNavContent>
+          <app-leave-kpi></app-leave-kpi>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="4" *ngIf="canAccessTab('my-leaves')">
+        <a ngbNavLink>📋 My Leaves</a>
+        <ng-template ngbNavContent>
+          <app-my-leave-kpi></app-my-leave-kpi>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="5" *ngIf="canAccessTab('my-missions')">
+        <a ngbNavLink>📊 My Missions</a>
+        <ng-template ngbNavContent>
+          <app-my-mission-kpi></app-my-mission-kpi>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="nav"></div>
+  </div>
+</div>
+
+<!-- ─── Posts & Leave Stats Row ────────────────────────────────────────── -->
+<div class="pte-grid pte-grid--2 mb-6" *ngIf="user">
+  <!-- Posts Statistics -->
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">
+        {{ userRoles === 'ADMIN' ? 'All Posts' : user.firstName + "'s Posts" }}
+      </h3>
+      <div class="pte-card__header-actions">
+        <a routerLink="/allnews" class="pte-btn pte-btn--ghost pte-btn--sm">View All</a>
+      </div>
+    </div>
+    <div class="pte-card__body">
+      <div class="stat-row">
+        <div class="stat-item">
+          <span class="pte-badge pte-badge--success pte-badge--dot">Approved</span>
+          <strong>{{ userRoles === 'ADMIN' ? approvedCount : MyApprovedPostsCount }}</strong>
+        </div>
+        <div class="stat-item">
+          <span class="pte-badge pte-badge--danger pte-badge--dot">Declined</span>
+          <strong>{{ userRoles === 'ADMIN' ? declinedCount : MyDeclinedPostsCount }}</strong>
+        </div>
+        <div class="stat-item">
+          <span class="pte-badge pte-badge--warning pte-badge--dot">Pending</span>
+          <strong>{{ userRoles === 'ADMIN' ? pendingCount : MyPendingPostsCount }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leave Statistics -->
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">
+        {{ userRoles === 'ADMIN' ? 'All Leaves' : user.firstName + "'s Leaves" }}
+      </h3>
+      <div class="pte-card__header-actions">
+        <a routerLink="/dashboard/myLeave" class="pte-btn pte-btn--ghost pte-btn--sm">View All</a>
+      </div>
+    </div>
+    <div class="pte-card__body">
+      <div class="stat-row">
+        <div class="stat-item">
+          <span class="pte-badge pte-badge--primary pte-badge--dot">Total</span>
+          <strong>{{ userRoles === 'ADMIN' ? allLeave : MyLeave }}</strong>
+        </div>
+        <div class="stat-item">
+          <span class="pte-badge pte-badge--warning pte-badge--dot">Pending</span>
+          <strong>{{ userRoles === 'ADMIN' ? allPendingLeave : MyPendingLeave }}</strong>
+        </div>
+        <div class="stat-item">
+          <span class="pte-badge pte-badge--success pte-badge--dot">Accepted</span>
+          <strong>{{ userRoles === 'ADMIN' ? allAcceptedLeave : MyAcceptedLeave }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Lab Stats (non-Admin) ──────────────────────────────────────────── -->
+<div class="pte-card mb-6" *ngIf="user && userRoles !== 'ADMIN' && userRoles !== 'ASSISTANT'">
+  <div class="pte-card__header">
+    <h3 class="pte-card__header-title">
+      {{ userRoles === 'LAB-MANAGER' ? 'All Lab Requests' : user.firstName + "'s Labs" }}
+    </h3>
+    <div class="pte-card__header-actions">
+      <a routerLink="/dashboard/myRequest" class="pte-btn pte-btn--ghost pte-btn--sm">View All</a>
+    </div>
+  </div>
+  <div class="pte-card__body">
+    <div class="stat-row">
+      <div class="stat-item">
+        <span class="pte-badge pte-badge--primary pte-badge--dot">Total</span>
+        <strong>{{ labRequestCount }}</strong>
+      </div>
+      <div class="stat-item">
+        <span class="pte-badge pte-badge--warning pte-badge--dot">Pending</span>
+        <strong>{{ MyPendingLabs }}</strong>
+      </div>
+      <div class="stat-item">
+        <span class="pte-badge pte-badge--success pte-badge--dot">Active</span>
+        <strong>{{ MyAcceptedLabs }}</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Custom Styles ──────────────────────────────────────────────────── -->
+<style>
+  .stat-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+  }
+  .stat-item strong {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--pte-text-primary);
+  }
+</style>

@@ -1,0 +1,33 @@
+// =============================================================================
+// PTE Design System — SCSS Functions
+// =============================================================================
+
+// Get a design token value
+@function token($name) {
+  @return var(--pte-#{$name});
+}
+
+// Map shorthand aliases
+@function color($name) {
+  @return var(--pte-#{$name});
+}
+
+@function space($size) {
+  @return var(--pte-space-#{$size});
+}
+
+@function radius($size) {
+  @return var(--pte-radius-#{$size});
+}
+
+@function shadow($size) {
+  @return var(--pte-shadow-#{$size});
+}
+
+@function font-size($size) {
+  @return var(--pte-font-size-#{$size});
+}
+
+@function z($layer) {
+  @return var(--pte-z-#{$layer});
+}

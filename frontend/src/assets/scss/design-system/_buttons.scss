@@ -1,0 +1,186 @@
+// =============================================================================
+// PTE Design System — Buttons
+// =============================================================================
+
+// ─── Base Button ─────────────────────────────────────────────────────────────
+.pte-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pte-space-2);
+  padding: var(--pte-space-2) var(--pte-space-4);
+  font-family: var(--pte-font-family);
+  font-size: var(--pte-font-size-sm);
+  font-weight: var(--pte-font-weight-medium);
+  line-height: 1.5;
+  border-radius: var(--pte-radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  @include transition(all);
+  @include focus-ring;
+
+  &:disabled,
+  &.pte-btn--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Icon inside button
+  i, [class*="icon-"] {
+    font-size: 1.1em;
+  }
+
+  // ─── Sizes ──────────────────────────────────────────────────────────────
+  &--xs {
+    padding: var(--pte-space-1) var(--pte-space-2);
+    font-size: var(--pte-font-size-xs);
+    border-radius: var(--pte-radius-sm);
+  }
+
+  &--sm {
+    padding: var(--pte-space-1) var(--pte-space-3);
+    font-size: var(--pte-font-size-xs);
+  }
+
+  &--lg {
+    padding: var(--pte-space-3) var(--pte-space-6);
+    font-size: var(--pte-font-size-base);
+  }
+
+  &--xl {
+    padding: var(--pte-space-4) var(--pte-space-8);
+    font-size: var(--pte-font-size-lg);
+  }
+
+  // ─── Variants ───────────────────────────────────────────────────────────
+  &--primary {
+    background: var(--pte-primary-600);
+    color: white;
+    border-color: var(--pte-primary-600);
+
+    &:hover {
+      background: var(--pte-primary-700);
+      border-color: var(--pte-primary-700);
+    }
+    &:active {
+      background: var(--pte-primary-800);
+      border-color: var(--pte-primary-800);
+    }
+  }
+
+  &--secondary {
+    background: var(--pte-gray-100);
+    color: var(--pte-text-primary);
+    border-color: var(--pte-border-color);
+
+    &:hover {
+      background: var(--pte-gray-200);
+      border-color: var(--pte-border-color-hover);
+    }
+    &:active {
+      background: var(--pte-gray-300);
+    }
+  }
+
+  &--outline {
+    background: transparent;
+    color: var(--pte-primary-600);
+    border-color: var(--pte-primary-600);
+
+    &:hover {
+      background: var(--pte-primary-50);
+    }
+    &:active {
+      background: var(--pte-primary-100);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--pte-text-secondary);
+    border-color: transparent;
+
+    &:hover {
+      background: var(--pte-gray-100);
+      color: var(--pte-text-primary);
+    }
+    &:active {
+      background: var(--pte-gray-200);
+    }
+  }
+
+  &--danger {
+    background: var(--pte-danger-600);
+    color: white;
+    border-color: var(--pte-danger-600);
+
+    &:hover {
+      background: var(--pte-danger-700);
+      border-color: var(--pte-danger-700);
+    }
+  }
+
+  &--success {
+    background: var(--pte-success-600);
+    color: white;
+    border-color: var(--pte-success-600);
+
+    &:hover {
+      background: var(--pte-success-700);
+      border-color: var(--pte-success-700);
+    }
+  }
+
+  &--warning {
+    background: var(--pte-warning-500);
+    color: white;
+    border-color: var(--pte-warning-500);
+
+    &:hover {
+      background: var(--pte-warning-600);
+      border-color: var(--pte-warning-600);
+    }
+  }
+
+  // ─── Icon only ──────────────────────────────────────────────────────────
+  &--icon {
+    padding: var(--pte-space-2);
+    border-radius: var(--pte-radius-md);
+
+    &.pte-btn--sm { padding: var(--pte-space-1); }
+    &.pte-btn--lg { padding: var(--pte-space-3); }
+  }
+
+  // ─── Loading state ─────────────────────────────────────────────────────
+  &--loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: var(--pte-radius-full);
+      animation: pte-spin 0.6s linear infinite;
+    }
+
+    &.pte-btn--primary::after,
+    &.pte-btn--danger::after,
+    &.pte-btn--success::after {
+      border-color: rgba(255, 255, 255, 0.3);
+      border-right-color: transparent;
+    }
+  }
+
+  // ─── Block (full width) ────────────────────────────────────────────────
+  &--block {
+    width: 100%;
+  }
+}

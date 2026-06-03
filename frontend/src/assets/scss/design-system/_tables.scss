@@ -1,0 +1,193 @@
+// =============================================================================
+// PTE Design System — Tables
+// =============================================================================
+
+.pte-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  @include custom-scrollbar(6px);
+}
+
+.pte-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--pte-font-size-sm);
+
+  // ─── Header ────────────────────────────────────────────────────────────
+  thead {
+    th {
+      padding: var(--pte-space-3) var(--pte-space-4);
+      text-align: left;
+      font-weight: var(--pte-font-weight-semibold);
+      font-size: var(--pte-font-size-xs);
+      color: var(--pte-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: var(--pte-letter-spacing-wide);
+      background: var(--pte-bg-tertiary);
+      border-bottom: 1px solid var(--pte-border-color);
+      white-space: nowrap;
+      user-select: none;
+
+      &.sortable {
+        cursor: pointer;
+
+        &:hover {
+          color: var(--pte-text-primary);
+        }
+
+        &.sorted {
+          color: var(--pte-primary-600);
+        }
+      }
+    }
+  }
+
+  // ─── Body ──────────────────────────────────────────────────────────────
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--pte-border-color);
+      @include transition(background-color);
+
+      &:hover {
+        background: var(--pte-gray-50);
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    td {
+      padding: var(--pte-space-3) var(--pte-space-4);
+      color: var(--pte-text-primary);
+      vertical-align: middle;
+    }
+  }
+
+  // ─── Striped ───────────────────────────────────────────────────────────
+  &--striped tbody tr:nth-child(even) {
+    background: var(--pte-gray-50);
+
+    &:hover {
+      background: var(--pte-gray-100);
+    }
+  }
+
+  // ─── Compact ───────────────────────────────────────────────────────────
+  &--compact {
+    thead th { padding: var(--pte-space-2) var(--pte-space-3); }
+    tbody td { padding: var(--pte-space-2) var(--pte-space-3); }
+  }
+
+  // ─── Actions column ────────────────────────────────────────────────────
+  .table-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-1);
+    justify-content: flex-end;
+  }
+}
+
+// ─── Table Toolbar ──────────────────────────────────────────────────────────
+.pte-table-toolbar {
+  @include flex-between;
+  padding: var(--pte-space-4) 0;
+  gap: var(--pte-space-4);
+  flex-wrap: wrap;
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-3);
+    flex-wrap: wrap;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-3);
+  }
+
+  &__search {
+    position: relative;
+
+    input {
+      padding: var(--pte-space-2) var(--pte-space-4);
+      padding-left: var(--pte-space-10);
+      border: 1px solid var(--pte-border-color);
+      border-radius: var(--pte-radius-md);
+      font-size: var(--pte-font-size-sm);
+      background: var(--pte-bg-secondary);
+      color: var(--pte-text-primary);
+      width: 260px;
+      @include transition(border-color);
+      @include focus-ring;
+
+      &::placeholder {
+        color: var(--pte-text-tertiary);
+      }
+
+      &:focus {
+        border-color: var(--pte-border-color-focus);
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      left: var(--pte-space-3);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--pte-text-tertiary);
+      font-size: var(--pte-font-size-sm);
+    }
+  }
+
+  &__count {
+    font-size: var(--pte-font-size-sm);
+    color: var(--pte-text-secondary);
+  }
+}
+
+// ─── Pagination ─────────────────────────────────────────────────────────────
+.pte-pagination {
+  @include flex-between;
+  padding: var(--pte-space-4) 0;
+
+  &__info {
+    font-size: var(--pte-font-size-sm);
+    color: var(--pte-text-secondary);
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--pte-space-1);
+
+    button {
+      @include flex-center;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--pte-radius-md);
+      font-size: var(--pte-font-size-sm);
+      color: var(--pte-text-secondary);
+      border: 1px solid transparent;
+      @include transition(all);
+
+      &:hover:not(:disabled) {
+        background: var(--pte-gray-100);
+        color: var(--pte-text-primary);
+      }
+
+      &.active {
+        background: var(--pte-primary-600);
+        color: white;
+        border-color: var(--pte-primary-600);
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

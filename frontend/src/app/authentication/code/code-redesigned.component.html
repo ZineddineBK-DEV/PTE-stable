@@ -1,0 +1,36 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE Auth — Code Validation (Redesigned)                                 -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-auth">
+  <div class="pte-auth__brand">
+    <div class="pte-auth__brand-logo">P</div>
+    <h1 class="pte-auth__brand-title">Verification</h1>
+    <p class="pte-auth__brand-subtitle">Enter the code we sent to your email.</p>
+  </div>
+
+  <div class="pte-auth__form">
+    <div class="pte-auth__card">
+      <h2 class="pte-auth__title">Enter Code</h2>
+      <p class="pte-auth__subtitle">Check your email for the verification code</p>
+
+      <form (ngSubmit)="onSubmit()" [formGroup]="codeSendForm">
+        <div class="pte-auth__field">
+          <label>Confirmation Code</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            <input type="text" formControlName="code" placeholder="Enter code" autofocus>
+          </div>
+        </div>
+
+        <button type="submit" class="pte-btn pte-btn--primary pte-auth__submit">
+          Verify Code
+        </button>
+      </form>
+
+      <p class="pte-auth__footer">
+        Didn't receive the code? <a routerLink="/authentication/forgot">Try again</a>
+      </p>
+    </div>
+  </div>
+</div>

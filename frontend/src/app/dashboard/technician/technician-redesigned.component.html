@@ -1,0 +1,37 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — Technician / Missions Calendar (Redesigned)                      -->
+<!-- Controller: calendarOptions, technicians, events                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Resources</span><span class="separator">/</span><span class="current">Missions</span>
+      </div>
+      <h1 class="pte-page__header-title">Mission Schedule</h1>
+      <p class="pte-page__header-subtitle">Plan and track technician assignments</p>
+    </div>
+  </div>
+
+  <div class="pte-card">
+    <div class="pte-card__body" style="padding:0;">
+      <div class="pte-page__calendar">
+        <!-- Tech List -->
+        <div class="pte-page__calendar-sidebar">
+          <h4 style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--pte-text-secondary);text-transform:uppercase;letter-spacing:0.5px;">Technicians</h4>
+          <div *ngFor="let t of technicians" class="resource-card" (click)="viewTechDetails(t)">
+            <div class="resource-card__name">{{ t.firstName }} {{ t.lastName }}</div>
+            <div class="resource-card__detail">{{ t.departement || '' }}</div>
+          </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="pte-page__calendar-main">
+          <full-calendar [options]="calendarOptions"></full-calendar>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

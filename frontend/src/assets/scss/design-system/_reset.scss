@@ -1,0 +1,90 @@
+// =============================================================================
+// PTE Design System — CSS Reset
+// =============================================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--pte-font-family);
+  font-size: var(--pte-font-size-base);
+  font-weight: var(--pte-font-weight-normal);
+  line-height: var(--pte-line-height-normal);
+  color: var(--pte-text-primary);
+  background-color: var(--pte-bg-primary);
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--pte-text-link);
+  text-decoration: none;
+  @include transition(color);
+
+  &:hover {
+    color: var(--pte-primary-700);
+    text-decoration: underline;
+  }
+}
+
+img,
+svg {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--pte-font-weight-semibold);
+  line-height: var(--pte-line-height-tight);
+  color: var(--pte-text-primary);
+}
+
+h1 { font-size: var(--pte-font-size-4xl); }
+h2 { font-size: var(--pte-font-size-3xl); }
+h3 { font-size: var(--pte-font-size-2xl); }
+h4 { font-size: var(--pte-font-size-xl); }
+h5 { font-size: var(--pte-font-size-lg); }
+h6 { font-size: var(--pte-font-size-base); }
+
+// Scrollbar
+body {
+  @include custom-scrollbar(8px);
+}
+
+// Selection
+::selection {
+  background-color: var(--pte-primary-100);
+  color: var(--pte-primary-900);
+}

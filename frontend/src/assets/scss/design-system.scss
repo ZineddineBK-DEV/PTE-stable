@@ -1,0 +1,101 @@
+// =============================================================================
+// PTE Design System — Main Entry Point
+// Load this file in angular.json → styles array
+// =============================================================================
+
+// ─── Design System Foundation ───────────────────────────────────────────────
+@import 'design-system/tokens';
+@import 'design-system/functions';
+@import 'design-system/mixins';
+@import 'design-system/reset';
+@import 'design-system/animations';
+
+// ─── Components ──────────────────────────────────────────────────────────────
+@import 'design-system/buttons';
+@import 'design-system/cards';
+@import 'design-system/tables';
+@import 'design-system/forms';
+@import 'design-system/modals';
+@import 'design-system/badges';
+@import 'design-system/auth';
+@import 'design-system/pages';
+
+// ─── Layout ──────────────────────────────────────────────────────────────────
+@import 'design-system/layout';
+
+// ─── Utility Classes ─────────────────────────────────────────────────────────
+
+// Flex utilities
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-center { @include flex-center; }
+.flex-between { @include flex-between; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.gap-1 { gap: var(--pte-space-1); }
+.gap-2 { gap: var(--pte-space-2); }
+.gap-3 { gap: var(--pte-space-3); }
+.gap-4 { gap: var(--pte-space-4); }
+.gap-6 { gap: var(--pte-space-6); }
+
+// Margin utilities
+.mt-2 { margin-top: var(--pte-space-2); }
+.mt-4 { margin-top: var(--pte-space-4); }
+.mt-6 { margin-top: var(--pte-space-6); }
+.mt-8 { margin-top: var(--pte-space-8); }
+.mb-2 { margin-bottom: var(--pte-space-2); }
+.mb-4 { margin-bottom: var(--pte-space-4); }
+.mb-6 { margin-bottom: var(--pte-space-6); }
+.ml-auto { margin-left: auto; }
+
+// Padding utilities
+.p-4 { padding: var(--pte-space-4); }
+.p-6 { padding: var(--pte-space-6); }
+.px-4 { padding-left: var(--pte-space-4); padding-right: var(--pte-space-4); }
+.px-6 { padding-left: var(--pte-space-6); padding-right: var(--pte-space-6); }
+.py-4 { padding-top: var(--pte-space-4); padding-bottom: var(--pte-space-4); }
+.py-6 { padding-top: var(--pte-space-6); padding-bottom: var(--pte-space-6); }
+
+// Text utilities
+.text-xs { font-size: var(--pte-font-size-xs); }
+.text-sm { font-size: var(--pte-font-size-sm); }
+.text-base { font-size: var(--pte-font-size-base); }
+.text-lg { font-size: var(--pte-font-size-lg); }
+.text-xl { font-size: var(--pte-font-size-xl); }
+.text-2xl { font-size: var(--pte-font-size-2xl); }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.font-medium { font-weight: var(--pte-font-weight-medium); }
+.font-semibold { font-weight: var(--pte-font-weight-semibold); }
+.font-bold { font-weight: var(--pte-font-weight-bold); }
+.text-primary { color: var(--pte-text-primary); }
+.text-secondary { color: var(--pte-text-secondary); }
+.text-tertiary { color: var(--pte-text-tertiary); }
+.text-success { color: var(--pte-success-600); }
+.text-danger { color: var(--pte-danger-600); }
+.text-warning { color: var(--pte-warning-600); }
+.text-truncate { @include truncate; }
+
+// Display
+.hidden { display: none !important; }
+.block { display: block; }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.overflow-hidden { overflow: hidden; }
+.relative { position: relative; }
+
+// Border radius
+.rounded { border-radius: var(--pte-radius-md); }
+.rounded-lg { border-radius: var(--pte-radius-lg); }
+.rounded-full { border-radius: var(--pte-radius-full); }
+
+// Visibility responsive
+@include respond-below('md') {
+  .hide-mobile { display: none !important; }
+}
+@include respond-above('md') {
+  .show-mobile-only { display: none !important; }
+}

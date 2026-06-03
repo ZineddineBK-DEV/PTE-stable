@@ -13,7 +13,8 @@ import { RightSidebarComponent } from './layout/right-sidebar/right-sidebar.comp
 import { AuthLayoutComponent } from './layout/app-layout/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from './layout/app-layout/main-layout/main-layout.component';
 import { FooterComponent } from './layout/footer/footer.component';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { NewLayoutComponent } from './layout/app-layout/new-layout/new-layout.component';
+import { LocationStrategy, HashLocationStrategy, PathLocationStrategy } from '@angular/common';
 import { ErrorInterceptor } from './core/interceptor/error.interceptor';
 import { JwtInterceptor } from './core/interceptor/jwt.interceptor';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -43,6 +44,7 @@ export function createTranslateLoader(http: HttpClient) {
     RightSidebarComponent,
     AuthLayoutComponent,
     MainLayoutComponent,
+    NewLayoutComponent,
     FooterComponent,
     
     

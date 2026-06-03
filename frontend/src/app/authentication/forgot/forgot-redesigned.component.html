@@ -1,0 +1,36 @@
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE Auth — Forgot Password (Redesigned)                                 -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="pte-auth">
+  <div class="pte-auth__brand">
+    <div class="pte-auth__brand-logo">P</div>
+    <h1 class="pte-auth__brand-title">PTE Platform</h1>
+    <p class="pte-auth__brand-subtitle">Reset your password to regain access.</p>
+  </div>
+
+  <div class="pte-auth__form">
+    <div class="pte-auth__card">
+      <h2 class="pte-auth__title">Forgot Password</h2>
+      <p class="pte-auth__subtitle">Enter your email and we'll send you a verification code</p>
+
+      <form (ngSubmit)="onSubmit()" [formGroup]="emailSendForm">
+        <div class="pte-auth__field">
+          <label>Email address</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input type="email" formControlName="email" placeholder="name@company.com" autofocus>
+          </div>
+        </div>
+
+        <button type="submit" class="pte-btn pte-btn--primary pte-auth__submit">
+          Send Verification Code
+        </button>
+      </form>
+
+      <p class="pte-auth__footer">
+        Remember your password? <a routerLink="/authentication/signin">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>
