@@ -4,6 +4,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 import { OffersComponent } from '../../offers/offers.component';
 import { CreateOfferComponent } from '../../offers/create-offer/create-offer.component';
@@ -22,7 +23,8 @@ const routes: Routes = [{ path: '', component: OffersComponent }];
   ],
   imports: [
     CommonModule, NgbModule, FormsModule, ReactiveFormsModule,
-    RouterModule.forChild(routes), ToastrModule.forChild(), OffersSharedModule,
+    RouterModule.forChild(routes), ToastrModule.forChild(),
+    NgApexchartsModule, OffersSharedModule,
   ],
   exports: [RouterModule],
 })

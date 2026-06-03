@@ -14,14 +14,14 @@ import { User } from 'src/app/core/models/user';
 })
 export class NewLayoutComponent implements OnInit, OnDestroy {
   readonly picsUrl = environment.PICSURL;
-  user: User;
+  user!: User;
   sidebarCollapsed = false;
   sidebarMobileOpen = false;
   currentRoute = '';
   isDark = false;
   userRoles: string[] = [];
 
-  private routerSub: Subscription;
+  private routerSub!: Subscription;
 
   constructor(
     private router: Router,
@@ -29,8 +29,8 @@ export class NewLayoutComponent implements OnInit, OnDestroy {
     private themeService: ThemeService
   ) {
     this.routerSub = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => {
         this.currentRoute = event.urlAfterRedirects;
         this.closeMobileSidebar();
       });
@@ -44,7 +44,9 @@ export class NewLayoutComponent implements OnInit, OnDestroy {
     this.authService.getUser().subscribe((user) => {
       this.user = user as User;
       if (this.user?.roles) {
-        this.userRoles = this.user.roles;
+        this.userRoles = Array.isArray(this.user.roles)
+          ? this.user.roles
+          : [this.user.roles];
       }
     });
 
@@ -62,7 +64,9 @@ export class NewLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.routerSub?.unsubscribe();
+    if (this.routerSub) {
+      this.routerSub.unsubscribe();
+    }
   }
 
   hasRole(role: string): boolean {

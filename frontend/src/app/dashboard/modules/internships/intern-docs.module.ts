@@ -12,7 +12,7 @@ const routes: Routes = [{ path: '', component: DocsComponent }];
 @NgModule({
   declarations: [DocsComponent],
   imports: [
-    CommonModule, FormsModule, ReactiveFormsModule,
+    CommonModule, NgbModule, FormsModule, ReactiveFormsModule,
     RouterModule.forChild(routes), ToastrModule.forChild(), NgxDropzoneModule,
   ],
   exports: [RouterModule],
