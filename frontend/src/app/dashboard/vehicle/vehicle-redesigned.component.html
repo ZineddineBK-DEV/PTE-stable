@@ -25,8 +25,8 @@
         <div class="pte-page__calendar-sidebar">
           <h4 style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--pte-text-secondary);text-transform:uppercase;letter-spacing:0.5px;">Vehicles</h4>
           <div *ngFor="let v of vehicles" class="resource-card">
-            <div class="resource-card__name">{{ v.name || v.brand }}</div>
-            <div class="resource-card__detail">{{ v.matricule || v.model || '' }}</div>
+      <div class="resource-card__name">{{ v.model || v.type }}</div>
+      <div class="resource-card__detail">{{ v.registration_number || '' }}</div>
           </div>
         </div>
 

@@ -32,7 +32,6 @@ export class MyLeaveRequestsComponent {
   rowsToApprove: any[] = [];
   expanded: any = {};
   timeout: any;
-  loadingIndicator = true;
   reorderable = true;
   temp: any[] = [];
   role: string = '';
