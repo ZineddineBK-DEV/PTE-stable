@@ -1,409 +1,86 @@
-<section class="main-content" style="margin-top: 20px;">
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — My Lab Requests (Redesigned)                                     -->
+<!-- Controller: rows, loadingIndicator, statusFilter                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
 
-  <!-- ── PAGE HEADER ── -->
-  <div class="page-header">
-    <div class="page-header-left">
-      <div class="page-header-icon">
-        <i class="fas fa-layer-group"></i>
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Labs</span><span class="separator">/</span><span class="current">My Bookings</span>
       </div>
-      <div>
-        <h2 class="page-title">Resource Management</h2>
-        <nav class="breadcrumb-nav">
-          <a routerLink="/dashboard/main"><i class="fas fa-home"></i></a>
-          <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
-          <span>Lab Environment</span>
-          <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
-          <span class="bc-active">My Requests</span>
-        </nav>
-      </div>
+      <h1 class="pte-page__header-title">My Lab Bookings</h1>
+    </div>
+    <div class="pte-page__header-actions">
+      <a routerLink="/dashboard/virt-env" class="pte-btn pte-btn--primary">+ Book New Lab</a>
     </div>
   </div>
 
-  <!-- ── MAIN SHELL ── -->
-  <div class="shell">
-
-    <!-- ══ TAB RAIL ══ -->
-    <div class="tab-rail">
-      <button class="tab-btn" [class.tab-active]="activee === 1" (click)="activee = 1">
-        <div class="tab-btn-icon"><i class="fas fa-flask"></i></div>
-        <div class="tab-btn-label">
-          <span class="tab-btn-title">My Lab Requests</span>
-          <span class="tab-btn-sub">Your submissions</span>
-        </div>
-      </button>
-
-      <button class="tab-btn" [class.tab-active]="activee === 2" (click)="activee = 2">
-        <div class="tab-btn-icon"><i class="fas fa-users"></i></div>
-        <div class="tab-btn-label">
-          <span class="tab-btn-title">Intern's Lab Requests</span>
-          <span class="tab-btn-sub">By offer</span>
-        </div>
-      </button>
-
-      <button class="tab-btn" *ngIf="role === 'LAB-MANAGER'"
-        [class.tab-active]="activee === 3" (click)="activee = 3">
-        <div class="tab-btn-icon"><i class="fas fa-layer-group"></i></div>
-        <div class="tab-btn-label">
-          <span class="tab-btn-title">All Intern's Requests</span>
-          <span class="tab-btn-sub">Manager view</span>
-        </div>
-      </button>
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">Booking History</h3>
     </div>
-
-    <!-- ══ CONTENT AREA ══ -->
-    <div class="content-area">
-
-      <!-- ─────────────────────────────────────────── -->
-      <!-- TAB 1 : My Lab Requests                     -->
-      <!-- ─────────────────────────────────────────── -->
-      <div class="tab-panel" [class.tab-panel-visible]="activee === 1">
-
-        <div class="panel-topbar">
-          <div class="panel-topbar-left">
-            <div class="panel-topbar-icon"><i class="fas fa-flask"></i></div>
-            <div>
-              <h3 class="panel-topbar-title">My Lab Environment Requests</h3>
-              <p class="panel-topbar-sub">Track and manage your submitted lab requests</p>
-            </div>
-          </div>
-          <div class="search-wrap">
-            <i class="fas fa-search search-ico"></i>
-            <input type="text" class="search-input"
-              placeholder="Filter by name, ref or status…"
-              (input)="handleLabSearch($event)" />
-          </div>
+    <div class="pte-card__body">
+      <div class="pte-page__toolbar">
+        <div class="pte-page__toolbar-left">
+          <select class="pte-page__toolbar-filter">
+            <option value="all">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Pending">Pending</option>
+            <option value="Declined">Declined</option>
+            <option value="Expired">Expired</option>
+          </select>
         </div>
+      </div>
 
-        <div class="cards-section">
+      <div *ngIf="loadingIndicator" class="flex-center" style="padding:48px;">
+        <div class="pte-skeleton pte-skeleton--circle" style="width:48px;height:48px;"></div>
+      </div>
 
-          <!-- Loading skeleton -->
-          <div class="cards-loading" *ngIf="loadingIndicator">
-            <div class="loading-pulse" *ngFor="let _ of [1,2,3,4]">
-              <div class="pulse-block pulse-avatar"></div>
-              <div class="pulse-block pulse-line pulse-line-lg"></div>
-              <div class="pulse-block pulse-line pulse-line-sm"></div>
-              <div class="pulse-block pulse-badge"></div>
-            </div>
-          </div>
+      <div *ngIf="!loadingIndicator" class="pte-table-wrapper">
+        <table class="pte-table">
+          <thead>
+            <tr>
+              <th>Lab Ref</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of rows">
+              <td style="font-weight:600;font-size:13px;">{{ row.code || '—' }}</td>
+              <td>{{ row.firstName }} {{ row.lastName }}</td>
+              <td style="font-size:13px;color:var(--pte-text-secondary);">{{ row.email }}</td>
+              <td><span class="pte-badge pte-badge--neutral">{{ row.departement }}</span></td>
+              <td style="font-size:13px;">{{ row.start | date:'dd/MM/yyyy' }}</td>
+              <td style="font-size:13px;">{{ row.end | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span class="pte-badge" [ngClass]="{
+                  'pte-badge--success': row.status === 'Active',
+                  'pte-badge--warning': row.status === 'Pending',
+                  'pte-badge--danger': row.status === 'Declined' || row.status === 'Expired'
+                }">{{ row.status }}</span>
+              </td>
+              <td>
+                <button class="pte-btn pte-btn--sm pte-btn--ghost">View</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-          <!-- Empty state -->
-          <div class="cards-empty" *ngIf="!loadingIndicator && filteredRows.length === 0">
-            <div class="cards-empty-icon"><i class="fas fa-inbox"></i></div>
-            <h4 class="cards-empty-title">No lab requests found</h4>
-            <p class="cards-empty-desc">
-              {{ searchTerm ? 'Try a different search term.' : 'You haven\'t submitted any lab requests yet.' }}
-            </p>
-          </div>
-
-          <!-- Request Cards -->
-          <ng-container *ngIf="!loadingIndicator && filteredRows.length > 0">
-
-            <div class="req-card-slim" *ngFor="let row of filteredRows | slice: pageStart : pageEnd">
-
-              <!-- Top row: ref + status + expand -->
-              <div class="rcs-top">
-                <span class="ref-pill">{{ row.code }}</span>
-                <span class="status-tag"
-                  [class.tag-active]="row.status === 'Active'"
-                  [class.tag-pending]="row.status === 'Pending'"
-                  [class.tag-declined]="row.status === 'Declined'"
-                  [class.tag-expired]="row.status === 'Expired'">
-                  <span class="tag-dot"></span>{{ row.status }}
-                </span>
-                <button class="rcs-expand-btn" (click)="toggleRow(row)"
-                  [ngbTooltip]="row._expanded ? 'Collapse' : 'Expand details'">
-                  <i class="fas" [ngClass]="row._expanded ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-                </button>
-              </div>
-
-              <!-- Body: avatar + info -->
-              <div class="rcs-body">
-                <div class="rcs-avatar">
-                  {{ (row.firstName || '?')[0] }}{{ (row.lastName || '')[0] }}
-                </div>
-                <div class="rcs-info">
-                  <span class="rcs-name">{{ row.firstName }} {{ row.lastName }}</span>
-                  <span class="rcs-email">{{ row.email }}</span>
-                  <span class="rcs-dept"><i class="fas fa-building"></i> {{ row.departement }}</span>
-                </div>
-              </div>
-
-              <!-- Expanded detail panel -->
-              <div class="rcs-detail" *ngIf="row._expanded">
-                <div class="rcs-detail-inner">
-
-                  <!-- Resource specs -->
-                  <div class="rcs-detail-group">
-                    <span class="rcs-dg-title"><i class="fas fa-server"></i> Resource</span>
-                    <div class="rcs-dg-chips">
-                      <span class="chip-sm"><span class="chip-sm-label">Type</span> {{ row.type }}</span>
-                      <span class="chip-sm"><span class="chip-sm-label">RAM</span> {{ row.ram }} GB</span>
-                      <span class="chip-sm"><span class="chip-sm-label">Disk</span> {{ row.disk }} GB</span>
-                      <span class="chip-sm"><span class="chip-sm-label">CPU</span> {{ row.processor }} Core</span>
-                      <span class="chip-sm"><span class="chip-sm-label">Backup</span> {{ row.backup }}</span>
-                      <span class="chip-sm">
-                        <span class="chip-sm-label">DHCP</span>
-                        <span *ngIf="row.dhcp === true">Yes</span>
-                        <span *ngIf="row.dhcp === false">No</span>
-                      </span>
-                    </div>
-                  </div>
-
-                  <!-- Booking dates -->
-                  <div class="rcs-detail-group">
-                    <span class="rcs-dg-title"><i class="fas fa-calendar-alt"></i> Booking</span>
-                    <div class="rcs-dg-chips">
-                      <span class="chip-sm"><span class="chip-sm-label">Start</span> {{ row.start | date:'dd/MM/yyyy' }}</span>
-                      <span class="chip-sm"><span class="chip-sm-label">End</span> {{ row.end | date:'dd/MM/yyyy' }}</span>
-                    </div>
-                  </div>
-
-                  <!-- Goals -->
-                  <div class="rcs-detail-group">
-                    <span class="rcs-dg-title"><i class="fas fa-bullseye"></i> Objective</span>
-                    <p class="rcs-goals-text">{{ row.goals }}</p>
-                  </div>
-
-                  <!-- Manager actions -->
-                  <div class="rcs-actions" *ngIf="role === 'LAB-MANAGER' && row.status === 'Pending'">
-                    <button class="action-btn approve-btn"
-                      (click)="approveRequestModal(row._id, row); $event.stopPropagation()">
-                      <i class="fas fa-check"></i> Approve
-                    </button>
-                    <button class="action-btn decline-btn"
-                      (click)="declineRequest(row._id); $event.stopPropagation()">
-                      <i class="fas fa-times"></i> Decline
-                    </button>
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Pagination -->
-            <div class="cards-pagination" *ngIf="totalPages > 1">
-              <div class="pagination-info">
-                Showing {{ pageStart + 1 }}–{{ pageEnd > filteredRows.length ? filteredRows.length : pageEnd }}
-                of {{ filteredRows.length }}
-              </div>
-              <div class="pagination-controls">
-                <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
-                  <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="page-btn"
-                  *ngFor="let p of pageNumbers"
-                  [class.page-active]="p === currentPage"
-                  (click)="goToPage(p)">
-                  {{ p }}
-                </button>
-                <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
-                  <i class="fas fa-chevron-right"></i>
-                </button>
-              </div>
-            </div>
-
-          </ng-container>
-        </div>
-      </div><!-- /tab-panel 1 -->
-
-      <!-- ─────────────────────────────────────────── -->
-      <!-- TAB 2 : Intern's Lab Requests               -->
-      <!-- ─────────────────────────────────────────── -->
-      <div class="tab-panel" [class.tab-panel-visible]="activee === 2">
-        <div class="panel-topbar">
-          <div class="panel-topbar-left">
-            <div class="panel-topbar-icon teal"><i class="fas fa-users"></i></div>
-            <div>
-              <h3 class="panel-topbar-title">Intern's Lab Requests</h3>
-              <p class="panel-topbar-sub">Pick an offer to browse its lab requests</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="dual-panel-layout">
-
-          <!-- Offers column -->
-          <div class="offers-column">
-            <div class="column-header">
-              <i class="fas fa-briefcase"></i>
-              <span>Offers</span>
-              <span class="column-count">{{ mentorOffers.length }}</span>
-            </div>
-            <div class="column-empty" *ngIf="mentorOffers.length === 0">
-              <div class="empty-icon"><i class="fas fa-inbox"></i></div>
-              <p>No offers found</p>
-            </div>
-            <ng-scrollbar style="height:520px" visibility="hover" *ngIf="mentorOffers.length > 0">
-              <div class="offer-card" *ngFor="let offer of mentorOffers" (click)="selectOffer(offer)">
-                <div class="offer-card-icon"><i class="fas fa-briefcase"></i></div>
-                <div class="offer-card-body">
-                  <span class="offer-card-title">{{ offer.title }}</span>
-                </div>
-                <span class="offer-count-pill">
-                  <span *ngIf="offer.labCount === undefined">…</span>
-                  <span *ngIf="offer.labCount !== undefined">{{ offer.labCount }}</span>
-                </span>
-              </div>
-            </ng-scrollbar>
-          </div>
-
-          <!-- Requests column -->
-          <div class="requests-column">
-            <div class="column-header">
-              <i class="fas fa-list-alt"></i>
-              <span>Lab Requests</span>
-              <span class="column-count" *ngIf="offerSelected && !offerEmpty">{{ offer_labs.length }}</span>
-            </div>
-            <div class="column-empty" *ngIf="!offerSelected">
-              <div class="empty-icon"><i class="fas fa-hand-pointer"></i></div>
-              <p>Select an offer to see its lab requests</p>
-            </div>
-            <div class="column-empty" *ngIf="offerEmpty">
-              <div class="empty-icon"><i class="fas fa-inbox"></i></div>
-              <p>This offer has no lab requests yet</p>
-            </div>
-            <ng-scrollbar style="height:520px" visibility="hover" *ngIf="offerSelected && !offerEmpty">
-              <div class="req-card" *ngFor="let req of offer_labs" (click)="selectRequest(req)">
-                <div class="req-card-header">
-                  <span class="ref-pill">{{ req.code }}</span>
-                  <div class="req-badges">
-                    <span class="approval-chip mentor" *ngIf="req.isMentorAccepted">
-                      <i class="fas fa-check-circle"></i> Mentor
-                    </span>
-                    <span class="approval-chip manager" *ngIf="req.isLabManagerAccepted">
-                      <i class="fas fa-check-circle"></i> Lab Mgr
-                    </span>
-                  </div>
-                  <span class="status-tag"
-                    [class.tag-active]="req.status === 'ACTIVE'"
-                    [class.tag-pending]="req.status === 'PENDING'"
-                    [class.tag-declined]="req.status === 'DECLINED'"
-                    [class.tag-completed]="req.status === 'COMPLETED'">
-                    <span class="tag-dot"></span>{{ req.status }}
-                  </span>
-                  <span class="expire-tag">
-                    <i class="fas fa-calendar-times"></i>{{ req.end | date }}
-                  </span>
-                </div>
-                <div class="req-card-applicant">
-                  <img [src]="picsUrl + req.applicant.image" class="req-avatar"
-                    onerror="this.src='assets/images/avatar-default.png'" />
-                  <div class="req-applicant-info">
-                    <span class="req-applicant-name">{{ req.applicant.firstName }} {{ req.applicant.lastName }}</span>
-                    <span class="req-applicant-meta">{{ req.applicant.role }} · {{ req.applicant.departement }}</span>
-                  </div>
-                </div>
-                <div class="req-goals">
-                  <span class="req-goals-label"><i class="fas fa-bullseye"></i> Purpose</span>
-                  <p class="req-goals-text">{{ req.goals }}</p>
-                </div>
-              </div>
-            </ng-scrollbar>
-          </div>
-
-        </div>
-      </div><!-- /tab-panel 2 -->
-
-      <!-- ─────────────────────────────────────────── -->
-      <!-- TAB 3 : All Intern's Requests (LAB-MANAGER) -->
-      <!-- ─────────────────────────────────────────── -->
-      <div class="tab-panel" [class.tab-panel-visible]="activee === 3" *ngIf="role === 'LAB-MANAGER'">
-        <div class="panel-topbar">
-          <div class="panel-topbar-left">
-            <div class="panel-topbar-icon amber"><i class="fas fa-layer-group"></i></div>
-            <div>
-              <h3 class="panel-topbar-title">All Intern's Lab Requests</h3>
-              <p class="panel-topbar-sub">Manager overview across all offers</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="dual-panel-layout">
-
-          <!-- Offers column -->
-          <div class="offers-column">
-            <div class="column-header">
-              <i class="fas fa-briefcase"></i>
-              <span>All Offers</span>
-              <span class="column-count">{{ AllMentorOffers.length }}</span>
-            </div>
-            <div class="column-empty" *ngIf="AllMentorOffers.length === 0">
-              <div class="empty-icon"><i class="fas fa-inbox"></i></div>
-              <p>No offers found</p>
-            </div>
-            <ng-scrollbar style="height:520px" visibility="hover" *ngIf="AllMentorOffers.length > 0">
-              <div class="offer-card" *ngFor="let offer of AllMentorOffers" (click)="goToOffer(offer)">
-                <div class="offer-card-icon"><i class="fas fa-briefcase"></i></div>
-                <div class="offer-card-body">
-                  <span class="offer-card-title">{{ offer.title }}</span>
-                </div>
-                <span class="offer-count-pill">
-                  <span *ngIf="offer.labCount === undefined">…</span>
-                  <span *ngIf="offer.labCount !== undefined">{{ offer.labCount }}</span>
-                </span>
-              </div>
-            </ng-scrollbar>
-          </div>
-
-          <!-- Requests column -->
-          <div class="requests-column">
-            <div class="column-header">
-              <i class="fas fa-list-alt"></i>
-              <span>Lab Requests</span>
-              <span class="column-count" *ngIf="offerSelected && !offerEmpty">{{ offer_labs.length }}</span>
-            </div>
-            <div class="column-empty" *ngIf="!offerSelected">
-              <div class="empty-icon"><i class="fas fa-hand-pointer"></i></div>
-              <p>Select an offer to see its lab requests</p>
-            </div>
-            <div class="column-empty" *ngIf="offerEmpty">
-              <div class="empty-icon"><i class="fas fa-inbox"></i></div>
-              <p>This offer has no lab requests yet</p>
-            </div>
-            <ng-scrollbar style="height:520px" visibility="hover" *ngIf="offerSelected && !offerEmpty">
-              <div class="req-card" *ngFor="let req of offer_labs" (click)="selectRequest(req)">
-                <div class="req-card-header">
-                  <span class="ref-pill">{{ req.code }}</span>
-                  <div class="req-badges">
-                    <span class="approval-chip mentor" *ngIf="req.isMentorAccepted">
-                      <i class="fas fa-check-circle"></i> Mentor
-                    </span>
-                    <span class="approval-chip manager" *ngIf="req.isLabManagerAccepted">
-                      <i class="fas fa-check-circle"></i> Lab Mgr
-                    </span>
-                  </div>
-                  <span class="status-tag"
-                    [class.tag-active]="req.status === 'ACTIVE'"
-                    [class.tag-pending]="req.status === 'PENDING'"
-                    [class.tag-declined]="req.status === 'DECLINED'"
-                    [class.tag-completed]="req.status === 'COMPLETED'">
-                    <span class="tag-dot"></span>{{ req.status }}
-                  </span>
-                  <span class="expire-tag">
-                    <i class="fas fa-calendar-times"></i>{{ req.end | date }}
-                  </span>
-                </div>
-                <div class="req-card-applicant">
-                  <img [src]="picsUrl + req.applicant.image" class="req-avatar"
-                    onerror="this.src='assets/images/avatar-default.png'" />
-                  <div class="req-applicant-info">
-                    <span class="req-applicant-name">{{ req.applicant.firstName }} {{ req.applicant.lastName }}</span>
-                    <span class="req-applicant-meta">{{ req.applicant.role }} · {{ req.applicant.departement }}</span>
-                  </div>
-                </div>
-                <div class="req-goals">
-                  <span class="req-goals-label"><i class="fas fa-bullseye"></i> Purpose</span>
-                  <p class="req-goals-text">{{ req.goals }}</p>
-                </div>
-              </div>
-            </ng-scrollbar>
-          </div>
-
-        </div>
-      </div><!-- /tab-panel 3 -->
-
-    </div><!-- /content-area -->
-  </div><!-- /shell -->
-
-</section>
+      <div *ngIf="!loadingIndicator && (!rows || rows.length === 0)" class="pte-empty-state">
+        <div class="pte-empty-state__icon">🔬</div>
+        <div class="pte-empty-state__title">No lab bookings</div>
+        <div class="pte-empty-state__description">You haven't made any lab booking requests yet</div>
+        <a routerLink="/dashboard/virt-env" class="pte-btn pte-btn--primary">Book a Lab</a>
+      </div>
+    </div>
+  </div>
+</div>

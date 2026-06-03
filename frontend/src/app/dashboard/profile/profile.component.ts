@@ -38,6 +38,8 @@ export class ProfileComponent {
   active!: number;
   user!:any
   CV!:any
+  // Alias for redesigned template (uses lowercase 'cv')
+  get cv(): any { return this.CV; }
   lisence!:string
   personalData!:FormGroup
   securityForm!:FormGroup

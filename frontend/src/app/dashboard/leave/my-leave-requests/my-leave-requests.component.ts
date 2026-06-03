@@ -21,6 +21,10 @@ export class MyLeaveRequestsComponent {
   disabled = true;
   user: any;
   readonly leaveCertUrl = environment.LEAVE_CERT_URL;
+  statusFilter: string = 'all';
+  filteredLeaves: any[] = [];
+  loadingIndicator: boolean = true;
+  rows: any[] = [];
 
   allLeaves: any[] = [];
   teamLeaves: any[] = [];

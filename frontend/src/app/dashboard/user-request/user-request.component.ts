@@ -126,7 +126,8 @@ export class UserRequestComponent implements OnInit {
   }
 
   // ── Actions ──────────────────────────────────────────────────────
-  confirmRequest(userID: string): void {
+  confirmRequest(userID: string | undefined): void {
+    if (!userID) return;
     const swal = Swal.mixin({
       customClass: { confirmButton: 'btn btn-success', cancelButton: 'btn btn-danger' },
       buttonsStyling: false
@@ -152,7 +153,8 @@ export class UserRequestComponent implements OnInit {
     });
   }
 
-  declineRequest(userID: string): void {
+  declineRequest(userID: string | undefined): void {
+    if (!userID) return;
     const swal = Swal.mixin({
       customClass: { confirmButton: 'btn btn-success', cancelButton: 'btn btn-danger' },
       buttonsStyling: false

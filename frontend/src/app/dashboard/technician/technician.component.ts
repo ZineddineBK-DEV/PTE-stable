@@ -35,6 +35,7 @@ export class TechnicianComponent {
   calendarData!: TechEvent;
   calendarEvents!: EventInput[];
   technicians!: User[];
+  viewTechDetails = this.seeTechPersonalDetails.bind(this);
   showCalendar!: boolean;
   selectedTech!: User | null;
   Events: any[] = [];

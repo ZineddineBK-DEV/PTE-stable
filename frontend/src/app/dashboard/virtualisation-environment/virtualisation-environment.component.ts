@@ -17,6 +17,11 @@ export class VirtualisationEnvironmentComponent {
   bookingDate!: FormGroup;
   goals!: FormGroup;
 
+  // Alias for redesigned template compatibility
+  get labForm(): FormGroup {
+    return this.applicant;
+  }
+
   labEnv!: any;
   isLinear = true;
 
