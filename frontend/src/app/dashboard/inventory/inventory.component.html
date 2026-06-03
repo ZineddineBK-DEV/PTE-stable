@@ -1,358 +1,82 @@
-<section class="main-content">
-    <ul class="breadcrumb breadcrumb-style">
-        <li class="breadcrumb-item">
-            <h5 class="page-title m-b-0">User Equipments</h5>
-        </li>
-        <li class="breadcrumb-item bcrumb-1">
-            <a routerLink="/dashboard/main">
-                <i class="fas fa-home font-17"></i>
-            </a>
-        </li>
-        <li class="breadcrumb-item">User</li>
-        <li class="breadcrumb-item">Equipments</li>
-    </ul>
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PTE — Inventory (Redesigned)                                           -->
+<!-- Controller: rows, loading, userItems, search, filter                    -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
 
-    <div class="section-body">
-        <div class="inventory-layout">
-
-            <!-- ── LEFT PANEL: User List ── -->
-            <div class="users-panel">
-                <div class="panel-header">
-                    <div class="panel-header-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h6 class="panel-header-title">Users</h6>
-                    <span class="panel-count">{{users.length}}</span>
-                </div>
-                <div class="panel-body">
-                    <ng-scrollbar style="height: 560px" visibility="hover">
-                        <div class="user-item" *ngFor="let u of users"
-                            (click)="getUserItems(u._id!)"
-                            [class.active]="userSelected && user?._id === u._id">
-                            <div class="user-item-avatar-wrap">
-                                <img src="{{ picsUrl + u.image }}" class="user-item-avatar"  />
-                                <span class="user-item-dot"></span>
-                            </div>
-                            <div class="user-item-info">
-                                <span class="user-item-name">{{u.firstName + " " + u.lastName}}</span>
-                                <span class="user-item-meta">{{u.roles}} · {{u.departement}}</span>
-                            </div>
-                            <i class="fas fa-chevron-right user-item-arrow"></i>
-                        </div>
-                    </ng-scrollbar>
-                </div>
-            </div>
-
-            <!-- ── RIGHT PANEL: Items ── -->
-            <div class="items-panel">
-
-                <!-- No user selected placeholder -->
-                <div class="no-user-selected" *ngIf="!userSelected">
-                    <div class="no-user-icon">
-                        <i class="fas fa-hand-pointer"></i>
-                    </div>
-                    <h4>Select a user</h4>
-                    <p>Pick a user from the left panel to view and manage their equipment and accessories.</p>
-                </div>
-
-                <ng-container *ngIf="userSelected && user">
-
-                    <!-- Download actions bar -->
-                    <div class="actions-bar">
-                        <div class="actions-bar-left">
-                            <div class="user-selected-avatar-wrap">
-                                <img src="{{ picsUrl + user.image }}" class="user-selected-avatar"
-                                    onerror="this.src='assets/images/avatar-default.png'" />
-                            </div>
-                            <div>
-                                <span class="user-selected-name">{{user.firstName + " " + user.lastName}}</span>
-                                <span class="user-selected-dept">{{user.departement}}</span>
-
-                            </div>
-                        </div>
-                        <div class="actions-bar-right">
-                            <button class="btn-download" (click)="dowloadFile(user._id!)">
-                                <i class="fas fa-file-download"></i> User Items
-                            </button>
-                            <button class="btn-download" (click)="dowloadAllItems()">
-                                <i class="fas fa-file-download"></i> All Items
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- ── EQUIPMENTS SECTION ── -->
-                    <div class="detail-card">
-                        <div class="detail-card-header">
-                            <div class="header-icon">
-                                <i class="fas fa-laptop"></i>
-                            </div>
-                            <h6 class="header-title">{{user.firstName}}'s Equipments</h6>
-                            <div class="header-actions">
-                                <button class="header-btn" (click)="toggleCreateEqui()">
-                                    <i class="fas fa-plus"></i> Create
-                                </button>
-                                <button class="header-btn" (click)="toggleShowEqui()">
-                                    <i class="fas fa-eye"></i> Show
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="detail-card-body">
-                            <!-- Create Equipment Form -->
-                            <div *ngIf="createEquipment" class="item-form-wrap">
-                                <form [formGroup]="equipmentForm" (ngSubmit)="onSubmitEqui(equipmentForm)">
-                                    <div class="row">
-                                        <div class="col-xl-6 col-md-6 col-sm-12 mb-3">
-                                            <div class="form-field">
-                                                <label class="field-label">Name <span class="required-star">*</span></label>
-                                                <div class="input-wrapper">
-                                                    <i class="fas fa-tag input-icon"></i>
-                                                    <input type="text" class="modern-input form-control"
-                                                        placeholder="Equipment name…" formControlName="name" required>
-                                                </div>
-                                                <small class="field-error"
-                                                    *ngIf="!equipmentForm.get('name')?.valid && equipmentForm.get('name')?.touched">
-                                                    Name is required
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xl-4 col-md-4 col-sm-12 mb-3">
-                                            <div class="form-field">
-                                                <label class="field-label">Brand <span class="required-star">*</span></label>
-                                                <div class="input-wrapper">
-                                                    <i class="fas fa-industry input-icon"></i>
-                                                    <input type="text" class="modern-input form-control"
-                                                        placeholder="Brand name…" formControlName="brand" required>
-                                                </div>
-                                                <small class="field-error"
-                                                    *ngIf="!equipmentForm.get('brand')?.valid && equipmentForm.get('brand')?.touched">
-                                                    Brand is required
-                                                </small>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-4 col-md-4 col-sm-12 mb-3">
-                                            <div class="form-field">
-                                                <label class="field-label">Model <span class="required-star">*</span></label>
-                                                <div class="input-wrapper">
-                                                    <i class="fas fa-cube input-icon"></i>
-                                                    <input type="text" class="modern-input form-control"
-                                                        placeholder="Model name…" formControlName="model" required>
-                                                </div>
-                                                <small class="field-error"
-                                                    *ngIf="!equipmentForm.get('model')?.valid && equipmentForm.get('model')?.touched">
-                                                    Model is required
-                                                </small>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-4 col-md-4 col-sm-12 mb-3">
-                                            <div class="form-field">
-                                                <label class="field-label">Serial Number</label>
-                                                <div class="input-wrapper">
-                                                    <i class="fas fa-barcode input-icon"></i>
-                                                    <input type="text" class="modern-input form-control"
-                                                        placeholder="Serial number…" formControlName="serial_number">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-footer">
-                                        <button type="button" class="btn-cancel" (click)="toggleShowEqui()">Cancel</button>
-                                        <button type="submit" class="btn-save" [disabled]="!equipmentForm.valid">
-                                            <i class="fas fa-plus"></i> Create Equipment
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <!-- Equipment Cards -->
-                            <div *ngIf="showEquipment && userEquipments.length > 0">
-                                <ng-scrollbar style="height: 240px" visibility="hover">
-                                    <div class="row">
-                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3"
-                                            *ngFor="let equipment of userEquipments">
-                                            <div class="item-card">
-                                                <div class="item-card-icon">
-                                                    <i class="fas fa-laptop"></i>
-                                                </div>
-                                                <div class="item-card-info">
-                                                    <span class="item-card-name">{{equipment.name}}</span>
-                                                    <span class="item-card-detail" *ngIf="equipment.brand">
-                                                        <i class="fas fa-industry"></i> {{equipment.brand}}
-                                                    </span>
-                                                    <span class="item-card-detail" *ngIf="equipment.model">
-                                                        <i class="fas fa-cube"></i> {{equipment.model}}
-                                                    </span>
-                                                    <span class="item-card-detail" *ngIf="equipment.serial_number">
-                                                        <i class="fas fa-barcode"></i> {{equipment.serial_number}}
-                                                    </span>
-                                                </div>
-                                                <div class="item-card-actions">
-                                                    <button class="item-action-btn btn-edit"
-                                                        (click)="editEquipment(equipment._id)"
-                                                        ngbTooltip="Edit" placement="top">
-                                                        <i class="fas fa-pen"></i>
-                                                    </button>
-                                                    <button class="item-action-btn btn-forward"
-                                                        (click)="forwardEquipment(equipment, 'equipment')"
-                                                        ngbTooltip="Forward" placement="top">
-                                                        <i class="fas fa-share-square"></i>
-                                                    </button>
-                                                    <button class="item-action-btn btn-delete"
-                                                        (click)="deleteEquipment(equipment._id)"
-                                                        ngbTooltip="Delete" placement="top">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-scrollbar>
-                            </div>
-
-                            <!-- Empty Equipment -->
-                            <div class="items-empty" *ngIf="showEquipment && userEquipments.length === 0">
-                                <i class="fas fa-laptop"></i>
-                                <span>{{user.firstName}} has no equipment listed</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ── ACCESSORIES SECTION ── -->
-                    <div class="detail-card">
-                        <div class="detail-card-header">
-                            <div class="header-icon">
-                                <i class="fas fa-plug"></i>
-                            </div>
-                            <h6 class="header-title">{{user.firstName}}'s Accessories</h6>
-                            <div class="header-actions">
-                                <button class="header-btn" (click)="toggleCreateAcc()">
-                                    <i class="fas fa-plus"></i> Create
-                                </button>
-                                <button class="header-btn" (click)="toggleShowAcc()">
-                                    <i class="fas fa-eye"></i> Show
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="detail-card-body">
-                            <!-- Create Accessory Form -->
-                            <div *ngIf="createAccessoiry" class="item-form-wrap">
-                                <form [formGroup]="accessoryForm" (ngSubmit)="onSubmitAcc(accessoryForm)">
-                                    <div class="row">
-                                        <div class="col-xl-6 col-md-6 col-sm-12 mb-3">
-                                            <div class="form-field">
-                                                <label class="field-label">Name <span class="required-star">*</span></label>
-                                                <div class="input-wrapper">
-                                                    <i class="fas fa-tag input-icon"></i>
-                                                    <input type="text" class="modern-input form-control"
-                                                        placeholder="Accessory name…" formControlName="name" required>
-                                                </div>
-                                                <small class="field-error"
-                                                    *ngIf="!accessoryForm.get('name')?.valid && accessoryForm.get('name')?.touched">
-                                                    Name is required
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xl-4 col-md-4 col-sm-12 mb-3">
-                                            <div class="form-field">
-                                                <label class="field-label">Brand</label>
-                                                <div class="input-wrapper">
-                                                    <i class="fas fa-industry input-icon"></i>
-                                                    <input type="text" class="modern-input form-control"
-                                                        placeholder="Brand name…" formControlName="brand">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-4 col-md-4 col-sm-12 mb-3">
-                                            <div class="form-field">
-                                                <label class="field-label">Model</label>
-                                                <div class="input-wrapper">
-                                                    <i class="fas fa-cube input-icon"></i>
-                                                    <input type="text" class="modern-input form-control"
-                                                        placeholder="Model name…" formControlName="model">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-4 col-md-4 col-sm-12 mb-3">
-                                            <div class="form-field">
-                                                <label class="field-label">Serial Number</label>
-                                                <div class="input-wrapper">
-                                                    <i class="fas fa-barcode input-icon"></i>
-                                                    <input type="text" class="modern-input form-control"
-                                                        placeholder="Serial number…" formControlName="serial_number">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-footer">
-                                        <button type="button" class="btn-cancel" (click)="toggleShowAcc()">Cancel</button>
-                                        <button type="submit" class="btn-save" [disabled]="!accessoryForm.valid">
-                                            <i class="fas fa-plus"></i> Create Accessory
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <!-- Accessory Cards -->
-                            <div *ngIf="showAccessoiry && userAccessories.length > 0">
-                                <ng-scrollbar style="height: 240px" visibility="hover">
-                                    <div class="row">
-                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3"
-                                            *ngFor="let accessory of userAccessories">
-                                            <div class="item-card">
-                                                <div class="item-card-icon accent-teal">
-                                                    <i class="fas fa-plug"></i>
-                                                </div>
-                                                <div class="item-card-info">
-                                                    <span class="item-card-name">{{accessory.name}}</span>
-                                                    <span class="item-card-detail" *ngIf="accessory.brand">
-                                                        <i class="fas fa-industry"></i> {{accessory.brand}}
-                                                    </span>
-                                                    <span class="item-card-detail" *ngIf="accessory.model">
-                                                        <i class="fas fa-cube"></i> {{accessory.model}}
-                                                    </span>
-                                                    <span class="item-card-detail" *ngIf="accessory.serial_number">
-                                                        <i class="fas fa-barcode"></i> {{accessory.serial_number}}
-                                                    </span>
-                                                </div>
-                                                <div class="item-card-actions">
-                                                    <button class="item-action-btn btn-edit"
-                                                        (click)="editAccessory(accessory._id)"
-                                                        ngbTooltip="Edit" placement="top">
-                                                        <i class="fas fa-pen"></i>
-                                                    </button>
-                                                    <button class="item-action-btn btn-forward"
-                                                        (click)="forwardAccessory(accessory, 'accessory')"
-                                                        ngbTooltip="Forward" placement="top">
-                                                        <i class="fas fa-share-square"></i>
-                                                    </button>
-                                                    <button class="item-action-btn btn-delete"
-                                                        (click)="deleteAccessory(accessory._id)"
-                                                        ngbTooltip="Delete" placement="top">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-scrollbar>
-                            </div>
-
-                            <!-- Empty Accessory -->
-                            <div class="items-empty" *ngIf="showAccessoiry && userAccessories.length === 0">
-                                <i class="fas fa-plug"></i>
-                                <span>{{user.firstName}} has no accessories listed</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </ng-container>
-            </div>
-
-        </div>
+<div class="pte-page">
+  <div class="pte-page__header">
+    <div class="pte-page__header-left">
+      <div class="pte-page__breadcrumb">
+        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
+        <span>Equipment</span><span class="separator">/</span><span class="current">Inventory</span>
+      </div>
+      <h1 class="pte-page__header-title">Inventory</h1>
+      <p class="pte-page__header-subtitle">Manage equipment and accessories</p>
     </div>
-</section>
+  </div>
+
+  <div class="pte-page__kpi-row" style="grid-template-columns:repeat(3,1fr);">
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ totalEquipment || 0 }}</div><div class="pte-kpi__label">Total Equipment</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--primary">💻</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ totalAccessories || 0 }}</div><div class="pte-kpi__label">Accessories</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--success">🎧</div>
+      </div>
+    </div>
+    <div class="pte-card pte-card--kpi">
+      <div class="pte-card__body">
+        <div><div class="pte-kpi__value">{{ assignedItems || 0 }}</div><div class="pte-kpi__label">Assigned</div></div>
+        <div class="pte-kpi__icon pte-kpi__icon--warning">👤</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pte-card">
+    <div class="pte-card__header">
+      <h3 class="pte-card__header-title">Equipment List</h3>
+    </div>
+    <div class="pte-card__body">
+      <div class="pte-page__toolbar">
+        <div class="pte-page__toolbar-left">
+          <div class="pte-page__toolbar-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search equipment...">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="loading" class="flex-center" style="padding:48px;">
+        <div class="pte-skeleton pte-skeleton--circle" style="width:48px;height:48px;"></div>
+      </div>
+
+      <div *ngIf="!loading" class="pte-table-wrapper">
+        <table class="pte-table">
+          <thead><tr><th>Type</th><th>Brand / Model</th><th>Serial Number</th><th>Assigned To</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let item of rows">
+              <td><span class="pte-badge pte-badge--neutral">{{ item.type || 'Equipment' }}</span></td>
+              <td style="font-weight:500;">{{ item.brand || item.name || '—' }}</td>
+              <td style="font-size:13px;color:var(--pte-text-secondary);">{{ item.serialNumber || '—' }}</td>
+              <td>{{ item.user?.firstName || 'Unassigned' }}</td>
+              <td><span class="pte-badge" [ngClass]="item.user ? 'pte-badge--success' : 'pte-badge--neutral'">{{ item.user ? 'Assigned' : 'Available' }}</span></td>
+              <td><div class="table-actions" style="justify-content:flex-end;">
+                <button class="pte-btn pte-btn--sm pte-btn--ghost">Edit</button>
+                <button class="pte-btn pte-btn--sm pte-btn--ghost">Forward</button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!loading && (!rows || rows.length === 0)" class="pte-empty-state">
+        <div class="pte-empty-state__icon">📦</div>
+        <div class="pte-empty-state__title">No equipment found</div>
+      </div>
+    </div>
+  </div>
+</div>

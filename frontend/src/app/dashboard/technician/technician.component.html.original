@@ -1,0 +1,176 @@
+<section class="main-content">
+  <ul class="breadcrumb breadcrumb-style">
+    <li class="breadcrumb-item">
+      <h5 class="page-title m-b-0">Resource Management</h5>
+    </li>
+    <li class="breadcrumb-item bcrumb-1">
+      <a routerLink="/dashboard/main">
+        <i class="fas fa-home font-17"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item">Technician</li>
+    <li class="breadcrumb-item">Calendar</li>
+  </ul>
+
+  <div class="section-body">
+
+    <!-- Page Header -->
+    <div class="page-header mb-4">
+      <div class="page-header-left">
+        <div class="header-icon">
+          <i class="fas fa-tools"></i>
+        </div>
+        <div>
+          <h4 class="mb-1">Technicians Calendar</h4>
+          <p class="text-muted mb-0">Manage and schedule technical team assignments</p>
+        </div>
+      </div>
+      <div class="page-header-right" *ngIf="userRole === 'ASSISTANT'">
+        <button class="btn-gradient" (click)="openLogModal()">
+          <i class="fas fa-file-signature"></i>
+          Show Logs
+        </button>
+      </div>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="tech-layout">
+
+      <!-- ── Sidebar ── -->
+      <div class="rooms-panel">
+        <div class="panel-header">
+          <div class="panel-header-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h5 class="panel-header-title">Technical Team</h5>
+          <span class="panel-count">{{technicians?.length}}</span>
+        </div>
+
+        <div class="panel-body">
+          <!-- Search -->
+          <div class="tech-search" *ngIf="userRole === 'ASSISTANT'">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search technicians…" [(ngModel)]="searchTech" class="search-input">
+          </div>
+
+          <ng-scrollbar style="height: 700px" visibility="hover">
+            <div class="tech-list">
+
+              <!-- Technician Item -->
+              <div class="tech-item" *ngFor="let technician of filteredTechnicians"
+                [class.active]="selectedTech?._id === technician._id">
+
+                <!-- Avatar + Info -->
+                <div class="tech-item-top" (click)="ToggleCalendar(technician)">
+                  <div class="tech-avatar-wrap">
+                    <img [src]="picsUrl + technician.image" [alt]="technician.firstName" class="tech-avatar-img"
+                      width="44" height="44">
+                    <span class="avatar-dot online"></span>
+                  </div>
+                  <div class="tech-item-info">
+                    <strong class="tech-name">
+                      {{technician.firstName + " " + technician.lastName}}
+                    </strong>
+                    <span class="tech-title-text">{{technician.title}}</span>
+                    <span class="tech-exp-chip">
+                      <i class="fas fa-star"></i>
+                      {{technician.experience}}
+                      {{(technician.experience || 0) > 1 ? 'yrs' : 'yr'}}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="tech-item-actions">
+                  <button class="room-btn btn-calendar" (click)="ToggleCalendar(technician)"
+                    ngbTooltip="Book technician" [class.active-cal]="selectedTech?._id === technician._id">
+                    <i class="far fa-calendar-alt"></i>
+                  </button>
+                  <button class="room-btn btn-edit" (click)="seeTechPersonalDetails(technician)"
+                    ngbTooltip="View details">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="room-btn btn-delete" [routerLink]="'/dashboard/user-profile/' + technician._id"
+                    ngbTooltip="Go to profile">
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div class="no-techs" *ngIf="technicians?.length === 0">
+                <i class="fas fa-user-slash"></i>
+                <p>No technicians found</p>
+              </div>
+            </div>
+          </ng-scrollbar>
+        </div>
+      </div>
+
+      <!-- ── Calendar Panel ── -->
+      <div class="content-panel">
+
+        <!-- Selected Technician Banner -->
+        <div class="detail-card" *ngIf="selectedTech">
+          <div class="detail-card-header">
+            <img [src]="picsUrl + selectedTech.image" [alt]="selectedTech.firstName" class="banner-avatar" width="44"
+              height="44">
+            <div style="flex:1">
+              <h5 class="header-title mb-0">
+                {{selectedTech.firstName + " " + selectedTech.lastName}}
+              </h5>
+              <div class="header-room-meta">
+                <span class="header-meta-chip">
+                  <i class="fas fa-briefcase"></i>
+                  {{selectedTech.title}}
+                </span>
+                <span class="header-meta-chip">
+                  <i class="fas fa-star"></i>
+                  {{selectedTech.experience}}
+                  {{(selectedTech.experience || 0) > 1 ? 'years' : 'year'}}
+                </span>
+              </div>
+            </div>
+            <button class="banner-clear-btn" (click)="showCalendar = false; selectedTech = null" ngbTooltip="Deselect">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Calendar Card -->
+        <div class="detail-card">
+          <!-- With calendar -->
+          <div *ngIf="showCalendar" class="detail-card-body calendar-body">
+            <full-calendar [options]="calendarOptions"></full-calendar>
+          </div>
+
+          <!-- Empty State -->
+          <div class="no-room-selected" *ngIf="!showCalendar">
+            <div class="no-room-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h4>No Technician Selected</h4>
+            <p>Select a technician from the list to view their schedule and book assignments.</p>
+            <div class="empty-steps">
+              <div class="empty-step">
+                <div class="step-num">1</div>
+                <span>Browse the team list</span>
+              </div>
+              <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+              <div class="empty-step">
+                <div class="step-num">2</div>
+                <span>Click the calendar icon</span>
+              </div>
+              <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+              <div class="empty-step">
+                <div class="step-num">3</div>
+                <span>Schedule an event</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

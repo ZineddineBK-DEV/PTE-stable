@@ -1,0 +1,210 @@
+<section class="main-content">
+    <ul class="breadcrumb breadcrumb-style">
+        <li class="breadcrumb-item">
+            <h5 class="page-title m-b-0">Resource Management</h5>
+        </li>
+        <li class="breadcrumb-item bcrumb-1">
+            <a routerLink="/dashboard/main">
+                <i class="fas fa-home font-17"></i>
+            </a>
+        </li>
+        <li class="breadcrumb-item">Vehicle</li>
+        <li class="breadcrumb-item">Calendar</li>
+    </ul>
+
+    <div class="section-body">
+        <div class="vehicle-layout">
+
+            <!-- ── LEFT PANEL: Vehicle List ── -->
+            <div class="vehicles-panel">
+                <div class="panel-header">
+                    <div class="panel-header-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h6 class="panel-header-title">Vehicles</h6>
+                    <span class="panel-count">{{vehicles.length || 0}}</span>
+                </div>
+
+                <div class="panel-body">
+                    <button class="btn-add-vehicle" *ngIf="role === 'ASSISTANT'"
+                        (click)="addVehicleWindowCall()">
+                        <i class="fas fa-plus"></i> Add Vehicle
+                    </button>
+
+                    <ng-scrollbar style="height: 680px" visibility="hover">
+                        <div class="vehicle-item" *ngFor="let vehicle of vehicles"
+                            [class.active]="selectedVehicle?._id === vehicle._id">
+
+                            <div class="vehicle-item-top">
+                                <div class="vehicle-icon">
+                                    <i class="fas fa-car-side"></i>
+                                </div>
+                                <div class="vehicle-item-info">
+                                    <span class="vehicle-model">{{vehicle.model}}</span>
+                                    <span class="vehicle-reg">{{vehicle.registration_number}}</span>
+                                </div>
+                                <div class="vehicle-avail-dot"
+                                    [class.avail]="vehicle.available"
+                                    [class.unavail]="!vehicle.available"
+                                    [ngbTooltip]="vehicle.available ? 'Available' : 'Unavailable'">
+                                </div>
+                            </div>
+
+                            <div class="vehicle-item-actions">
+                                <button class="veh-btn btn-calendar"
+                                    (click)="ToggleCalendar(vehicle)"
+                                    ngbTooltip="Book vehicle" placement="right">
+                                    <i class="far fa-calendar-alt"></i>
+                                </button>
+                                <button *ngIf="role === 'ADMIN'" class="veh-btn btn-stat"
+                                    (click)="showVehicleStat(vehicle._id)"
+                                    ngbTooltip="Analytics" placement="top">
+                                    <i class="fas fa-chart-line"></i>
+                                </button>
+                                <button *ngIf="role === 'ASSISTANT'" class="veh-btn btn-card"
+                                    (click)="showCard(vehicle)"
+                                    ngbTooltip="Gas card" placement="top">
+                                    <i class="fas fa-credit-card"></i>
+                                </button>
+                                <button *ngIf="role === 'ASSISTANT'" class="veh-btn btn-edit"
+                                    (click)="editVehicleWindowCall(vehicle)"
+                                    ngbTooltip="Edit" placement="top">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button *ngIf="role === 'ASSISTANT'" class="veh-btn btn-toggle"
+                                    [class.is-on]="vehicle.available"
+                                    (click)="toggleAvailability(vehicle)"
+                                    [ngbTooltip]="vehicle.available ? 'Set unavailable' : 'Set available'"
+                                    placement="top">
+                                    <i class="fas" [ngClass]="vehicle.available ? 'fa-toggle-on' : 'fa-toggle-off'"></i>
+                                </button>
+                                <button *ngIf="role === 'ASSISTANT'" class="veh-btn btn-delete"
+                                    (click)="deleteVehicle(vehicle._id)"
+                                    ngbTooltip="Delete" placement="top">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-scrollbar>
+                </div>
+            </div>
+
+            <!-- ── RIGHT PANEL: Calendar / Stat / Placeholder ── -->
+            <div class="content-panel">
+
+                <!-- Placeholder -->
+                <div class="no-vehicle-selected" *ngIf="!showCalendar && !showStat">
+                    <div class="no-vehicle-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h4>Select a vehicle</h4>
+                    <p>Pick a vehicle from the left panel to view its calendar.</p>
+                </div>
+
+                <!-- Calendar -->
+                <div class="detail-card" *ngIf="showCalendar">
+                    <div class="detail-card-header">
+                        <div class="header-icon">
+                            <i class="far fa-calendar-alt"></i>
+                        </div>
+                        <h6 class="header-title">
+                            {{selectedVehicle?.model}} — Booking Calendar
+                        </h6>
+                        <span class="header-reg-badge">{{selectedVehicle?.registration_number}}</span>
+                    </div>
+                    <div class="detail-card-body calendar-body">
+                        <full-calendar [options]="calendarOptions"></full-calendar>
+                    </div>
+                </div>
+
+                <!-- Vehicle Stat -->
+                <ng-container *ngIf="showStat && vehicle">
+
+                    <!-- Info bar -->
+                    <div class="vehicle-info-bar">
+                        <div class="info-bar-left">
+                            <div class="info-bar-icon">
+                                <i class="fas fa-car-side"></i>
+                            </div>
+                            <div>
+                                <span class="info-bar-model">{{vehicle.model}}</span>
+                                <span class="info-bar-meta">
+                                    {{vehicle.registration_number}} · {{vehicle.type}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="km-total-badge">
+                            <span class="km-label">KM Total</span>
+                            <span class="km-value">{{vehicle.kmTotal.toFixed(1)}} km</span>
+                        </div>
+                    </div>
+
+                    <!-- Log table -->
+                    <div class="detail-card">
+                        <div class="detail-card-header">
+                            <div class="header-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h6 class="header-title">Usage Log</h6>
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="table-responsive-wrap">
+                                <ngx-datatable #table class="material vehicle-table"
+                                    [rows]="vehicle.log"
+                                    [sortType]="SortType.multi"
+                                    [loadingIndicator]="loadingIndicator"
+                                    columnMode="force"
+                                    [headerHeight]="48"
+                                    [footerHeight]="52"
+                                    rowHeight="auto"
+                                    [limit]="6"
+                                    [scrollbarH]="scrollBarHorizontal"
+                                    [reorderable]="reorderable">
+
+                                    <ngx-datatable-column [width]="280" name="Event Title">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <div class="cell-with-icon">
+                                                <i class="fas fa-calendar-check cell-icon"></i>
+                                                <span>{{row.event?.title}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="180" name="Kilometrage">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <div class="cell-with-icon">
+                                                <i class="fas fa-road cell-icon"></i>
+                                                <span>{{row?.kilometrage}} km</span>
+                                            </div>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column name="Reservation Date">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <div class="cell-with-icon">
+                                                <i class="fas fa-clock cell-icon"></i>
+                                                <span>{{row?.reservationDate | date:'short'}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="160" name="Event" [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <button class="view-event-btn"
+                                                (click)="showAssociatedEvent(row.event)">
+                                                <i class="fas fa-eye"></i> View
+                                            </button>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                </ngx-datatable>
+                            </div>
+                        </div>
+                    </div>
+
+                </ng-container>
+
+            </div>
+        </div>
+    </div>
+</section>
