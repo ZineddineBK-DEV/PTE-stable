@@ -1,101 +1,76 @@
-<section class="main-content">
-    <ul class="breadcrumb breadcrumb-style ">
-        <li class="breadcrumb-item">
-            <h5 class="page-title m-b-0">Network Requests</h5>
-        </li>
-        <li class="breadcrumb-item bcrumb-1">
-            <a routerLink="/dashboard/main">
-                <i class="fas fa-home font-17"></i></a>
-        </li>
-        <li class="breadcrumb-item">Network</li>
-        <li class="breadcrumb-item">Requests</li>
-    </ul>
-    <div class="section-body">
-        <div class="row">
-            <div class="col-12 col-md-12 col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Network Requests</h4>
-                    </div>
-                    <div class="no-requests-container" *ngIf="requests.length === 0">
-                        <div class="no-requests-icon">
-                          <div class="magnifying-glass">
-                            <div class="glass"></div>
-                            <div class="handle"></div>
-                          </div>
-                        </div>
-                        <p class="no-requests-text">No Requests Found</p>
-                      </div>
-                      
-                    <div class="row" *ngIf="requests.length > 0">
-                            <div class="col-4">
-                                <h5 class="title">Select a user to view network request</h5>
-                                <div class="row user-line" *ngFor="let req of requests">
-                                    <div (click)="selectUser(req)" >
-                                        <div class="row">
-                                            <div class="col-2">
-                                                <img src="{{ picsUrl+req.user.image }}" class="enc-img" />
-                                            </div>
-                                            <div class="col-7 name-col-style">
-                                                <div class="font-16"><strong>{{req.user.firstName+" "+req.user.lastName}}</strong></div>
-                                                <div class="font-14 text-muted">{{req.user.role}} | {{req.user.departement}}
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <span class="badge rounded-pill bg-success" *ngIf="req.status==='TREATED'">TREATED</span>
-                                                <span class="badge rounded-pill bg-danger" *ngIf="req.status==='PENDING'">PENDING</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col-7 no-task-selected" *ngIf="!userSelected">
-                                <img class="pic" src="assets/images/notSelected.png" alt="">
-                                <h5> Select user to view request.</h5>
-                            </div>
-                            <div class="col-8" *ngIf="userSelected">
-                                <h5 class="card-body title">Update <strong>{{user.firstName+" "+user.lastName}}</strong> request</h5>
-                                <div class="task-details-container">
-                                    <div class="row">
-                                        <form [formGroup]="updateReqForm" (ngSubmit)="onSubmit(updateReqForm)">
-                                            <div class="row">
-                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
-                                                    <label>SSID<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" placeholder="ssid..." formControlName="ssid" required>
-                                                    <small class="form-text text-danger"
-                                                        *ngIf="!updateReqForm.get('ssid')?.valid && updateReqForm.get('ssid')?.touched"> SSID is required
-                                                    </small>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-4">
-                                                    <label>Login<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" placeholder="login" formControlName="login" required>
-                                                    <small class="form-text text-danger"
-                                                        *ngIf="!updateReqForm.get('login')?.valid && updateReqForm.get('login')?.touched"> Login is required
-                                                    </small>
-                                                </div>
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-4">
-                                                    <label>Password<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" placeholder="password..." formControlName="password" required>
-                                                    <small class="form-text text-danger"
-                                                        *ngIf="!updateReqForm.get('password')?.valid && updateReqForm.get('password')?.touched"> Password is required
-                                                    </small>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 text-end">
-                                                    <button type="submit" class="btn btn-success">Update Request <i class="fas fa-check"></i></button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-            </div>
-        </div>
+<!-- PTE Network Requests — Redesigned -->
+<!-- Controller: requests, userSelected, user, request, picsUrl,
+     updateReqForm, selectUser(), onSubmit() -->
+<section class="pte-page">
+  <div class="pte-page__header">
+    <h1 class="pte-page__title">Network Requests</h1>
+    <div class="pte-page__breadcrumb">
+      <a routerLink="/dashboard/main">Dashboard</a>
+      <span class="separator">/</span>
+      <span>Network</span>
+      <span class="separator">/</span>
+      <span>Requests</span>
     </div>
+  </div>
+
+  <div class="pte-card">
+    <div style="padding:20px;">
+      <!-- Empty state -->
+      <div *ngIf="requests.length === 0" style="text-align:center;padding:48px 20px;">
+        <p style="color:var(--pte-text-secondary);font-size:16px;">No Requests Found</p>
+      </div>
+
+      <div *ngIf="requests.length > 0" style="display:flex;gap:24px;">
+        <!-- User List -->
+        <div style="width:320px;flex-shrink:0;">
+          <h5 style="font-size:14px;font-weight:600;color:var(--pte-text-secondary);margin:0 0 12px;">Select a user to view network request</h5>
+          <div *ngFor="let req of requests" (click)="selectUser(req)"
+            style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--pte-radius-md);cursor:pointer;border:1px solid var(--pte-border-color);margin-bottom:8px;transition:background 0.15s;"
+            onmouseover="this.style.background='var(--pte-gray-50)'" onmouseout="this.style.background='transparent'">
+            <img [src]="picsUrl+req.user.image" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" alt="">
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:600;font-size:14px;">{{req.user.firstName+" "+req.user.lastName}}</div>
+              <div style="font-size:12px;color:var(--pte-text-secondary);">{{req.user.role}} | {{req.user.departement}}</div>
+            </div>
+            <span class="pte-badge pte-badge--success" *ngIf="req.status==='TREATED'">TREATED</span>
+            <span class="pte-badge pte-badge--danger" *ngIf="req.status==='PENDING'">PENDING</span>
+          </div>
+        </div>
+
+        <!-- No Selection -->
+        <div *ngIf="!userSelected" style="flex:1;display:flex;align-items:center;justify-content:center;min-height:300px;">
+          <div style="text-align:center;color:var(--pte-text-secondary);">
+            <p>Select user to view request.</p>
+          </div>
+        </div>
+
+        <!-- Request Form -->
+        <div *ngIf="userSelected" style="flex:1;">
+          <h5 style="font-size:16px;font-weight:600;margin:0 0 20px;">Update <strong>{{user.firstName+" "+user.lastName}}</strong> request</h5>
+          <form [formGroup]="updateReqForm" (ngSubmit)="onSubmit(updateReqForm)">
+            <div class="pte-form-field">
+              <label class="pte-form-field__label">SSID <span class="text-danger">*</span></label>
+              <input type="text" class="pte-form-field__input" placeholder="ssid..." formControlName="ssid" required>
+              <small class="pte-form-field__error" *ngIf="!updateReqForm.get('ssid')?.valid && updateReqForm.get('ssid')?.touched">SSID is required</small>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="pte-form-field">
+                <label class="pte-form-field__label">Login <span class="text-danger">*</span></label>
+                <input type="text" class="pte-form-field__input" placeholder="login" formControlName="login" required>
+                <small class="pte-form-field__error" *ngIf="!updateReqForm.get('login')?.valid && updateReqForm.get('login')?.touched">Login is required</small>
+              </div>
+              <div class="pte-form-field">
+                <label class="pte-form-field__label">Password <span class="text-danger">*</span></label>
+                <input type="text" class="pte-form-field__input" placeholder="password..." formControlName="password" required>
+                <small class="pte-form-field__error" *ngIf="!updateReqForm.get('password')?.valid && updateReqForm.get('password')?.touched">Password is required</small>
+              </div>
+            </div>
+            <div style="text-align:right;margin-top:8px;">
+              <button type="submit" class="pte-btn pte-btn--success">Update Request <i class="fas fa-check" style="margin-left:4px;"></i></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
