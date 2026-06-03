@@ -1,15 +1,34 @@
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- PTE — 404 Page (Redesigned)                                             -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="pte-empty-state" style="min-height:100vh;padding:80px 40px;">
-  <div style="font-size:120px;font-weight:800;color:var(--pte-gray-200);line-height:1;">404</div>
-  <div class="pte-empty-state__title" style="font-size:24px;margin-top:16px;">Page Not Found</div>
-  <div class="pte-empty-state__description" style="max-width:400px;">
-    The page you're looking for doesn't exist or has been moved.
+<main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
+  <div class="container">
+    <div class="page-error">
+      <div class="page-inner">
+        <h1>404</h1>
+        <div class="page-description">
+          The page you were looking for could not be found.
+        </div>
+        <div class="page-search">
+          <form>
+            <div class="form-group floating-addon floating-addon-not-append">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fas fa-search"></i>
+                  </div>
+                </div>
+                <input type="text" class="form-control" placeholder="Search">
+                <div class="input-group-append">
+                  <button class="btn btn-primary btn-lg">
+                    Search
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="mt-3">
+            <a style="cursor:pointer;color:rgb(50, 50, 228);" (click)="redirect()">Back to Home</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div style="margin-top:32px;display:flex;gap:12px;">
-    <a routerLink="/dashboard/main" class="pte-btn pte-btn--primary">Go to Dashboard</a>
-    <a routerLink="/authentication/signin" class="pte-btn pte-btn--secondary">Sign In</a>
-  </div>
-</div>
+</main>

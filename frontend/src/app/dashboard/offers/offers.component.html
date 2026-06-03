@@ -1,73 +1,406 @@
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- PTE — Internship Offers (Redesigned)                                   -->
-<!-- Controller: offers, loading, search                                     -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-
-<div class="pte-page">
-  <div class="pte-page__header">
-    <div class="pte-page__header-left">
-      <div class="pte-page__breadcrumb">
-        <a routerLink="/dashboard/main">Dashboard</a><span class="separator">/</span>
-        <span>Internships</span><span class="separator">/</span><span class="current">Offers</span>
-      </div>
-      <h1 class="pte-page__header-title">Internship Offers</h1>
-      <p class="pte-page__header-subtitle">Manage and track internship opportunities</p>
-    </div>
-    <div class="pte-page__header-actions">
-      <button class="pte-btn pte-btn--primary" routerLink="/dashboard/offerDetails/new">+ Create Offer</button>
-    </div>
-  </div>
-
-  <div class="pte-card">
-    <div class="pte-card__header">
-      <h3 class="pte-card__header-title">All Offers</h3>
-    </div>
-    <div class="pte-card__body">
-      <div class="pte-page__toolbar">
-        <div class="pte-page__toolbar-left">
-          <div class="pte-page__toolbar-search">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" placeholder="Search offers...">
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="loading" class="flex-center" style="padding:48px;">
-        <div class="pte-skeleton pte-skeleton--circle" style="width:48px;height:48px;"></div>
-      </div>
-
-      <!-- Offer Cards Grid -->
-      <div *ngIf="!loading" class="pte-grid pte-grid--auto">
-        <div class="pte-card pte-card--hoverable" *ngFor="let offer of offers" style="cursor:pointer;" [routerLink]="'/dashboard/offerDetails/' + offer._id">
-          <div class="pte-card__body">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-              <div>
-                <h4 style="margin:0 0 4px;font-size:16px;font-weight:600;">{{ offer.title || offer.subject }}</h4>
-                <span style="font-size:13px;color:var(--pte-text-secondary);">{{ offer.department || '' }}</span>
-              </div>
-              <span class="pte-badge" [ngClass]="{
-                'pte-badge--success': offer.status === 'Open',
-                'pte-badge--warning': offer.status === 'Pending',
-                'pte-badge--neutral': offer.status === 'Closed'
-              }">{{ offer.status || 'Draft' }}</span>
+<section class="main-content" style="margin-top: 20px;">
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-header-icon">
+                <i class="fas fa-briefcase"></i>
             </div>
-            <p style="font-size:13px;color:var(--pte-text-secondary);margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
-              {{ offer.description || offer.description }}
-            </p>
-            <div style="display:flex;gap:12px;font-size:12px;color:var(--pte-text-tertiary);">
-              <span *ngIf="offer.startDate">📅 {{ offer.startDate | date:'shortDate' }}</span>
-              <span *ngIf="offer.applications">👥 {{ offer.applications?.length || 0 }} applicants</span>
+            <div>
+                <h2 class="page-title">Internship Management</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb-modern">
+                        <li><a routerLink="/dashboard/main"><i class="fas fa-home"></i></a></li>
+                        <li><i class="fas fa-chevron-right"></i></li>
+                        <li><span>Internship</span></li>
+                        <li><i class="fas fa-chevron-right"></i></li>
+                        <li class="active">Offers</li>
+                    </ol>
+                </nav>
             </div>
-          </div>
         </div>
-      </div>
-
-      <div *ngIf="!loading && (!offers || offers.length === 0)" class="pte-empty-state">
-        <div class="pte-empty-state__icon">💼</div>
-        <div class="pte-empty-state__title">No offers yet</div>
-        <div class="pte-empty-state__description">Create your first internship offer</div>
-        <button class="pte-btn pte-btn--primary" routerLink="/dashboard/offerDetails/new">Create Offer</button>
-      </div>
     </div>
-  </div>
-</div>
+
+    <div class="section-body">
+        <!-- Stats Cards Row -->
+        <div class="row mb-4">
+            <div class="col-xl-2 col-lg-4 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-primary">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{totalActiveOffers}}</h3>
+                        <p>Active Offers</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-lg-4 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-success">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{cyberSecurityCount}}</h3>
+                        <p>Cyber Security</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-lg-4 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-info">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{developmentCount}}</h3>
+                        <p>Development</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-lg-4 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-warning">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{systemCount}}</h3>
+                        <p>System</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-lg-4 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-purple">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{networkingCount}}</h3>
+                        <p>Networking</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-lg-4 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-danger">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{expiringCount}}</h3>
+                        <p>Expiring Soon</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4" *ngIf="temp.length > 0">
+            <div class="col-xl-6 col-lg-6 mb-3">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Offers by Department</h6>
+                    </div>
+                    <div class="card-body">
+                        <apx-chart [series]="departmentChartOptions.series" [chart]="departmentChartOptions.chart"
+                            [plotOptions]="departmentChartOptions.plotOptions"
+                            [dataLabels]="departmentChartOptions.dataLabels" [colors]="departmentChartOptions.colors"
+                            [xaxis]="departmentChartOptions.xaxis" [yaxis]="departmentChartOptions.yaxis"
+                            [grid]="departmentChartOptions.grid" [legend]="departmentChartOptions.legend"></apx-chart>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 col-lg-6 mb-3">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Offer Status Overview</h6>
+                    </div>
+                    <div class="card-body">
+                        <apx-chart [series]="offerStatusChartOptions.series" [chart]="offerStatusChartOptions.chart"
+                            [labels]="offerStatusChartOptions.labels" [colors]="offerStatusChartOptions.colors"
+                            [legend]="offerStatusChartOptions.legend" [dataLabels]="offerStatusChartOptions.dataLabels"
+                            [plotOptions]="offerStatusChartOptions.plotOptions"></apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="card modern-card">
+            <div class="card-body p-0">
+                <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="modern-tabs">
+                    <!-- Active Offers Tab -->
+                    <li [ngbNavItem]="1">
+                        <a ngbNavLink>
+                            <i class="fas fa-briefcase"></i>
+                            Active Offers
+                            <span class="tab-badge">{{totalActiveOffers}}</span>
+                        </a>
+
+                        <ng-template ngbNavContent>
+                            <div class="tab-content-wrapper">
+                                <!-- Header with Add Button -->
+                                <div class="content-header">
+                                    <div>
+                                        <h4 class="mb-1">Internship Offers</h4>
+                                        <p class="text-muted mb-0">Manage and view all active internship opportunities
+                                        </p>
+                                    </div>
+                                    <button class="btn btn-gradient" *ngIf="userRole !== 'ADMIN'"
+                                        (click)="createOffer()">
+                                        <i class="fas fa-plus"></i> Add New Offer
+                                    </button>
+                                </div>
+
+                                <!-- Filters Section -->
+                                <div class="filters-section">
+                                    <div class="row g-3">
+                                        <div class="col-lg-8 col-md-6">
+                                            <div class="search-box">
+                                                <i class="fas fa-search"></i>
+                                                <input type="text" class="form-control"
+                                                    placeholder="Search by title, technologies, or department..."
+                                                    [(ngModel)]="searchQuery" (keyup)="applyFilters()">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4">
+                                            <select class="form-control" [(ngModel)]="selectedDepartment"
+                                                (change)="applyFilters()">
+                                                <option value="all">All Departments</option>
+                                                <option *ngFor="let dept of getUniqueDepartments()" [value]="dept">
+                                                    {{dept}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-1 col-md-2">
+                                            <button class="btn btn-outline-secondary w-100" (click)="clearFilters()"
+                                                ngbTooltip="Clear filters">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Results Count -->
+                                <div class="results-info">
+                                    <span>Showing <strong>{{offers.length}}</strong> of
+                                        <strong>{{totalActiveOffers}}</strong> offers</span>
+                                </div>
+
+                                <!-- Empty State -->
+                                <div class="empty-state" *ngIf="offers.length === 0">
+                                    <img src="assets/images/empty.png" alt="No offers">
+                                    <h5>No offers found</h5>
+                                    <p>Try adjusting your search or filters</p>
+                                    <button class="btn btn-primary" (click)="clearFilters()"
+                                        *ngIf="searchQuery || selectedDepartment !== 'all'">
+                                        Clear Filters
+                                    </button>
+                                </div>
+
+                                <!-- Offers Grid -->
+                                <div class="offers-grid" *ngIf="offers.length > 0">
+                                    <div class="offer-card-modern" *ngFor="let offer of offers">
+                                        <div class="offer-card-header">
+                                            <div class="dept-badge" [ngClass]="{
+                                                'cyber': offer.departement === 'Cyber Security',
+                                                'dev': offer.departement === 'Development',
+                                                'sys': offer.departement === 'System',
+                                                'net': offer.departement === 'Networking'
+                                            }">
+                                                <i class="fas" [ngClass]="{
+                                                    'fa-shield-alt': offer.departement === 'Cyber Security',
+                                                    'fa-code': offer.departement === 'Development',
+                                                    'fa-server': offer.departement === 'System',
+                                                    'fa-network-wired': offer.departement === 'Networking'
+                                                }"></i>
+                                                {{offer.departement}}
+                                            </div>
+                                            <div class="card-actions" *ngIf="offer.encadrant === userId">
+                                                <button class="btn-icon-action"
+                                                    (click)="editOfferModal(offer); $event.stopPropagation()"
+                                                    ngbTooltip="Edit offer">
+                                                    <i class="fas fa-pen"></i>
+                                                </button>
+                                                <button class="btn-icon-action danger"
+                                                    (click)="deleteOffer(offer._id); $event.stopPropagation()"
+                                                    ngbTooltip="Delete offer">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="offer-card-body" (click)="redirectDetails(offer._id)">
+                                            <h5 class="offer-title">{{offer.title}}</h5>
+                                            <p class="offer-description">{{offer.description | offer}}</p>
+
+                                            <div class="tech-section">
+                                                <label class="tech-label">
+                                                    <i class="fas fa-tools"></i> Technologies
+                                                </label>
+                                                <div class="tech-tags">
+                                                    <span class="tech-tag"
+                                                        *ngFor="let tech of offer.technologies?.split(',').slice(0, 3)">
+                                                        {{tech.trim()}}
+                                                    </span>
+                                                    <span class="tech-tag more"
+                                                        *ngIf="offer.technologies?.split(',').length > 3">
+                                                        +{{offer.technologies?.split(',').length - 3}}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="offer-footer-info">
+                                                <div class="expiration-info">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                    <span>Expires: {{offer.expirationDate | date:'mediumDate'}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="offer-card-actions">
+                                            <button class="btn btn-outline-primary btn-sm"
+                                                (click)="redirectDetails(offer._id)">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </button>
+                                            <button class="btn btn-link btn-sm"
+                                                [routerLink]="['/dashboard/offerTasks', offer._id]"
+                                                (click)="$event.stopPropagation()">
+                                                Manage Tasks <i class="fas fa-arrow-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </li>
+
+                    <!-- Archived Offers Tab -->
+                    <li [ngbNavItem]="2">
+                        <a ngbNavLink>
+                            <i class="fas fa-archive"></i>
+                            Archive
+                            <span class="tab-badge archive">{{totalArchivedOffers}}</span>
+                        </a>
+
+                        <ng-template ngbNavContent>
+                            <div class="tab-content-wrapper">
+                                <!-- Header -->
+                                <div class="content-header">
+                                    <div>
+                                        <h4 class="mb-1">Archived Offers</h4>
+                                        <p class="text-muted mb-0">View past and expired internship offers</p>
+                                    </div>
+                                </div>
+
+                                <!-- Filters Section -->
+                                <div class="filters-section">
+                                    <div class="row g-3">
+                                        <div class="col-lg-8 col-md-6">
+                                            <div class="search-box">
+                                                <i class="fas fa-search"></i>
+                                                <input type="text" class="form-control"
+                                                    placeholder="Search archived offers..."
+                                                    [(ngModel)]="searchQueryArchived" (keyup)="applyArchivedFilters()">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4">
+                                            <select class="form-control" [(ngModel)]="selectedDepartmentArchived"
+                                                (change)="applyArchivedFilters()">
+                                                <option value="all">All Departments</option>
+                                                <option *ngFor="let dept of getUniqueDepartmentsArchived()"
+                                                    [value]="dept">{{dept}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-1 col-md-2">
+                                            <button class="btn btn-outline-secondary w-100"
+                                                (click)="clearArchivedFilters()" ngbTooltip="Clear filters">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Results Count -->
+                                <div class="results-info">
+                                    <span>Showing <strong>{{archivedOffers.length}}</strong> of
+                                        <strong>{{totalArchivedOffers}}</strong> archived offers</span>
+                                </div>
+
+                                <!-- Empty State -->
+                                <div class="empty-state" *ngIf="archivedOffers.length === 0">
+                                    <img src="assets/images/empty.png" alt="No archived offers">
+                                    <h5>No archived offers found</h5>
+                                    <p>Archived offers will appear here</p>
+                                </div>
+
+                                <!-- Offers Grid -->
+                                <div class="offers-grid" *ngIf="archivedOffers.length > 0">
+                                    <div class="offer-card-modern archived" *ngFor="let offer of archivedOffers">
+                                        <div class="archived-overlay">
+                                            <i class="fas fa-archive"></i>
+                                        </div>
+
+                                        <div class="offer-card-header">
+                                            <div class="dept-badge" [ngClass]="{
+                                                'cyber': offer.departement === 'Cyber Security',
+                                                'dev': offer.departement === 'Development',
+                                                'sys': offer.departement === 'System',
+                                                'net': offer.departement === 'Networking'
+                                            }">
+                                                <i class="fas" [ngClass]="{
+                                                    'fa-shield-alt': offer.departement === 'Cyber Security',
+                                                    'fa-code': offer.departement === 'Development',
+                                                    'fa-server': offer.departement === 'System',
+                                                    'fa-network-wired': offer.departement === 'Networking'
+                                                }"></i>
+                                                {{offer.departement}}
+                                            </div>
+                                        </div>
+
+                                        <div class="offer-card-body" (click)="redirectDetails(offer._id)">
+                                            <h5 class="offer-title">{{offer.title}}</h5>
+                                            <p class="offer-description">{{offer.description | offer}}</p>
+
+                                            <div class="tech-section">
+                                                <label class="tech-label">
+                                                    <i class="fas fa-tools"></i> Technologies
+                                                </label>
+                                                <div class="tech-tags">
+                                                    <span class="tech-tag"
+                                                        *ngFor="let tech of offer.technologies?.split(',').slice(0, 3)">
+                                                        {{tech.trim()}}
+                                                    </span>
+                                                    <span class="tech-tag more"
+                                                        *ngIf="offer.technologies?.split(',').length > 3">
+                                                        +{{offer.technologies?.split(',').length - 3}}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="offer-footer-info">
+                                                <div class="expiration-info">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                    <span>Expired: {{offer.expirationDate | date:'mediumDate'}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="offer-card-actions">
+                                            <button class="btn btn-outline-secondary btn-sm"
+                                                (click)="redirectDetails(offer._id)">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </li>
+                </ul>
+                <div [ngbNavOutlet]="nav"></div>
+            </div>
+        </div>
+    </div>
+</section>

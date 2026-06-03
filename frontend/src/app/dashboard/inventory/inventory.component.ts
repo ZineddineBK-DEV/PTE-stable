@@ -33,15 +33,6 @@ export class InventoryComponent {
   user!: any;
   userSelected: boolean = false;
   userId!: string
-
-  // Properties for redesigned template
-  loading: boolean = false;
-  rows: any[] = [];
-  get totalEquipment(): number { return this.userEquipments.length; }
-  get totalAccessories(): number { return this.userAccessories.length; }
-  get assignedItems(): number {
-    return [...this.userEquipments, ...this.userAccessories].filter((i: any) => i.user).length;
-  }
   constructor(
     private userService: UserServiceService,
     private toastr: ToastrService,

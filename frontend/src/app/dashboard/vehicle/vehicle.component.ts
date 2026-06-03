@@ -51,7 +51,6 @@ export class VehicleComponent {
   calendarData!: VehicleEvent;
   calendarEvents!: EventInput[];
   vehicles!:Vehicle[]
-  addVehicle = this.addVehicleWindowCall.bind(this);
   showCalendar!: boolean;
   showStat!: boolean;
   selectedVehicle!:any 

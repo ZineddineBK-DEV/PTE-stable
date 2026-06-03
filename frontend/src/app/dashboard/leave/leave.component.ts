@@ -21,10 +21,6 @@ export class LeaveComponent {
   Workers: any[] = []
   supervisors: any[] = []
   user: any
-  balance: number = 0
-  usedLeaves: number = 0
-  pendingLeaves: number = 0
-  minDate: string = new Date().toISOString().split('T')[0]
 
   constructor(
     private toastr: ToastrService,

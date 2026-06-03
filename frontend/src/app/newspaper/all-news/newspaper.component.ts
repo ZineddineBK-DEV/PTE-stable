@@ -28,7 +28,6 @@ export class NewspaperComponent {
   mySavedPosts!:number
   allPosts!:number
   postRequests!:number
-  loading: boolean = false;
   user!:any
   showCommentSection:boolean = false
   alignCommentSection:boolean []= []

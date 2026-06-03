@@ -28,7 +28,6 @@ import { EditRoomModalComponent } from './edit-room-modal/edit-room-modal.compon
 export class RoomComponent {
   @ViewChild('calendar', { static: false })
   dialogTitle!: string
-  addRoom = this.addRoomWindowCall.bind(this);
   isEditClick?: boolean;
   roomEventForm!: UntypedFormGroup;
   roomEvent!: RoomEvent | null;
