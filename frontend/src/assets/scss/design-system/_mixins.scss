@@ -115,9 +115,13 @@ $breakpoints: (
 }
 
 // ─── Transition ──────────────────────────────────────────────────────────────
-@mixin transition($properties: all) {
-  transition-property: #{$properties};
-  transition-duration: var(--pte-transition-base);
+@mixin transition($properties...) {
+  $props: ();
+  @each $p in $properties {
+    $props: append($props, $p, comma);
+  }
+  transition-property: $props;
+  transition-duration: 0.2s;
   transition-timing-function: ease;
 }
 
